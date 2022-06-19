@@ -1,4 +1,4 @@
-# XPVehicles
+# *XPVehicles*
 
 ## **Overview**
 
@@ -90,9 +90,15 @@ https://www.figma.com/file/Rd93IuWBGQO26hTFjSXgWE/Wireframe
 
 User
 
+https://www.notion.so/Product-Spec-cd792a75c39d46798df3a360fa47a6bb#09cb80a70282468a8ce4b812acdfe40b
+
 Vehicle
 
+https://www.notion.so/Product-Spec-cd792a75c39d46798df3a360fa47a6bb#18ef1dd954c94149ae76f1e0588a0ff5
+
 Chat
+
+https://www.notion.so/Product-Spec-cd792a75c39d46798df3a360fa47a6bb#ff7f51dbb6854f13baa15f1844a6bdda
 
 ### **Networking**
 
