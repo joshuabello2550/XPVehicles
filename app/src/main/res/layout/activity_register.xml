@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/firstNameOutlinedTextField">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtEmail"
+            android:id="@+id/edtRegisterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -89,7 +89,7 @@
         app:layout_constraintTop_toBottomOf="@+id/EmailOutlinedTextField">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtEmail"
+            android:id="@+id/edtRegisterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

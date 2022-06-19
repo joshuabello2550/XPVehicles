@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.xpvehicles.R;
 
@@ -26,8 +25,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void bind() {
-        edtEmail = findViewById(R.id.edtEmail);
-        edtPassword = findViewById(R.id.edtPassword);
+        edtEmail = findViewById(R.id.edtRegisterEmail);
+        edtPassword = findViewById(R.id.edtRegisterPassword);
         edtFirstName = findViewById(R.id.edtFirstName);
         edtLastName = findViewById(R.id.edtLastName);
     }
