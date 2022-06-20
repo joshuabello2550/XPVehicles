@@ -32,9 +32,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void createAccountOnClickListener() {
-        btnCreateAccount.setOnClickListener(v -> {
-
-        });
+//        btnCreateAccount.setOnClickListener(v -> {
+//
+//        });
     }
 
 }
