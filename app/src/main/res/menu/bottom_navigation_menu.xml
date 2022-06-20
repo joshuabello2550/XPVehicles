@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/explore"
+        android:checkable="true"
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:title="Explore"
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/saved"
+        android:checkable="true"
+        android:enabled="true"
+        android:icon="@drawable/selector_saved"
+        android:title="Saved"
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/vehicles"
+        android:enabled="true"
+        android:icon="@drawable/xpvehicles__3_"
+        android:visible="true"
+        app:showAsAction="always"
+        android:title="Vehicles" />
+    <item
+        android:id="@+id/inbox"
+        android:checkable="true"
+        android:enabled="true"
+        android:icon="@drawable/selector_mail"
+        android:title="Inbox"
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/profile"
+        android:checkable="true"
+        android:enabled="true"
+        android:icon="@drawable/selector_profile"
+        android:title="Profile"
+        android:visible="true"
+        app:showAsAction="always" />
+
+</menu>
