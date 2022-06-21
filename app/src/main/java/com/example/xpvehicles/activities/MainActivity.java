@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bind();
-        bottomNavigationOnClick();
+        setBottomNavigationOnClick();
     }
 
     private void bind() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
-    private void bottomNavigationOnClick() {
+    private void setBottomNavigationOnClick() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         bottomNavigationView.setOnItemSelectedListener(item -> {
             {

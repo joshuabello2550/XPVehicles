@@ -16,7 +16,7 @@ import com.parse.SignUpCallback;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    public static final String TAG = "RegisterActivity";
+    private static final String TAG = "Register_Activity";
     private EditText edtEmail;
     private EditText edtPassword;
     private EditText edtFirstName;
@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         bind();
-        createAccountOnClickListener();
+        setCreateAccountOnClickListener();
     }
 
     private void bind() {
@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnCreateAccount = findViewById(R.id.btnCreateAccount);
     }
 
-    private void createAccountOnClickListener() {
+    private void setCreateAccountOnClickListener() {
         btnCreateAccount.setOnClickListener(v -> {
             String username = edtEmail.getText().toString();
             String password = edtPassword.getText().toString();

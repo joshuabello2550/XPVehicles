@@ -32,10 +32,9 @@ public class LoginActivity extends AppCompatActivity {
         if (ParseUser.getCurrentUser() != null){
             goMainActivity();
         }
-
         bind();
-        newAccountOnClickListener();
-        loginOnClickListener();
+        setMakeNewAccountOnClickListener();
+        setLoginOnClickListener();
     }
 
     private void bind() {
@@ -45,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         tvMakeNewAccount = findViewById(R.id.tvMakeNewAccount);
     }
 
-    private void loginOnClickListener() {
+    private void setLoginOnClickListener() {
         btnLogin.setOnClickListener(v -> {
             // TODO: finish login button
             String username = edtLoginEmail.getText().toString();
@@ -69,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void newAccountOnClickListener() {
+    public void setMakeNewAccountOnClickListener() {
         tvMakeNewAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
