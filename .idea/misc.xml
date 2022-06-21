@@ -18,6 +18,7 @@
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.21481481481481482" />
         <entry key="app/src/main/res/layout/fragment_saved.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_vehicles.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/vehicle_card.xml" value="0.4" />
         <entry key="app/src/main/res/menu/add_vehicle_top_bar.xml" value="0.4111111111111111" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1111111111111111" />
       </map>
