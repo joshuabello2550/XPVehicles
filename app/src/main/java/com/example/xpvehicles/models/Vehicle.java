@@ -3,6 +3,7 @@ package com.example.xpvehicles.models;
 import androidx.core.app.NavUtils;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -14,6 +15,7 @@ public class Vehicle extends ParseObject {
 
     public static final String KEY_VEHICLE_NAME =  "vehicleName";
     public static final String KEY_DESCRIPTION =  "description";
+    public static final String KEY_VEHICLE_IMAGE =  "image";
     public static final String KEY_OWNER = "owner";
     public static final String KEY_DAILY_PRICE = "dailyPrice";
     public static final String KEY_GEO_LOCATION = "geoLocation";
@@ -58,5 +60,14 @@ public class Vehicle extends ParseObject {
     public void setGeoLocation(ParseGeoPoint geoLocation) {
         put(KEY_GEO_LOCATION, geoLocation);
     }
+
+    public ParseFile getVehicleImage(){
+        return getParseFile("KEY_VEHICLE_IMAGE");
+    }
+
+    public void setVehicleImage(ParseFile image) {
+        put(KEY_VEHICLE_IMAGE,image);
+    }
+
 
 }

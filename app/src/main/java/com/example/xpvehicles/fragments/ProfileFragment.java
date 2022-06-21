@@ -1,5 +1,6 @@
 package com.example.xpvehicles.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.activities.LoginActivity;
 import com.parse.ParseUser;
 
 
@@ -30,9 +32,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setLogoutOnClickListener() {
-//        btnLogout.setOnClickListener(v -> {
-//            ParseUser.logOut();
-//            getActivity().finish();
-//        });
+        btnLogout.setOnClickListener(v -> {
+            ParseUser.logOut();
+            Intent i = new Intent(getActivity(), LoginActivity.class);
+            startActivity(i);
+        });
     }
 }
