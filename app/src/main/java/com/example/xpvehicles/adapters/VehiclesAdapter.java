@@ -77,32 +77,6 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         return mVehicles.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
-            tvDistanceFromUser = itemView.findViewById(R.id.tvDailyPrice);
-            ivVehicle = itemView.findViewById(R.id.ivVehicle);
-            tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
-        }
-
-        public void bind(Vehicle vehicle) {
-            // Vehicle name
-            tvVehicleName.setText(vehicle.getVehicleName());
-            // daily price
-            String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
-            tvDailyPrice.setText(dailyPrice);
-            // distance from user
-            String vehiclePlaceId = vehicle.getPlaceId();
-            getDistanceFromUser(vehiclePlaceId, userLocation);
-            // vehicle image
-            ParseFile image = vehicle.getVehicleImage();
-            if (image != null) {
-                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
-            }
-        }
-    }
-
     public void addAll(List<Vehicle> allVehicles) {
         mVehicles.addAll(allVehicles);
         notifyDataSetChanged();
@@ -135,6 +109,37 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
 
             }
         });
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
+            tvDistanceFromUser = itemView.findViewById(R.id.tvDailyPrice);
+            ivVehicle = itemView.findViewById(R.id.ivVehicle);
+            tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
+        }
+
+        public void bind(Vehicle vehicle) {
+            // Vehicle name
+            tvVehicleName.setText(vehicle.getVehicleName());
+            // daily price
+            String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
+            tvDailyPrice.setText(dailyPrice);
+            // distance from user
+            String vehiclePlaceId = vehicle.getPlaceId();
+            getDistanceFromUser(vehiclePlaceId, userLocation);
+            // vehicle image
+            ParseFile image = vehicle.getVehicleImage();
+            if (image != null) {
+                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
+            }
+            setImageOnClickListener();
+        }
+
+        private void setImageOnClickListener() {
+        }
+
     }
 
 }
