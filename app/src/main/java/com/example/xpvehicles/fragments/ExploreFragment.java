@@ -46,7 +46,7 @@ public class ExploreFragment extends Fragment {
     private void bindAdapter(View view) {
         RecyclerView rvVehicles = view.findViewById(R.id.rvVehicles);
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new VehiclesAdapter(allVehicles);
+        adapter = new VehiclesAdapter(getContext(), allVehicles);
         rvVehicles.setAdapter(adapter);
         rvVehicles.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
     }

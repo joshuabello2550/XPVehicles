@@ -1,10 +1,9 @@
 package com.example.xpvehicles.activities;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,12 +11,12 @@ import android.widget.EditText;
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.codepath.asynchttpclient.callback.TextHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +35,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private EditText edtZipCode;
     private EditText edtDailyPrice;
     private Button btnAddVehicle;
+    private String placeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,31 +74,60 @@ public class AddVehicleActivity extends AppCompatActivity {
             String zipCode = edtZipCode.getText().toString();
 //            Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
             ParseUser owner = ParseUser.getCurrentUser();
+            getPlaceId(streetAddress, city, state);
 
-
-            Vehicle vehicle = new Vehicle();
-            vehicle.setOwner(owner);
-            vehicle.setVehicleName(vehicleName);
-            vehicle.setDescription(description);
-//            vehicle.setDailyPrice(dailyPrice);
-            getGeocodedLocation(streetAddress, city, state);
+            saveVehicle(owner, vehicleName, description);
         });
-
     }
 
-    private void getGeocodedLocation(String streetAddress, String city, String state) {
+    private void saveVehicle(ParseUser owner, String vehicleName, String description) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setOwner(owner);
+        vehicle.setVehicleName(vehicleName);
+        vehicle.setDescription(description);
+//            vehicle.setDailyPrice(dailyPrice);
+        vehicle.setPlaceId(placeId);
+        vehicle.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error while saving the vehicle to parse", e);
+                    return;
+                }
+                Log.i(TAG, "Post was successful");
+                clearComponents();
+            }
+        });
+    }
+
+    private void clearComponents() {
+        edtVehicleName.setText("");
+        edtDescription.setText("");
+        edtStreetAddress.setText("");
+        edtCity.setText("");
+        edtState.setText("");
+        edtZipCode.setText("");
+        // clear the daily price
+    }
+
+    private String getPlaceId(String streetAddress, String city, String state) {
         String base_url = "https://maps.googleapis.com/maps/api/geocode/json?";
         String address = streetAddress + " " + city + " " + state;
-        AsyncHttpClient client = new AsyncHttpClient();
+
         RequestParams params = new RequestParams();
-        params.put("key", R.string.API_KEY);
+        Resources res = this.getResources();
+        params.put("key", res.getString(R.string.API_KEY));
         params.put("address", address);
+
+        AsyncHttpClient client = new AsyncHttpClient();
         client.get(base_url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONObject jsonObject = json.jsonObject;
                 try {
-                    JSONObject test = jsonObject.getJSONObject("results");
+                    // TODO: fix conflict with placeId being initalized to null but then also returning at a certain time.
+                    placeId = jsonObject.getJSONArray("results").getJSONObject(0).getString("place_id");
+//                    return placeId;
                 } catch (JSONException e) {
                     Log.e(TAG, "hit json exception when getting the latitude and longitude");
                 }
@@ -109,8 +138,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                 Log.e(TAG, "Error sending the JSON request", throwable);
             }
         });
-
-
+        return "";
     }
 
 

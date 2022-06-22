@@ -2,23 +2,27 @@ package com.example.xpvehicles.models;
 
 import androidx.core.app.NavUtils;
 
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import okhttp3.Headers;
+
 @ParseClassName("Vehicle")
 public class Vehicle extends ParseObject {
 
-    //TODO: finish vehicle
-
-    public static final String KEY_VEHICLE_NAME =  "vehicleName";
+    public static final String KEY_VEHICLE_NAME =  "name";
     public static final String KEY_DESCRIPTION =  "description";
     public static final String KEY_VEHICLE_IMAGE =  "image";
     public static final String KEY_OWNER = "owner";
     public static final String KEY_DAILY_PRICE = "dailyPrice";
     public static final String KEY_GEO_LOCATION = "geoLocation";
+    public static final String KEY_PLACE_ID = "placeId";
 
 
     public ParseUser getOwner() {
@@ -61,13 +65,41 @@ public class Vehicle extends ParseObject {
         put(KEY_GEO_LOCATION, geoLocation);
     }
 
+    public String getPlaceId () {
+        return getString(KEY_GEO_LOCATION);
+    }
+
+    public void setPlaceId(String placeId) {
+        put(KEY_GEO_LOCATION, placeId);
+    }
+
     public ParseFile getVehicleImage(){
-        return getParseFile("KEY_VEHICLE_IMAGE");
+        return getParseFile(KEY_VEHICLE_IMAGE);
     }
 
     public void setVehicleImage(ParseFile image) {
         put(KEY_VEHICLE_IMAGE,image);
     }
+
+    private String getDistanceFromUser() {
+        String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+
+        client.get(baseUrl, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+//                json.
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
+        return "";
+    }
+
 
 
 }
