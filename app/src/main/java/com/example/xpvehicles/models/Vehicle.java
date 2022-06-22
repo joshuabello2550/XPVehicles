@@ -66,11 +66,11 @@ public class Vehicle extends ParseObject {
     }
 
     public String getPlaceId () {
-        return getString(KEY_GEO_LOCATION);
+        return getString(KEY_PLACE_ID);
     }
 
     public void setPlaceId(String placeId) {
-        put(KEY_GEO_LOCATION, placeId);
+        put(KEY_PLACE_ID, placeId);
     }
 
     public ParseFile getVehicleImage(){
@@ -80,27 +80,5 @@ public class Vehicle extends ParseObject {
     public void setVehicleImage(ParseFile image) {
         put(KEY_VEHICLE_IMAGE,image);
     }
-
-    private String getDistanceFromUser() {
-
-        String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-
-        client.get(baseUrl, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-//                json.
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
-            }
-        });
-        return "";
-    }
-
-
 
 }

@@ -12,12 +12,16 @@ import android.widget.Button;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.LoginActivity;
+import com.example.xpvehicles.activities.MainActivity;
 import com.parse.ParseUser;
 
 
 public class ProfileFragment extends Fragment {
 
     private Button btnLogout;
+
+    public ProfileFragment(MainActivity mainActivity) {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {

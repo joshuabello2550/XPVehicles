@@ -35,7 +35,6 @@ public class AddVehicleActivity extends AppCompatActivity {
     private EditText edtZipCode;
     private EditText edtDailyPrice;
     private Button btnAddVehicle;
-    private String placeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +65,49 @@ public class AddVehicleActivity extends AppCompatActivity {
 
     private void setAddVehicleOnClickListener() {
         btnAddVehicle.setOnClickListener(v -> {
-            String vehicleName = edtVehicleName.getText().toString();
-            String description = edtDescription.getText().toString();
             String streetAddress = edtStreetAddress.getText().toString();
             String city = edtCity.getText().toString();
             String state = edtState.getText().toString();
             String zipCode = edtZipCode.getText().toString();
-//            Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
-            ParseUser owner = ParseUser.getCurrentUser();
             getPlaceId(streetAddress, city, state);
-
-            saveVehicle(owner, vehicleName, description);
         });
     }
 
-    private void saveVehicle(ParseUser owner, String vehicleName, String description) {
+    private void getPlaceId(String streetAddress, String city, String state) {
+        String base_url = "https://maps.googleapis.com/maps/api/geocode/json?";
+        String address = streetAddress + " " + city + " " + state;
+
+        RequestParams params = new RequestParams();
+        Resources res = this.getResources();
+        params.put("key", res.getString(R.string.API_KEY));
+        params.put("address", address);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(base_url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject jsonObject = json.jsonObject;
+                try {
+                    String placeId = jsonObject.getJSONArray("results").getJSONObject(0).getString("place_id");
+                    saveVehicle(placeId);
+                } catch (JSONException e) {
+                    Log.e(TAG, "hit json exception when getting the latitude and longitude");
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Error sending the JSON request", throwable);
+            }
+        });
+    }
+
+    private void saveVehicle(String placeId) {
+        String vehicleName = edtVehicleName.getText().toString();
+        String description = edtDescription.getText().toString();
+//        Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
+        ParseUser owner = ParseUser.getCurrentUser();
+
         Vehicle vehicle = new Vehicle();
         vehicle.setOwner(owner);
         vehicle.setVehicleName(vehicleName);
@@ -107,39 +134,6 @@ public class AddVehicleActivity extends AppCompatActivity {
         edtCity.setText("");
         edtState.setText("");
         edtZipCode.setText("");
-        // clear the daily price
+        // TODO: clear the daily price
     }
-
-    private String getPlaceId(String streetAddress, String city, String state) {
-        String base_url = "https://maps.googleapis.com/maps/api/geocode/json?";
-        String address = streetAddress + " " + city + " " + state;
-
-        RequestParams params = new RequestParams();
-        Resources res = this.getResources();
-        params.put("key", res.getString(R.string.API_KEY));
-        params.put("address", address);
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(base_url, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                JSONObject jsonObject = json.jsonObject;
-                try {
-                    // TODO: fix conflict with placeId being initalized to null but then also returning at a certain time.
-                    placeId = jsonObject.getJSONArray("results").getJSONObject(0).getString("place_id");
-//                    return placeId;
-                } catch (JSONException e) {
-                    Log.e(TAG, "hit json exception when getting the latitude and longitude");
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "Error sending the JSON request", throwable);
-            }
-        });
-        return "";
-    }
-
-
 }

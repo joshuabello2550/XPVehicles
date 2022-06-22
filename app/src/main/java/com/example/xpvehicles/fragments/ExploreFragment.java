@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.AddVehicleActivity;
+import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.adapters.VehiclesAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +29,12 @@ public class ExploreFragment extends Fragment {
 
     private static final String TAG = "Explore_Fragment";
     private VehiclesAdapter adapter;
+    private Activity activity;
+    private static String userLocation;
+
+    public ExploreFragment(MainActivity mainActivity){
+        activity = mainActivity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -38,15 +45,17 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         FloatingActionButton fabAddVehicle = view.findViewById(R.id.fabAddVehicle);
+        userLocation = ((MainActivity)getActivity()).getUserLocation();
         bindAdapter(view);
         queryVehicles();
         setAddVehicleOnClickListener(fabAddVehicle);
     }
 
     private void bindAdapter(View view) {
-        RecyclerView rvVehicles = view.findViewById(R.id.rvVehicles);
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new VehiclesAdapter(getContext(), allVehicles);
+        adapter = new VehiclesAdapter(this, allVehicles, userLocation);
+
+        RecyclerView rvVehicles = view.findViewById(R.id.rvVehicles);
         rvVehicles.setAdapter(adapter);
         rvVehicles.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
     }
@@ -73,4 +82,7 @@ public class ExploreFragment extends Fragment {
 
     }
 
+     public void notifyAdapter() {
+        adapter.notifyDataSetChanged();
+    }
 }

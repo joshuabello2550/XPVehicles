@@ -1,6 +1,15 @@
 package com.example.xpvehicles.adapters;
 
+import static android.content.Context.LOCATION_SERVICE;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,33 +17,48 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.parse.ParseFile;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHolder> {
 
+    public static final String TAG = "Vehicles_Adapter";
     private List<Vehicle> mVehicles;
     private TextView tvVehicleName;
     private TextView tvDistanceFromUser;
     private TextView tvDailyPrice;
     private ImageView ivVehicle;
-    private Context context;
+    private Fragment fragment;
+    private static String userLocation;
 
-    public VehiclesAdapter(Context context, List<Vehicle> vehicles){
+    public VehiclesAdapter(Fragment fragment, List<Vehicle> vehicles, String userLocation){
         mVehicles = vehicles;
-        this.context = context;
+        this.fragment = fragment;
+        this.userLocation =  userLocation;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
 
         // Inflate the custom layout
         View vehicleView =  inflater.inflate(R.layout.vehicle_card, parent, false);
@@ -63,12 +87,18 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         }
 
         public void bind(Vehicle vehicle) {
+            // Vehicle name
             tvVehicleName.setText(vehicle.getVehicleName());
+            // daily price
             String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
             tvDailyPrice.setText(dailyPrice);
+            // distance from user
+            String vehiclePlaceId = vehicle.getPlaceId();
+            getDistanceFromUser(vehiclePlaceId, userLocation);
+            // vehicle image
             ParseFile image = vehicle.getVehicleImage();
             if (image != null) {
-                Glide.with(context).load(image.getUrl()).into(ivVehicle);
+                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
             }
         }
     }
@@ -76,6 +106,35 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
     public void addAll(List<Vehicle> allVehicles) {
         mVehicles.addAll(allVehicles);
         notifyDataSetChanged();
+    }
+
+    private void getDistanceFromUser(String vehiclePlaceId, String userLocation) {
+        String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+
+        RequestParams params = new RequestParams();
+        Resources res = fragment.getContext().getResources();
+        params.put("origins", userLocation);
+        params.put("destinations", vehiclePlaceId);
+        params.put("key", res.getString(R.string.API_KEY));
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(baseUrl, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject jsonObject = json.jsonObject;
+                try {
+                    jsonObject.getJSONArray("rows");
+
+                } catch (JSONException e) {
+                    Log.e(TAG, "hit json exception when getting the distance between the user and vehicle", e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
     }
 
 }

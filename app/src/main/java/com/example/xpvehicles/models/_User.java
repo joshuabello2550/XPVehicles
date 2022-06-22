@@ -19,7 +19,6 @@ import com.parse.ParseUser;
 @ParseClassName("_User")
 public class _User extends ParseUser {
 
-    private static final String TAG = "_User";
     public static final String KEY_FIRST_NAME =  "firstName";
     public static final String KEY_LAST_NAME =  "lastName";
     private Location userLocation;
@@ -38,27 +37,6 @@ public class _User extends ParseUser {
 
     public void setLastName(String lastName) {
         put(KEY_LAST_NAME, lastName);
-    }
-
-    private void userLocation() {
-        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-        long MIN_DISTANCE = 1 * 1609; /* 1 mile */
-        int REQUEST_CODE = 1;
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-        }
-
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_INTERVAL, MIN_DISTANCE, new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                userLocation = location;
-                Log.i(TAG, "Location is " + location.getLongitude() + "," + location.getLatitude());
-            }
-        });
     }
 
 

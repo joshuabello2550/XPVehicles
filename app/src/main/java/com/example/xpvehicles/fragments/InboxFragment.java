@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.activities.MainActivity;
 
 public class InboxFragment extends Fragment {
+
+    public InboxFragment(MainActivity mainActivity) {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {

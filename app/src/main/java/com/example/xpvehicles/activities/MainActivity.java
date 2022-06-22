@@ -9,33 +9,48 @@ import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestParams;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.adapters.VehiclesAdapter;
 import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.fragments.InboxFragment;
 import com.example.xpvehicles.fragments.ProfileFragment;
 import com.example.xpvehicles.fragments.SavedFragment;
 import com.example.xpvehicles.fragments.VehiclesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.CompletableFuture;
+
+import okhttp3.Headers;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Main_Activity";
-    final Fragment explore_fragment = new ExploreFragment();
-    final Fragment inbox_fragment = new InboxFragment();
-    final Fragment saved_fragment = new SavedFragment();
-    final Fragment vehicles_fragment = new VehiclesFragment();
-    final Fragment profile_fragment = new ProfileFragment();
+    public static String userLocation;
+    final ExploreFragment explore_fragment = new ExploreFragment(this);
+    final InboxFragment inbox_fragment = new InboxFragment(this);
+    final SavedFragment saved_fragment = new SavedFragment(this);
+    final VehiclesFragment vehicles_fragment = new VehiclesFragment(this);
+    final ProfileFragment profile_fragment = new ProfileFragment(this);
     private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUserLocation();
         setContentView(R.layout.activity_main);
         bind();
         setBottomNavigationOnClick();
@@ -78,5 +93,31 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.explore);
     }
 
+    private void setUserLocation() {
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        long UPDATE_INTERVAL = 1;  /* 10 secs */
+        long MIN_DISTANCE = 1 * 1609; /* 1 mile */
+        int REQUEST_CODE = 1;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+        }
+
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_INTERVAL, MIN_DISTANCE, new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                Log.i(TAG, "Location is" + location.getLongitude() + "," + location.getLatitude());
+                Double userLongitude = location.getLongitude();
+                Double userLatitude = location.getLatitude();
+                userLocation = userLatitude + String.valueOf(userLongitude);
+                explore_fragment.notifyAdapter();
+            }
+        });
+    }
+
+    public String getUserLocation() {
+        return userLocation;
+    }
 
 }
