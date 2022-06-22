@@ -82,6 +82,7 @@ public class Vehicle extends ParseObject {
     }
 
     private String getDistanceFromUser() {
+
         String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();

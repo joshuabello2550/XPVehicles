@@ -1,10 +1,19 @@
 package com.example.xpvehicles.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.fragments.ExploreFragment;
@@ -16,12 +25,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TAG = "Main_Activity";
     final Fragment explore_fragment = new ExploreFragment();
     final Fragment inbox_fragment = new InboxFragment();
     final Fragment saved_fragment = new SavedFragment();
     final Fragment vehicles_fragment = new VehiclesFragment();
     final Fragment profile_fragment = new ProfileFragment();
-    BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,4 +77,6 @@ public class MainActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.explore);
     }
+
+
 }
