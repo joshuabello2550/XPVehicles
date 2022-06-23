@@ -51,10 +51,6 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
 
     public static final String TAG = "Vehicles_Adapter";
     private List<Vehicle> mVehicles;
-    private TextView tvVehicleName;
-    private TextView tvDistanceFromUser;
-    private TextView tvDailyPrice;
-    private ImageView ivVehicle;
     private ExploreFragment fragment;
     private MainActivity activity;
 
@@ -91,41 +87,14 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    private void getDistanceFromUser(Vehicle vehicle, String vehiclePlaceId, String userLocation) {
-        String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
 
-        Log.i(TAG, "Vehicles " + vehiclePlaceId + " " + userLocation);
-
-        RequestParams params = new RequestParams();
-        Resources res = fragment.getContext().getResources();
-        params.put("destinations", "place_id:" + vehiclePlaceId);
-        params.put("origins", userLocation);
-        params.put("key", res.getString(R.string.API_KEY));
-        params.put("units", "imperial");
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(baseUrl, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                Log.i(TAG, "Success " + json.toString());
-                JSONObject jsonObject = json.jsonObject;
-                try {
-                    JSONArray elements = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
-                    String distance = elements.getJSONObject(0).getJSONObject("distance").getString("text");
-                    vehicle.setDistanceFromUser(distance);
-                    tvDistanceFromUser.setText(distance);
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error retrieve distance from json object", e);
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "Error getting the distance from the user" + response, throwable);
-            }
-        });
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvVehicleName;
+        private TextView tvDistanceFromUser;
+        private TextView tvDailyPrice;
+        private ImageView ivVehicle;
+
         public ViewHolder(View itemView) {
             super(itemView);
             tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
@@ -150,6 +119,40 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
                 Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
             }
             setImageOnClickListener(vehicle);
+        }
+
+        private void getDistanceFromUser(Vehicle vehicle, String vehiclePlaceId, String userLocation) {
+            String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+
+            Log.i(TAG, "Vehicles " + vehiclePlaceId + " " + userLocation);
+
+            RequestParams params = new RequestParams();
+            Resources res = fragment.getContext().getResources();
+            params.put("destinations", "place_id:" + vehiclePlaceId);
+            params.put("origins", userLocation);
+            params.put("key", res.getString(R.string.API_KEY));
+            params.put("units", "imperial");
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(baseUrl, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    Log.i(TAG, "Success " + json.toString());
+                    JSONObject jsonObject = json.jsonObject;
+                    try {
+                        JSONArray elements = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
+                        String distance = elements.getJSONObject(0).getJSONObject("distance").getString("text");
+                        vehicle.setDistanceFromUser(distance);
+                        tvDistanceFromUser.setText(distance);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error retrieve distance from json object", e);
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    Log.e(TAG, "Error getting the distance from the user" + response, throwable);
+                }
+            });
         }
 
         private void setImageOnClickListener(Vehicle vehicle) {

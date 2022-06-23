@@ -105,14 +105,14 @@ public class AddVehicleActivity extends AppCompatActivity {
     private void saveVehicle(String placeId) {
         String vehicleName = edtVehicleName.getText().toString();
         String description = edtDescription.getText().toString();
-//        Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
+        Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
         ParseUser owner = ParseUser.getCurrentUser();
 
         Vehicle vehicle = new Vehicle();
         vehicle.setOwner(owner);
         vehicle.setVehicleName(vehicleName);
         vehicle.setDescription(description);
-//            vehicle.setDailyPrice(dailyPrice);
+        vehicle.setDailyPrice(dailyPrice);
         vehicle.setPlaceId(placeId);
         vehicle.saveInBackground(new SaveCallback() {
             @Override
