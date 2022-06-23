@@ -4,11 +4,13 @@ import static android.content.Context.LOCATION_SERVICE;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +32,7 @@ import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
+import com.example.xpvehicles.activities.VehicleDetailsActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.parse.ParseFile;
 
@@ -134,10 +139,16 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
             if (image != null) {
                 Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
             }
-            setImageOnClickListener();
+            setImageOnClickListener(vehicle);
         }
 
-        private void setImageOnClickListener() {
+        private void setImageOnClickListener(Vehicle vehicle) {
+            ivVehicle.setOnClickListener(v -> {
+                Intent i = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
+                i.putExtra("vehicle", vehicle);
+                fragment.startActivity(i);
+            });
+
         }
 
     }

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.VehicleDetailsActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/add_vehicle_top_bar"
+            app:navigationIcon="@drawable/ic_close_24"
+            app:title="" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="0dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivDetailsVehicleImage"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:id="@+id/spacing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="0dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:id="@+id/tvDetailsVehicleName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Jet Ski"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+                    tools:layout_editor_absoluteX="29dp"
+                    tools:layout_editor_absoluteY="249dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailsDailyPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="TextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:layout_editor_absoluteY="251dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailsDistanceFromUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="TextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:layout_editor_absoluteY="251dp" />
+
+                <TextView
+                    android:id="@+id/tvDetailsVehicleDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="TextView" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectPickupDateOTF"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:clickable="false"
+                    android:hint="Pickup Date"
+                    app:counterEnabled="false"
+                    app:errorEnabled="false"
+                    app:passwordToggleEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtPickUpDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectReturnDateOTF"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Return Date">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtReturnDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="#F1F3F4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="24dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Order Summary" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvDailyPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Daily Price" />
+
+                            <TextView
+                                android:id="@+id/tvDailyPriceValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end"
+                                android:text="TextView" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvNumberOfDays"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Number Of Days" />
+
+                            <TextView
+                                android:id="@+id/tvNumberOfDaysValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end"
+                                android:text="TextView" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvOrderTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="OrderTotal" />
+
+                            <TextView
+                                android:id="@+id/tvOrderTotalValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end"
+                                android:text="TextView" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/button2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Reserve Now" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
