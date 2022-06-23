@@ -24,6 +24,7 @@
         <entry key="app/src/main/res/menu/add_vehicle_top_bar.xml" value="0.4111111111111111" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1111111111111111" />
         <entry key="app/src/main/res/menu/top_navigation_search.xml" value="0.25092592592592594" />
+        <entry key="app/src/main/res/xml/fileprovider.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/xml/searchable.xml" value="0.26944444444444443" />
       </map>
     </option>
