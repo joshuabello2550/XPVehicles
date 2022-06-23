@@ -44,7 +44,7 @@ import okhttp3.Headers;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Main_Activity";
-    public static String userLocation;
+    public String userLocation;
     final ExploreFragment explore_fragment = new ExploreFragment(this);
     final InboxFragment inbox_fragment = new InboxFragment(this);
     final SavedFragment saved_fragment = new SavedFragment(this);
@@ -128,10 +128,10 @@ public class MainActivity extends AppCompatActivity {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, UPDATE_INTERVAL, MIN_DISTANCE, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                Log.i(TAG, "Location is" + location.getLongitude() + "," + location.getLatitude());
                 Double userLongitude = location.getLongitude();
                 Double userLatitude = location.getLatitude();
-                userLocation = userLatitude + String.valueOf(userLongitude);
+                userLocation = userLatitude + " " + String.valueOf(userLongitude);
+                Log.i(TAG, "User's location is " + userLocation);
                 explore_fragment.notifyAdapter();
             }
         });

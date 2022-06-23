@@ -29,8 +29,7 @@ public class ExploreFragment extends Fragment {
 
     private static final String TAG = "Explore_Fragment";
     private VehiclesAdapter adapter;
-    private Activity activity;
-    private static String userLocation;
+    private MainActivity activity;
 
     public ExploreFragment(MainActivity mainActivity){
         activity = mainActivity;
@@ -45,7 +44,6 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         FloatingActionButton fabAddVehicle = view.findViewById(R.id.fabAddVehicle);
-        userLocation = ((MainActivity)getActivity()).getUserLocation();
         bindAdapter(view);
         queryVehicles();
         setAddVehicleOnClickListener(fabAddVehicle);
@@ -53,7 +51,7 @@ public class ExploreFragment extends Fragment {
 
     private void bindAdapter(View view) {
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new VehiclesAdapter(this, allVehicles, userLocation);
+        adapter = new VehiclesAdapter(this, allVehicles, (MainActivity)getActivity());
 
         RecyclerView rvVehicles = view.findViewById(R.id.rvVehicles);
         rvVehicles.setAdapter(adapter);

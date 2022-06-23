@@ -60,6 +60,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         tvDetailsVehicleName.setText(vehicle.getVehicleName());
         tvDetailsVehicleDescription.setText(vehicle.getDescription());
         tvDetailsDailyPrice.setText("$" + vehicle.getDailyPrice() + "/day");
+        tvDetailsDistanceFromUser.setText(vehicle.getDistanceFromUser());
         ParseFile image = vehicle.getVehicleImage();
         if (image != null) {
             Glide.with(this).load(image.getUrl()).into(ivDetailsVehicleImage);

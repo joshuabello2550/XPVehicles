@@ -23,6 +23,7 @@ public class Vehicle extends ParseObject {
     public static final String KEY_DAILY_PRICE = "dailyPrice";
     public static final String KEY_GEO_LOCATION = "geoLocation";
     public static final String KEY_PLACE_ID = "placeId";
+    private String distanceFromUser;
 
 
     public ParseUser getOwner() {
@@ -80,5 +81,15 @@ public class Vehicle extends ParseObject {
     public void setVehicleImage(ParseFile image) {
         put(KEY_VEHICLE_IMAGE,image);
     }
+
+    public String getDistanceFromUser() {
+        return distanceFromUser;
+    }
+
+    public void setDistanceFromUser(String distanceFromUser) {
+        this.distanceFromUser = distanceFromUser;
+    }
+
+
 
 }

@@ -3,6 +3,7 @@ package com.example.xpvehicles.adapters;
 import static android.content.Context.LOCATION_SERVICE;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,9 +35,11 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
+import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.models.Vehicle;
 import com.parse.ParseFile;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,13 +55,13 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
     private TextView tvDistanceFromUser;
     private TextView tvDailyPrice;
     private ImageView ivVehicle;
-    private Fragment fragment;
-    private static String userLocation;
+    private ExploreFragment fragment;
+    private MainActivity activity;
 
-    public VehiclesAdapter(Fragment fragment, List<Vehicle> vehicles, String userLocation){
+    public VehiclesAdapter(ExploreFragment fragment, List<Vehicle> vehicles, MainActivity activity){
         mVehicles = vehicles;
         this.fragment = fragment;
-        this.userLocation =  userLocation;
+        this.activity = activity;
     }
 
     @NonNull
@@ -87,31 +91,36 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    private void getDistanceFromUser(String vehiclePlaceId, String userLocation) {
+    private void getDistanceFromUser(Vehicle vehicle, String vehiclePlaceId, String userLocation) {
         String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+
+        Log.i(TAG, "Vehicles " + vehiclePlaceId + " " + userLocation);
 
         RequestParams params = new RequestParams();
         Resources res = fragment.getContext().getResources();
+        params.put("destinations", "place_id:" + vehiclePlaceId);
         params.put("origins", userLocation);
-        params.put("destinations", vehiclePlaceId);
         params.put("key", res.getString(R.string.API_KEY));
+        params.put("units", "imperial");
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(baseUrl, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "Success " + json.toString());
                 JSONObject jsonObject = json.jsonObject;
                 try {
-                    jsonObject.getJSONArray("rows");
-
+                    JSONArray elements = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
+                    String distance = elements.getJSONObject(0).getJSONObject("distance").getString("text");
+                    vehicle.setDistanceFromUser(distance);
+                    tvDistanceFromUser.setText(distance);
                 } catch (JSONException e) {
-                    Log.e(TAG, "hit json exception when getting the distance between the user and vehicle", e);
+                    Log.e(TAG, "Error retrieve distance from json object", e);
                 }
             }
-
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                Log.e(TAG, "Error getting the distance from the user" + response, throwable);
             }
         });
     }
@@ -120,7 +129,7 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
-            tvDistanceFromUser = itemView.findViewById(R.id.tvDailyPrice);
+            tvDistanceFromUser = itemView.findViewById(R.id.tvDistanceFromUser);
             ivVehicle = itemView.findViewById(R.id.ivVehicle);
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
         }
@@ -133,7 +142,8 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
             tvDailyPrice.setText(dailyPrice);
             // distance from user
             String vehiclePlaceId = vehicle.getPlaceId();
-            getDistanceFromUser(vehiclePlaceId, userLocation);
+            Log.i(TAG, "User's location is " + activity.getUserLocation());
+            getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
             // vehicle image
             ParseFile image = vehicle.getVehicleImage();
             if (image != null) {
