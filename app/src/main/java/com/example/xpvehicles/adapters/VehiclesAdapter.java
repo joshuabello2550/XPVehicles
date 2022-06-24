@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -41,10 +42,10 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
 
     public static final String TAG = "Vehicles_Adapter";
     private List<Vehicle> mVehicles;
-    private ExploreFragment fragment;
+    private Fragment fragment;
     private MainActivity activity;
 
-    public VehiclesAdapter(ExploreFragment fragment, List<Vehicle> vehicles, MainActivity activity){
+    public VehiclesAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
         mVehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;

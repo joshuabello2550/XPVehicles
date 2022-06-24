@@ -50,7 +50,7 @@ public class _User extends ParseUser {
         return savedVehicles;
     }
 
-    public void setSavedVehicles(List listSavedVehicles) {
+    public void setSavedVehicles(List<Vehicle> listSavedVehicles) {
         put(KEY_SAVED_VEHICLES, listSavedVehicles);
     }
 

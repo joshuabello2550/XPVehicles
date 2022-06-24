@@ -25,7 +25,6 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ExploreFragment extends Fragment {
 
     private static final String TAG = "Explore_Fragment";
