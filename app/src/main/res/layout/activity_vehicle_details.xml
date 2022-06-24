@@ -164,7 +164,7 @@
                                 android:text="Daily Price" />
 
                             <TextView
-                                android:id="@+id/tvDailyPriceValue"
+                                android:id="@+id/tvOrderSummaryDailyPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -186,7 +186,7 @@
                                 android:text="Number Of Days" />
 
                             <TextView
-                                android:id="@+id/tvNumberOfDaysValue"
+                                android:id="@+id/tvOrderSummaryNumberOfDays"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -208,7 +208,7 @@
                                 android:text="OrderTotal" />
 
                             <TextView
-                                android:id="@+id/tvOrderTotalValue"
+                                android:id="@+id/tvOrderSummaryOrderTotal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -217,7 +217,7 @@
                         </LinearLayout>
 
                         <Button
-                            android:id="@+id/button2"
+                            android:id="@+id/btnReserveNow"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Reserve Now" />
