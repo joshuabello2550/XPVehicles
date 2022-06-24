@@ -16,12 +16,15 @@ import com.example.xpvehicles.activities.MainActivity;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ParseClassName("_User")
 public class _User extends ParseUser {
 
-    public static final String KEY_FIRST_NAME =  "firstName";
-    public static final String KEY_LAST_NAME =  "lastName";
-    private Location userLocation;
+    public static final String KEY_FIRST_NAME = "firstName";
+    public static final String KEY_LAST_NAME = "lastName";
+    public static final String KEY_SAVED_VEHICLES = "savedVehicles";
 
     public String getFirstName() {
         return getString(KEY_FIRST_NAME);
@@ -39,5 +42,16 @@ public class _User extends ParseUser {
         put(KEY_LAST_NAME, lastName);
     }
 
+    public List<String> getSavedVehicles() {
+        List<String> savedVehicles = getList(KEY_SAVED_VEHICLES);
+        if (savedVehicles == null) {
+            savedVehicles = new ArrayList<>();
+        }
+        return savedVehicles;
+    }
+
+    public void setSavedVehicles(List listSavedVehicles) {
+        put(KEY_SAVED_VEHICLES, listSavedVehicles);
+    }
 
 }

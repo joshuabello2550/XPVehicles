@@ -71,7 +71,7 @@
             <!-- Heart Icon -->
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/ibSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"

@@ -1,31 +1,19 @@
 package com.example.xpvehicles.adapters;
 
-import static android.content.Context.LOCATION_SERVICE;
-
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -37,7 +25,9 @@ import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
 import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.models._User;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,7 +64,8 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vehicle vehicle = mVehicles.get(position);
-        holder.bind(vehicle);
+        holder.setValues(vehicle);
+        holder.setSaveBtnOnClickListener(vehicle);
     }
 
     @Override
@@ -94,16 +85,24 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         private TextView tvDistanceFromUser;
         private TextView tvDailyPrice;
         private ImageView ivVehicle;
+        private ImageButton ibSave;
+        private _User currentUser;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            bind(itemView);
+        }
+
+        private void bind(View itemView) {
             tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
             tvDistanceFromUser = itemView.findViewById(R.id.tvDistanceFromUser);
             ivVehicle = itemView.findViewById(R.id.ivVehicle);
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
+            ibSave = itemView.findViewById(R.id.ibSave);
         }
 
-        public void bind(Vehicle vehicle) {
+
+        public void setValues(Vehicle vehicle) {
             // Vehicle name
             tvVehicleName.setText(vehicle.getVehicleName());
             // daily price
@@ -161,7 +160,38 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
                 i.putExtra("vehicle", vehicle);
                 fragment.startActivity(i);
             });
+        }
 
+        private void setSaveBtnOnClickListener(Vehicle vehicle) {
+            currentUser = (_User) ParseUser.getCurrentUser();
+            List listSavedVehicles = currentUser.getSavedVehicles();
+            if (listSavedVehicles.contains(vehicle.getObjectId())) {
+                setSaveBtnClicked(ibSave);
+            } else {
+                ibSave.setImageResource(R.drawable.ic_favorite_border_24);
+            }
+
+            ibSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listSavedVehicles.contains(vehicle.getObjectId())) {
+                        listSavedVehicles.remove(vehicle.getObjectId());
+                        ibSave.setImageResource(R.drawable.ic_favorite_border_24);
+                    } else {
+                        listSavedVehicles.add(vehicle.getObjectId());
+                        setSaveBtnClicked(ibSave);
+                    }
+                    currentUser.setSavedVehicles(listSavedVehicles);
+                    currentUser.saveInBackground();
+                }
+            });
+        }
+
+        private void setSaveBtnClicked(ImageButton ibSave) {
+            Drawable img = fragment.getActivity().getDrawable(R.drawable.ic_favorite_24);
+            Resources res = fragment.getContext().getResources();
+            img.setTint(res.getColor(R.color.md_theme_light_error, activity.getTheme()));
+            ibSave.setImageDrawable(img);
         }
 
     }

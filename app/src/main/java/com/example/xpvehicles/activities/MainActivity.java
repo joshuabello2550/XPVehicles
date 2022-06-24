@@ -91,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
                         fragment = explore_fragment;
                         break;
                     case R.id.saved:
-                        fragment = inbox_fragment;
-                        break;
-                    case R.id.vehicles:
                         fragment = saved_fragment;
                         break;
-                    case R.id.inbox:
+                    case R.id.vehicles:
                         fragment = vehicles_fragment;
+                        break;
+                    case R.id.inbox:
+                        fragment = inbox_fragment;
                         break;
                     case R.id.profile:
                         fragment = profile_fragment;
