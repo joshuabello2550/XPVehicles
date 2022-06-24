@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,7 @@ public class ExploreFragment extends Fragment {
 
     private void queryVehicles() {
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
+        query.whereNotEqualTo("owner", ParseUser.getCurrentUser().getObjectId());
         query.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {
