@@ -15,4 +15,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNoSavedVehicles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Saved Vehicles"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rvVehicles"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
