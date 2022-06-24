@@ -14,7 +14,7 @@
         android:text="CREATE ACCOUNT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PasswordOutlinedTextField" />
+        app:layout_constraintTop_toBottomOf="@+id/registerPasswordOTF" />
 
     <TextView
         android:id="@+id/textView"
@@ -27,13 +27,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/firstNameOutlinedTextField"
+        android:id="@+id/registerFirstNameOTF"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="135dp"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="First Name"
-        app:layout_constraintStart_toStartOf="@+id/EmailOutlinedTextField"
+        app:errorEnabled="true"
+        app:layout_constraintStart_toStartOf="@+id/registerEmailOTF"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -45,13 +46,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/lastNameOutlinedTextField"
+        android:id="@+id/registerLastNameOTF"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="135dp"
         android:layout_height="wrap_content"
         android:hint="Last Name"
-        app:layout_constraintEnd_toEndOf="@+id/EmailOutlinedTextField"
-        app:layout_constraintTop_toTopOf="@+id/firstNameOutlinedTextField">
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="@+id/registerEmailOTF"
+        app:layout_constraintTop_toTopOf="@+id/registerFirstNameOTF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtLastName"
@@ -62,15 +64,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/EmailOutlinedTextField"
+        android:id="@+id/registerEmailOTF"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:hint="@string/prompt_email"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstNameOutlinedTextField">
+        app:layout_constraintTop_toBottomOf="@+id/registerFirstNameOTF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtRegisterEmail"
@@ -82,15 +84,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/PasswordOutlinedTextField"
+        android:id="@+id/registerPasswordOTF"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:hint="@string/prompt_password"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/EmailOutlinedTextField"
+        app:layout_constraintTop_toBottomOf="@+id/registerEmailOTF"
         app:passwordToggleEnabled="true"
         app:startIconCheckable="true">
 

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.xpvehicles.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -22,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtLoginPassword;
     private Button btnLogin;
     private TextView tvMakeNewAccount;
+    private TextInputLayout loginEmailOTF;
+    private TextInputLayout loginPasswordOTF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +45,60 @@ public class LoginActivity extends AppCompatActivity {
         edtLoginPassword =  findViewById(R.id.edtLoginPassword);
         btnLogin =  findViewById(R.id.btnLogin);
         tvMakeNewAccount = findViewById(R.id.tvMakeNewAccount);
+        loginEmailOTF = findViewById(R.id.loginEmailOTF);
+        loginPasswordOTF = findViewById(R.id.loginPasswordOTF);
     }
 
     private void setLoginOnClickListener() {
         btnLogin.setOnClickListener(v -> {
-            // TODO: finish login button
+            resetErrors();
             String username = edtLoginEmail.getText().toString();
             String password = edtLoginPassword.getText().toString();
-            ParseUser.logInInBackground(username, password, new LogInCallback() {
-                @Override
-                public void done(ParseUser user, ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Issue with login", e);
-                        return;
-                    }
-                    goMainActivity();
-                }
-            });
+
+            Boolean loginUser = checkValues(username, password);
+            if (loginUser) {
+                loginUser(username, password);
+            }
         });
     }
+
+    private void resetErrors() {
+        loginEmailOTF.setError(null);
+        loginPasswordOTF.setError(null);
+    }
+
+    private Boolean checkValues(String username, String password) {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        Boolean shouldCreateNewUser = true;
+        if (username.isEmpty()){
+            loginEmailOTF.setError("Enter email address");
+            shouldCreateNewUser = false;
+        } else {
+            if (!username.trim().matches(emailPattern)) {
+                loginEmailOTF.setError("Invalid email address");
+                shouldCreateNewUser = false;
+            }
+        }
+        if (password.isEmpty()){
+            loginPasswordOTF.setError("Enter password");
+            shouldCreateNewUser = false;
+        }
+        return shouldCreateNewUser;
+    }
+
+    private void loginUser(String username, String password) {
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with login", e);
+                    return;
+                }
+                goMainActivity();
+            }
+        });
+    }
+
 
     private void goMainActivity() {
         Intent i = new Intent(LoginActivity.this, MainActivity.class);
