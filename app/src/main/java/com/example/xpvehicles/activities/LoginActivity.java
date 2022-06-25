@@ -93,6 +93,8 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue with login", e);
+                    loginEmailOTF.setError("Incorrect email or password");
+                    loginPasswordOTF.setError("Incorrect email or password");
                     return;
                 }
                 goMainActivity();

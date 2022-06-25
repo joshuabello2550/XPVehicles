@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,11 +15,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.w3c.dom.Text;
 
@@ -26,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class VehicleDetailsActivity extends AppCompatActivity {
@@ -44,6 +50,8 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private TextView tvOrderSummaryOrderTotal;
     private ImageView ivDetailsVehicleImage;
     private Button btnReserveNow;
+    private TextInputLayout detailsPickupDateOTF;
+    private TextInputLayout detailsReturnDateOTF;
     private Date pickupDate;
     private Date returnDate;
 
@@ -53,10 +61,11 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         vehicle = getIntent().getParcelableExtra("vehicle");
         setContentView(R.layout.activity_vehicle_details);
         bind();
+        setValues();
         setTopAppBarOnClickListener();
         setPickupDateOnClickListener();
         setReturnDateOnClickListener();
-        setValues();
+        setReserveNowOnClickListener();
     }
 
     private void setTopAppBarOnClickListener() {
@@ -78,7 +87,8 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         tvOrderSummaryDailyPrice = findViewById(R.id.tvOrderSummaryDailyPrice);
         tvOrderSummaryNumberOfDays = findViewById(R.id.tvOrderSummaryNumberOfDays);
         tvOrderSummaryOrderTotal = findViewById(R.id.tvOrderSummaryOrderTotal);
-
+        detailsPickupDateOTF = findViewById(R.id.detailsPickupDateOTF);
+        detailsReturnDateOTF = findViewById(R.id.detailsReturnDateOTF);
     }
 
     private void setValues() {
@@ -161,6 +171,52 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         Number orderTotal = numberOfRentDays * (int) vehicle.getDailyPrice();
         Log.i(TAG, String.valueOf(orderTotal));
         tvOrderSummaryOrderTotal.setText("$" + orderTotal);
+    }
+
+    private Boolean checkValidDates() {
+        Boolean validDates = true;
+        if (pickupDate == null) {
+            detailsPickupDateOTF.setError("Enter a pickup date");
+            validDates = false;
+        }
+        if (returnDate == null) {
+            detailsReturnDateOTF.setError("Enter a return date");
+            validDates = false;
+        }
+        return validDates;
+    }
+
+
+    private void setReserveNowOnClickListener() {
+        btnReserveNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean validDates = checkValidDates();
+                if (validDates) {
+                    _User currentUser = (_User) ParseUser.getCurrentUser();
+                    RentVehicle rentVehicle = createRentVehicle(currentUser);
+                    requestVehicle(currentUser, rentVehicle);
+                    finish();
+                }
+            }
+        });
+    }
+
+    private RentVehicle createRentVehicle(_User currentUser) {
+        RentVehicle rentVehicle = new RentVehicle();
+        rentVehicle.setVehicle(vehicle);
+        rentVehicle.setRentee(currentUser);
+        rentVehicle.setPickUpDate(pickupDate);
+        rentVehicle.setReturnDate(returnDate);
+        rentVehicle.saveInBackground();
+        return rentVehicle;
+    }
+
+    private void requestVehicle(_User currentUser, RentVehicle rentVehicle) {
+        List<RentVehicle> rentedVehicles = currentUser.getRentedVehicles();
+        rentedVehicles.add(rentVehicle);
+        currentUser.setRentedVehicles(rentedVehicles);
+        currentUser.saveInBackground();
     }
 
 
