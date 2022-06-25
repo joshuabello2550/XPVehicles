@@ -21,7 +21,7 @@
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/add_vehicle_top_bar"
             app:navigationIcon="@drawable/ic_close_24"
-            app:title="Add a Vehicle" />
+            app:title="Add a vehicle" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,52 +41,97 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="32dp">
+            android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/vehicleNameOTF"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:hint="Vehicle name">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtVehicleName"
+                <TextView
+                    android:id="@+id/vehicleName"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Vehicle Name"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/vehicleNameOTF"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:hint="Vehicle name">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/descriptionOTF"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtVehicleName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:hint="Tell us about the vehicle">
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtDescription"
+                <TextView
+                    android:id="@+id/textView3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="0dp"
+                    android:text="Description"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/descriptionOTF"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Tell us about the vehicle">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/streetAddressOTF"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:minLines="5" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
-                android:hint="Street address">
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtStreetAddress"
+                <TextView
+                    android:id="@+id/textView4"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Street Address"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/streetAddressOTF"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Street address">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtStreetAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,76 +141,106 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cityOTF"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:hint="City"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/streetAddressOTF">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtCity"
+                    <TextView
+                        android:id="@+id/textView6"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="City"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/cityOTF"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="0dp"
+                        android:hint="City"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/streetAddressOTF">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/stateOTF"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginHorizontal="16dp"
                     android:layout_weight="1"
-                    android:hint="State"
-                    app:layout_constraintStart_toEndOf="@+id/cityOTF"
-                    app:layout_constraintTop_toTopOf="@+id/cityOTF">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtState"
+                    <TextView
+                        android:id="@+id/textView7"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="State"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/stateOTF"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="0dp"
+                        android:hint="State"
+                        app:layout_constraintStart_toEndOf="@+id/cityOTF"
+                        app:layout_constraintTop_toTopOf="@+id/cityOTF">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/zipCodeOTF"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:hint="Zip code"
-                    app:layout_constraintStart_toEndOf="@+id/stateOTF"
-                    app:layout_constraintTop_toTopOf="@+id/cityOTF">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtZipCode"
+                    <TextView
+                        android:id="@+id/textView9"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Zip Code"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/zipCodeOTF"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="0dp"
+                        android:hint="Zip code"
+                        app:layout_constraintStart_toEndOf="@+id/stateOTF"
+                        app:layout_constraintTop_toTopOf="@+id/cityOTF">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtZipCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
             </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dailyPriceOTF"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:hint="Daily price">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtDailyPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
                 android:id="@+id/ivAddVehicleImage"
@@ -175,6 +250,36 @@
                 android:scaleType="centerCrop"
                 android:visibility="gone"
                 tools:srcCompat="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Daily Price"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/dailyPriceOTF"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Daily price">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtDailyPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/frameLayout"
@@ -225,7 +330,8 @@
                 android:id="@+id/btnAddVehicle"
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
-                android:text="Add Vehicle"
+                android:layout_marginTop="24dp"
+                android:text="Add vehicle"
                 android:visibility="visible" />
         </LinearLayout>
     </ScrollView>

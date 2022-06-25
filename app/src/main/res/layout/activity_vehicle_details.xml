@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".activities.VehicleDetailsActivity">
 
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -56,33 +64,39 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="0dp"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/tvDetailsVehicleName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Jet Ski"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
-                    tools:layout_editor_absoluteX="29dp"
-                    tools:layout_editor_absoluteY="249dp" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tvDetailsDailyPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:layout_editor_absoluteY="251dp" />
+                    <TextView
+                        android:id="@+id/tvDetailsVehicleName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jet Ski"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvDetailsDailyPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="TextView"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/tvDetailsDistanceFromUser"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="TextView"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:layout_editor_absoluteY="251dp" />
 
@@ -91,7 +105,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/selectPickupDateOTF"
@@ -128,103 +143,133 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card"
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#F1F3F4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardBackgroundColor="#F1F3F4"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_height="match_parent"
+                    android:layout_margin="24dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Order Summary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="24dp"
-                        android:orientation="vertical">
+                        android:layout_marginVertical="16dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView11"
+                            android:id="@+id/tvDailyPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Order Summary" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:text="Daily price"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-                            <TextView
-                                android:id="@+id/tvDailyPrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Daily Price" />
-
-                            <TextView
-                                android:id="@+id/tvOrderSummaryDailyPrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tvNumberOfDays"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Number Of Days" />
-
-                            <TextView
-                                android:id="@+id/tvOrderSummaryNumberOfDays"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/tvOrderTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="OrderTotal" />
-
-                            <TextView
-                                android:id="@+id/tvOrderSummaryOrderTotal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/btnReserveNow"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/tvOrderSummaryDailyPrice"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reserve Now" />
-
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="TextView"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
+
+                    <View
+                        android:id="@+id/divider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="8dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvNumberOfDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Number of days"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+                        <TextView
+                            android:id="@+id/tvOrderSummaryNumberOfDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="TextView"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/divider6"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvOrderTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Order Total"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+                        <TextView
+                            android:id="@+id/tvOrderSummaryOrderTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="TextView"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnReserveNow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Reserve Now" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
