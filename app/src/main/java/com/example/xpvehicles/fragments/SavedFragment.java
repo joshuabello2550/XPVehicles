@@ -14,7 +14,8 @@ import android.widget.TextView;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.adapters.VehiclesAdapter;
+import com.example.xpvehicles.adapters.ExploreAdapter;
+import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.FindCallback;
@@ -23,13 +24,12 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class SavedFragment extends Fragment {
 
     private static final String TAG = "Saved_Fragment";
-    private VehiclesAdapter adapter;
+    private ExploreAdapter adapter;
     private TextView tvNoSavedVehicles;
 
     public SavedFragment(MainActivity mainActivity) {
@@ -54,9 +54,9 @@ public class SavedFragment extends Fragment {
 
     private void bindAdapter(View view) {
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new VehiclesAdapter(this, allVehicles, (MainActivity)getActivity());
+        adapter = new ExploreAdapter(this, allVehicles, (MainActivity)getActivity());
 
-        RecyclerView rvVehicles = view.findViewById(R.id.rvVehicles);
+        RecyclerView rvVehicles = view.findViewById(R.id.rvSaved);
         rvVehicles.setAdapter(adapter);
         rvVehicles.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
     }
@@ -66,7 +66,6 @@ public class SavedFragment extends Fragment {
 
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
         query.whereContainedIn("objectId", savedVehicles);
-
         query.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {

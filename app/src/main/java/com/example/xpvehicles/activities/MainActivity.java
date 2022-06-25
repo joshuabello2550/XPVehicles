@@ -12,35 +12,21 @@ import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.RequestParams;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.adapters.VehiclesAdapter;
 import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.fragments.InboxFragment;
 import com.example.xpvehicles.fragments.ProfileFragment;
 import com.example.xpvehicles.fragments.SavedFragment;
-import com.example.xpvehicles.fragments.VehiclesFragment;
+import com.example.xpvehicles.fragments.RentingVehiclesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.CompletableFuture;
-
-import okhttp3.Headers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     final ExploreFragment explore_fragment = new ExploreFragment(this);
     final InboxFragment inbox_fragment = new InboxFragment(this);
     final SavedFragment saved_fragment = new SavedFragment(this);
-    final VehiclesFragment vehicles_fragment = new VehiclesFragment(this);
+    final RentingVehiclesFragment vehicles_fragment = new RentingVehiclesFragment(this);
     final ProfileFragment profile_fragment = new ProfileFragment(this);
     private BottomNavigationView bottomNavigationView;
 

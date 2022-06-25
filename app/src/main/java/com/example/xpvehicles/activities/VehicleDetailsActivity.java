@@ -208,6 +208,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         rentVehicle.setRentee(currentUser);
         rentVehicle.setPickUpDate(pickupDate);
         rentVehicle.setReturnDate(returnDate);
+        rentVehicle.setStatus("pending approval");
         rentVehicle.saveInBackground();
         return rentVehicle;
     }
