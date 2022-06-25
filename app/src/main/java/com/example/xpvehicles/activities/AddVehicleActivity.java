@@ -58,7 +58,6 @@ public class AddVehicleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatusBarColor();
         setContentView(R.layout.activity_add_vehicle);
         bind();
         setTopAppBarOnClickListener();
@@ -66,11 +65,6 @@ public class AddVehicleActivity extends AppCompatActivity {
         setTakePictureOnClickListener();
     }
 
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_light_surfaceVariant));
-        }
-    }
 
     private void bind() {
         topAppBar = findViewById(R.id.topAppBar);

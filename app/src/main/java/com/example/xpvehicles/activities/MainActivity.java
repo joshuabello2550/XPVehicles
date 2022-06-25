@@ -69,11 +69,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_light_surfaceVariant));
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bind();
         setBottomNavigationOnClick();
-        setStatusBarColor();
     }
 
     private void bind() {

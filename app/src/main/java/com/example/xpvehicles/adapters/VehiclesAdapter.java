@@ -191,7 +191,7 @@ public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHo
         private void setSaveBtnClicked(ImageButton ibSave) {
             Drawable img = fragment.getActivity().getDrawable(R.drawable.ic_favorite_24);
             Resources res = fragment.getContext().getResources();
-            img.setTint(res.getColor(R.color.md_theme_light_error, activity.getTheme()));
+            img.setTint(res.getColor(R.color.md_theme_light_primary, activity.getTheme()));
             ibSave.setImageDrawable(img);
         }
 

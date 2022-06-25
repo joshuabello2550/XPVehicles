@@ -32,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        setStatusBarColor();
         // navigate to Main_Activity if a user is already logged in.
         if (ParseUser.getCurrentUser() != null){
             goMainActivity();
@@ -40,12 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         bind();
         setMakeNewAccountOnClickListener();
         setLoginOnClickListener();
-    }
-
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_light_surfaceVariant));
-        }
     }
 
     private void bind() {
