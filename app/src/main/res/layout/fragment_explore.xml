@@ -19,7 +19,6 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/md_theme_light_surfaceVariant"
             app:menu="@menu/top_navigation_search" />
 
     </com.google.android.material.appbar.AppBarLayout>

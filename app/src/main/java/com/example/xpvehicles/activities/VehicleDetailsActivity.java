@@ -53,17 +53,10 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         vehicle = getIntent().getParcelableExtra("vehicle");
         setContentView(R.layout.activity_vehicle_details);
         bind();
-        setStatusBarColor();
         setTopAppBarOnClickListener();
         setPickupDateOnClickListener();
         setReturnDateOnClickListener();
         setValues();
-    }
-
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_light_surfaceVariant));
-        }
     }
 
     private void setTopAppBarOnClickListener() {

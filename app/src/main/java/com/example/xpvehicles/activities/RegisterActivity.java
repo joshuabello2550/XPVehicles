@@ -33,13 +33,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         bind();
         setCreateAccountOnClickListener();
-        setStatusBarColor();
-    }
-
-    private void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_light_surfaceVariant));
-        }
     }
 
     private void bind() {

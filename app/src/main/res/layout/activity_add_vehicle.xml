@@ -18,7 +18,6 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/md_theme_light_surfaceVariant"
             app:menu="@menu/add_vehicle_top_bar"
             app:navigationIcon="@drawable/ic_close_24"
             app:title="Add a vehicle" />
