@@ -25,6 +25,7 @@ public class _User extends ParseUser {
     public static final String KEY_FIRST_NAME = "firstName";
     public static final String KEY_LAST_NAME = "lastName";
     public static final String KEY_SAVED_VEHICLES = "savedVehicles";
+    public static final String KEY_RENTED_VEHICLES = "rentedVehicles";
 
     public String getFirstName() {
         return getString(KEY_FIRST_NAME);
@@ -50,8 +51,20 @@ public class _User extends ParseUser {
         return savedVehicles;
     }
 
-    public void setSavedVehicles(List<Vehicle> listSavedVehicles) {
+    public void setSavedVehicles(List<String> listSavedVehicles) {
         put(KEY_SAVED_VEHICLES, listSavedVehicles);
+    }
+
+    public List<RentVehicle> getRentedVehicles() {
+        List<RentVehicle> rentedVehicles = getList(KEY_RENTED_VEHICLES);
+        if (rentedVehicles == null) {
+            rentedVehicles = new ArrayList<>();
+        }
+        return rentedVehicles;
+    }
+
+    public void setRentedVehicles(List<RentVehicle> listRentedVehicles) {
+        put(KEY_RENTED_VEHICLES, listRentedVehicles);
     }
 
 }
