@@ -92,7 +92,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/xpvehicles__5_" />
+                app:srcCompat="@drawable/xpvehicles_copy" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 

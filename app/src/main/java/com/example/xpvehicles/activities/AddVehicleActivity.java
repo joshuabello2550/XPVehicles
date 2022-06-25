@@ -1,6 +1,7 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -56,11 +58,18 @@ public class AddVehicleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStatusBarColor();
         setContentView(R.layout.activity_add_vehicle);
         bind();
         setTopAppBarOnClickListener();
         setAddVehicleOnClickListener();
         setTakePictureOnClickListener();
+    }
+
+    private void setStatusBarColor() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_light_surfaceVariant));
+        }
     }
 
     private void bind() {
