@@ -1,9 +1,7 @@
 package com.example.xpvehicles.adapters;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +22,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
-import com.example.xpvehicles.fragments.ExploreFragment;
+import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseFile;
@@ -38,14 +36,14 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class VehiclesAdapter extends RecyclerView.Adapter<VehiclesAdapter.ViewHolder> {
+public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
 
     public static final String TAG = "Vehicles_Adapter";
     private List<Vehicle> mVehicles;
     private Fragment fragment;
     private MainActivity activity;
 
-    public VehiclesAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
+    public ExploreAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
         mVehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;

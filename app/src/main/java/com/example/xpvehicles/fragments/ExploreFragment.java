@@ -1,6 +1,5 @@
 package com.example.xpvehicles.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.AddVehicleActivity;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.adapters.VehiclesAdapter;
+import com.example.xpvehicles.adapters.ExploreAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
@@ -28,7 +27,7 @@ import java.util.List;
 public class ExploreFragment extends Fragment {
 
     private static final String TAG = "Explore_Fragment";
-    private VehiclesAdapter adapter;
+    private ExploreAdapter adapter;
     private MainActivity activity;
 
     public ExploreFragment(MainActivity mainActivity){
@@ -51,9 +50,9 @@ public class ExploreFragment extends Fragment {
 
     private void bindAdapter(View view) {
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new VehiclesAdapter(this, allVehicles, (MainActivity)getActivity());
+        adapter = new ExploreAdapter(this, allVehicles, (MainActivity)getActivity());
 
-        RecyclerView rvVehicles = view.findViewById(R.id.rvVehicles);
+        RecyclerView rvVehicles = view.findViewById(R.id.rvExplore);
         rvVehicles.setAdapter(adapter);
         rvVehicles.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
     }
