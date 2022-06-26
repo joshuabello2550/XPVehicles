@@ -22,6 +22,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
+import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
@@ -76,8 +77,6 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         mVehicles.addAll(allVehicles);
         notifyDataSetChanged();
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvVehicleName;
