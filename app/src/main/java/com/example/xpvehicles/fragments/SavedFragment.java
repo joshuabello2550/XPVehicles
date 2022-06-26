@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,7 +60,7 @@ public class SavedFragment extends Fragment {
 
         RecyclerView rvVehicles = view.findViewById(R.id.rvSaved);
         rvVehicles.setAdapter(adapter);
-        rvVehicles.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        rvVehicles.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
     }
 
     private void queryVehicles() {

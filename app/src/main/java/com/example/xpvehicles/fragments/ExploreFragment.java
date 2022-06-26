@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.AddVehicleActivity;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.adapters.ExploreAdapter;
+import com.example.xpvehicles.adapters.RecommendedVehiclesAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
@@ -27,7 +30,8 @@ import java.util.List;
 public class ExploreFragment extends Fragment {
 
     private static final String TAG = "Explore_Fragment";
-    private ExploreAdapter adapter;
+    private ExploreAdapter exploreAdapter;
+    private RecommendedVehiclesAdapter recommendedVehiclesAdapter;
     private MainActivity activity;
 
     public ExploreFragment(MainActivity mainActivity){
@@ -43,18 +47,28 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         FloatingActionButton fabAddVehicle = view.findViewById(R.id.fabAddVehicle);
-        bindAdapter(view);
+        bindExploreAdapter(view);
+        bindRecommendedAdapter(view);
         queryVehicles();
         setAddVehicleOnClickListener(fabAddVehicle);
     }
 
-    private void bindAdapter(View view) {
+    private void bindRecommendedAdapter(View view) {
+        List<Vehicle> recommendedVehicles = new ArrayList<>();
+        recommendedVehiclesAdapter = new RecommendedVehiclesAdapter(this, recommendedVehicles, (MainActivity)getActivity());
+
+        RecyclerView rvRecommendedVehicles = view.findViewById(R.id.rvRecommendedVehicles);
+        rvRecommendedVehicles.setAdapter(recommendedVehiclesAdapter);
+        rvRecommendedVehicles.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    }
+
+    private void bindExploreAdapter(View view) {
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new ExploreAdapter(this, allVehicles, (MainActivity)getActivity());
+        exploreAdapter = new ExploreAdapter(this, allVehicles, (MainActivity)getActivity());
 
         RecyclerView rvVehicles = view.findViewById(R.id.rvExplore);
-        rvVehicles.setAdapter(adapter);
-        rvVehicles.setLayoutManager(new GridLayoutManager(view.getContext(), 2));
+        rvVehicles.setAdapter(exploreAdapter);
+        rvVehicles.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
     }
 
     private void setAddVehicleOnClickListener(FloatingActionButton fabAddVehicle) {
@@ -74,13 +88,13 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                adapter.addAll(vehicles);
+                exploreAdapter.addAll(vehicles);
             }
         });
 
     }
 
-     public void notifyAdapter() {
-        adapter.notifyDataSetChanged();
+    public void notifyAdapter() {
+        exploreAdapter.notifyDataSetChanged();
     }
 }

@@ -82,8 +82,8 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
         return mVehicles.size();
     }
 
-    public void addAll(List<RentVehicle> allVehicles) {
-        mVehicles.addAll(allVehicles);
+    public void addAll(List<RentVehicle> rentingVehicles) {
+        mVehicles.addAll(rentingVehicles);
         notifyDataSetChanged();
     }
 
