@@ -65,6 +65,11 @@ public class AddVehicleActivity extends AppCompatActivity {
         setTakePictureOnClickListener();
     }
 
+    private void setTopAppBarOnClickListener() {
+        topAppBar.setNavigationOnClickListener(v -> {
+            this.finish();
+        });
+    }
 
     private void bind() {
         topAppBar = findViewById(R.id.topAppBar);
@@ -78,12 +83,6 @@ public class AddVehicleActivity extends AppCompatActivity {
         ivAddVehicleImage = findViewById(R.id.ivAddVehicleImage);
         btnAddVehicle = findViewById(R.id.btnAddVehicle);
         btnTakePicture = findViewById(R.id.btnTakePicture);
-    }
-
-    private void setTopAppBarOnClickListener() {
-        topAppBar.setNavigationOnClickListener(v -> {
-            this.finish();
-        });
     }
 
     private void setTakePictureOnClickListener() {
@@ -205,10 +204,15 @@ public class AddVehicleActivity extends AppCompatActivity {
                 }
                 Log.i(TAG, "Post was successful");
                 clearComponents();
+                goMainActivity();
             }
         });
     }
 
+    private void goMainActivity() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+    }
 
     private void clearComponents() {
         edtVehicleName.setText("");
