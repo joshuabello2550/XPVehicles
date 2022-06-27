@@ -1,13 +1,9 @@
 package com.example.xpvehicles.adapters;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,26 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.RequestParams;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.activities.VehicleDetailsActivity;
-import com.example.xpvehicles.fragments.ExploreFragment;
-import com.example.xpvehicles.models.RentVehicle;
+import com.example.xpvehicles.activities.UserVehicleRequestsActivity;
 import com.example.xpvehicles.models.Vehicle;
-import com.example.xpvehicles.models._User;
 import com.parse.ParseFile;
-import com.parse.ParseUser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
-
-import okhttp3.Headers;
 
 public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapter.ViewHolder> {
 
@@ -101,9 +84,19 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
             if (image != null) {
                 Glide.with(fragment.getContext()).load(image.getUrl()).into(ivUserVehicle);
             }
+            setUserVehicleImageOnClickListener(vehicle);
+        }
 
+        private void setUserVehicleImageOnClickListener(Vehicle vehicle) {
+            ivUserVehicle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(activity, UserVehicleRequestsActivity.class);
+                    i.putExtra("userVehicle", vehicle);
+                    fragment.startActivity(i);
+                }
+            });
         }
 
     }
-
 }

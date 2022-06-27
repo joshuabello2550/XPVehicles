@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with getting the vehicles",e);
+                    Log.e(TAG, "Issue with getting the user's vehicles",e);
                     return;
                 }
                 adapter.addAll(vehicles);

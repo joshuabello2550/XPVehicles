@@ -144,6 +144,9 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
                 case "approved":
                     statusColor = Color.parseColor("#4CAF50");
                     break;
+                case "denied":
+                    statusColor = Color.parseColor("#F44336");
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + status);
             }
