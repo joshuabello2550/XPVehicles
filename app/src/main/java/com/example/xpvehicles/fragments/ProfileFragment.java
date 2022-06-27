@@ -148,7 +148,6 @@ public class ProfileFragment extends Fragment {
                 } else {
                     tvUserNoVehiclesListed.setVisibility(View.VISIBLE);
                 }
-                adapter.addAll(vehicles);
             }
         });
     }
