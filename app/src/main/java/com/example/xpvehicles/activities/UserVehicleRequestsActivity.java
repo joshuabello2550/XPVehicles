@@ -63,7 +63,7 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
 
     private void bindAdapter() {
         List<RentVehicle> allVehicles = new ArrayList<>();
-        adapter = new RequestsAdapter(allVehicles);
+        adapter = new RequestsAdapter(allVehicles, this);
 
         RecyclerView rvVehicles = findViewById(R.id.rvRequests);
         rvVehicles.setAdapter(adapter);

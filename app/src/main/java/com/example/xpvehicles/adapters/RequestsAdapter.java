@@ -11,11 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.activities.UserVehicleRequestsActivity;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,9 +29,11 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
 
     public static final String TAG = "Requests_Adapter";
     private List<RentVehicle> mVehicles;
+    private UserVehicleRequestsActivity activity;
 
-    public RequestsAdapter(List<RentVehicle> vehicles){
+    public RequestsAdapter(List<RentVehicle> vehicles, UserVehicleRequestsActivity userVehicleRequestsActivity){
         mVehicles = vehicles;
+        activity = userVehicleRequestsActivity;
     }
 
     @NonNull
@@ -92,6 +98,12 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             String userRequestingName = userRequesting.fetchIfNeeded().getString("firstName") + " " + userRequesting.fetchIfNeeded().getString("lastName");
             tvRequestName.setText(userRequestingName);
 
+            // user requesting profile image
+            ParseFile profileImage = userRequesting.getProfileImage();
+            if (profileImage != null) {
+                Glide.with(activity).load(profileImage.getUrl()).into(ivRequestProfileImage);
+            }
+
             // request dates
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             // vehicle pickup date
@@ -102,6 +114,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             String formattedReturnDate = sdf.format(returnDate);
             String requestDates = formattedPickUpDate + " - " + formattedReturnDate;
             tvRequestDates.setText(requestDates);
+
         }
 
         private void setAcceptOnClickListener() {
