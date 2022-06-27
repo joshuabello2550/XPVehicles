@@ -68,7 +68,7 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             bind(itemView);
-            //add
+            //ad
         }
 
         private void bind(View itemView) {
