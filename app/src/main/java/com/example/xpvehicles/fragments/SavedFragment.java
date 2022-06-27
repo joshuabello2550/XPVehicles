@@ -46,8 +46,8 @@ public class SavedFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bind(view);
-        bindAdapter(view);
         queryVehicles();
+        bindAdapter(view);
     }
 
     private void bind(View view) {

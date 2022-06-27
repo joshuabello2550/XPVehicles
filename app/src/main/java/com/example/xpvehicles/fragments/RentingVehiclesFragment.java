@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
@@ -31,6 +32,7 @@ public class RentingVehiclesFragment extends Fragment {
 
     private static final String TAG = "Vehicles_Fragment";
     private RentingVehiclesAdapter adapter;
+    private TextView tvUserNoRentingVehicles;
 
     public RentingVehiclesFragment(MainActivity mainActivity) {
     }
@@ -43,8 +45,13 @@ public class RentingVehiclesFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        bindAdapter(view);
+        bind();
         queryVehicles();
+        bindAdapter(view);
+    }
+
+    private void bind() {
+        tvUserNoRentingVehicles = getActivity().findViewById(R.id.tvUserNoRentingVehicles);
     }
 
     private void bindAdapter(View view) {
@@ -68,7 +75,12 @@ public class RentingVehiclesFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                adapter.addAll(vehicles);
+                if (vehicles.size() > 0) {
+                    tvUserNoRentingVehicles.setVisibility(View.GONE);
+                    adapter.addAll(vehicles);
+                } else {
+                    tvUserNoRentingVehicles.setVisibility(View.VISIBLE);
+                }
             }
         });
 
