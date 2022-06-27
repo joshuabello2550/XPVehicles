@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.xpvehicles.activities.MainActivity;
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class _User extends ParseUser {
     public static final String KEY_LAST_NAME = "lastName";
     public static final String KEY_SAVED_VEHICLES = "savedVehicles";
     public static final String KEY_RENTED_VEHICLES = "rentedVehicles";
+    public static final String KEY_PROFILE_IMAGE = "profileImage";
 
     public String getFirstName() {
         return getString(KEY_FIRST_NAME);
@@ -65,6 +67,13 @@ public class _User extends ParseUser {
 
     public void setRentedVehicles(List<RentVehicle> listRentedVehicles) {
         put(KEY_RENTED_VEHICLES, listRentedVehicles);
+    }
+
+    public ParseFile getProfileImage() {
+        return getParseFile("profileImage");
+    }
+    public void setProfileImage(ParseFile profileImage) {
+        put("profileImage", profileImage);
     }
 
 }
