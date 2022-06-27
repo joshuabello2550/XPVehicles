@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.AddVehicleActivity;
 import com.example.xpvehicles.activities.MainActivity;
@@ -33,6 +35,8 @@ public class ExploreFragment extends Fragment {
     private ExploreAdapter exploreAdapter;
     private RecommendedVehiclesAdapter recommendedVehiclesAdapter;
     private MainActivity activity;
+    private TextView tvNoAvailableRentVehicle;
+    private FloatingActionButton fabAddVehicle;
 
     public ExploreFragment(MainActivity mainActivity){
         activity = mainActivity;
@@ -46,11 +50,16 @@ public class ExploreFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        FloatingActionButton fabAddVehicle = view.findViewById(R.id.fabAddVehicle);
+        bind();
         bindExploreAdapter(view);
         bindRecommendedAdapter(view);
         queryVehicles();
         setAddVehicleOnClickListener(fabAddVehicle);
+    }
+
+    private void bind() {
+        tvNoAvailableRentVehicle = activity.findViewById(R.id.tvNoAvailableRentVehicle);
+        fabAddVehicle = activity.findViewById(R.id.fabAddVehicle);
     }
 
     private void bindRecommendedAdapter(View view) {
@@ -88,7 +97,12 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                exploreAdapter.addAll(vehicles);
+                if (vehicles.size() > 0) {
+                    tvNoAvailableRentVehicle.setVisibility(View.GONE);
+                    exploreAdapter.addAll(vehicles);
+                } else {
+                    tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
+                }
             }
         });
 
