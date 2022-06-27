@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="No Saved Vehicles"
+        android:text="No saved vehicles"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/rvSaved"

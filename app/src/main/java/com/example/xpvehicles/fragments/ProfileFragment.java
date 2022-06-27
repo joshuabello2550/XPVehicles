@@ -59,6 +59,7 @@ public class ProfileFragment extends Fragment {
     private MaterialToolbar profileTopAppBar;
     private MainActivity activity;
     private TextView tvProfileUserName;
+    private TextView tvUserNoVehiclesListed;
     private ImageView ivSetProfileImage;
     private ImageView ivProfileImage;
 
@@ -94,8 +95,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bind(view);
-        bindAdapter(view);
         queryUserVehicles();
+        bindAdapter(view);
         setValues();
         setTopAppBarOnClickListener();
         setCaptureProfileImageOnClickListener();
@@ -114,7 +115,8 @@ public class ProfileFragment extends Fragment {
         profileTopAppBar = view.findViewById(R.id.profileTopAppBar);
         tvProfileUserName = view.findViewById(R.id.tvProfileUserName);
         ivSetProfileImage = view.findViewById(R.id.ivSetProfileImage);
-        ivProfileImage =view.findViewById(R.id.ivProfileImage);
+        ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        tvUserNoVehiclesListed = view.findViewById(R.id.tvUserNoVehiclesListed);
     }
 
     private void setValues() {
@@ -139,6 +141,12 @@ public class ProfileFragment extends Fragment {
                 if (e != null) {
                     Log.e(TAG, "Issue with getting the user's vehicles",e);
                     return;
+                }
+                if (vehicles.size() > 0) {
+                    tvUserNoVehiclesListed.setVisibility(View.GONE);
+                    adapter.addAll(vehicles);
+                } else {
+                    tvUserNoVehiclesListed.setVisibility(View.VISIBLE);
                 }
                 adapter.addAll(vehicles);
             }

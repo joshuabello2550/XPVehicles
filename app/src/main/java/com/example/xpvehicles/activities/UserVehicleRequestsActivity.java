@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,10 +32,11 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
     public static final String TAG = "User_Vehicle_Requests_Activity";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
+    private RequestsAdapter adapter;
     private TextView tvUserVehicleDetailsName;
     private TextView tvUserVehicleDetailsDailyPrice;
+    private TextView tvNoRequests;
     private ImageView ivUserVehicleDetails;
-    private RequestsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,8 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
         vehicle = getIntent().getParcelableExtra("userVehicle");
         setContentView(R.layout.activity_user_vehicle_requests);
         bind();
-        bindAdapter();
         queryUserVehicles();
+        bindAdapter();
         setValues();
         setTopAppBarOnClickListener();
     }
@@ -59,6 +61,7 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
         tvUserVehicleDetailsName = findViewById(R.id.tvUserVehicleDetailsName);
         tvUserVehicleDetailsDailyPrice = findViewById(R.id.tvUserVehicleDetailsDailyPrice);
         ivUserVehicleDetails = findViewById(R.id.ivUserVehicleDetails);
+        tvNoRequests = findViewById(R.id.tvNoRequests);
     }
 
     private void bindAdapter() {
@@ -89,7 +92,12 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
                     Log.e(TAG, "Issue with getting the requests", e);
                     return;
                 }
-                adapter.addAll(requests);
+                if (requests.size() > 0) {
+                    tvNoRequests.setVisibility(View.GONE);
+                    adapter.addAll(requests);
+                } else {
+                    tvNoRequests.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

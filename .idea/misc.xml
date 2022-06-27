@@ -15,11 +15,12 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_user_vehicle_details.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_user_vehicle_requests.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_vehicle_details.xml" value="0.3085988825017756" />
         <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_inbox.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.33827160493827163" />
-        <entry key="app/src/main/res/layout/fragment_renting_vehicles.xml" value="0.19444444444444445" />
+        <entry key="app/src/main/res/layout/fragment_renting_vehicles.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_saved.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_vehicles.xml" value="0.375" />
         <entry key="app/src/main/res/layout/recommend_vehicle_card.xml" value="0.6929955376519097" />
