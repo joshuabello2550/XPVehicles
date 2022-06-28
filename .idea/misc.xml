@@ -17,7 +17,7 @@
         <entry key="app/src/main/res/layout/activity_user_vehicle_details.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_user_vehicle_requests.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_vehicle_details.xml" value="0.3085988825017756" />
-        <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.45" />
         <entry key="app/src/main/res/layout/fragment_inbox.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.33827160493827163" />
         <entry key="app/src/main/res/layout/fragment_renting_vehicles.xml" value="0.335" />

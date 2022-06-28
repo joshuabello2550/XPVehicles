@@ -62,9 +62,6 @@
         <activity
             android:name=".activities.MainActivity"
             android:exported="true">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
     </application>
 
