@@ -58,7 +58,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vehicle = getIntent().getParcelableExtra("vehicle");
+        vehicle = (Vehicle) getIntent().getParcelableExtra("vehicle");
         setContentView(R.layout.activity_vehicle_details);
         bind();
         setValues();
@@ -161,7 +161,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private void calculateNumberOfDays() {
         if (pickupDate != null && returnDate != null) {
             int conversionFactor = (1000 * 60 * 60 * 24);
-            int numberOfRentDays = (int) ((pickupDate.getTime() - returnDate.getTime()) / (conversionFactor));
+            int numberOfRentDays = (int) ((returnDate.getTime() - pickupDate.getTime()) / (conversionFactor));
             tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
             calculateOrderTotal(numberOfRentDays);
         }
