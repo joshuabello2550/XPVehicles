@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -42,6 +44,7 @@ public class ExploreFragment extends Fragment {
     private TextView tvNoAvailableRentVehicle;
     private FloatingActionButton fabAddVehicle;
     private SearchView searchView;
+    private ImageView ivFilter;
 
     public ExploreFragment(MainActivity mainActivity){
         activity = mainActivity;
@@ -67,12 +70,14 @@ public class ExploreFragment extends Fragment {
         bindRecommendedAdapter(view);
         setAddVehicleOnClickListener(fabAddVehicle);
         setSearchViewOnClickListener();
+        setFilterOnClickListener();
     }
 
     private void bind() {
         tvNoAvailableRentVehicle = activity.findViewById(R.id.tvNoAvailableRentVehicle);
         fabAddVehicle = activity.findViewById(R.id.fabAddVehicle);
         searchView = activity.findViewById(R.id.searchView);
+        ivFilter = activity.findViewById(R.id.ivFilter);
     }
 
     private void bindRecommendedAdapter(View view) {
@@ -164,6 +169,14 @@ public class ExploreFragment extends Fragment {
         });
     }
 
+    private void setFilterOnClickListener() {
+        ivFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterDialogFragment.display(activity.getSupportFragmentManager());
+            }
+        });
+    }
 
     public void notifyAdapter() {
         exploreAdapter.notifyDataSetChanged();

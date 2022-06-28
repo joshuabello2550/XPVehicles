@@ -1,7 +1,6 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -72,7 +70,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     }
 
     private void bind() {
-        topAppBar = findViewById(R.id.topAppBar);
+        topAppBar = findViewById(R.id.filterTopAppBar);
         edtVehicleName = findViewById(R.id.edtVehicleName);
         edtDescription = findViewById(R.id.edtDescription);
         edtStreetAddress = findViewById(R.id.edtStreetAddress);
