@@ -26,6 +26,7 @@ import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -141,11 +142,11 @@ public class AddVehicleActivity extends AppCompatActivity {
             String city = edtCity.getText().toString();
             String state = edtState.getText().toString();
             String zipCode = edtZipCode.getText().toString();
-            getPlaceId(streetAddress, city, state);
+            getPlaceIdAndGeoPoint(streetAddress, city, state);
         });
     }
 
-    private void getPlaceId(String streetAddress, String city, String state) {
+    private void getPlaceIdAndGeoPoint(String streetAddress, String city, String state) {
         final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
         final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
         final String GOOGLE_GEOCODING_API_PARAMETER_ADDRESS = "address";
@@ -163,7 +164,11 @@ public class AddVehicleActivity extends AppCompatActivity {
                 JSONObject jsonObject = json.jsonObject;
                 try {
                     String placeId = jsonObject.getJSONArray("results").getJSONObject(0).getString("place_id");
-                    saveVehicle(placeId);
+                    JSONObject location = jsonObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+                    Double vehicleLatitude =  location.getDouble("lat");
+                    Double vehicleLongitude =  location.getDouble("lng");
+                    ParseGeoPoint vehicleLocationGeoPoint =  new ParseGeoPoint(vehicleLatitude, vehicleLongitude);
+                    saveVehicle(placeId, vehicleLocationGeoPoint);
                 } catch (JSONException e) {
                     Log.e(TAG, "hit json exception when getting the latitude and longitude");
                 }
@@ -175,7 +180,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         });
     }
 
-    private void saveVehicle(String placeId) {
+    private void saveVehicle(String placeId, ParseGeoPoint vehicleLocationGeoPoint) {
         String vehicleName = edtVehicleName.getText().toString();
         String description = edtDescription.getText().toString();
         Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
@@ -188,6 +193,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         vehicle.setDailyPrice(dailyPrice);
         vehicle.setPlaceId(placeId);
         vehicle.setVehicleImage(new ParseFile(photoFile));
+        vehicle.setGeoLocation(vehicleLocationGeoPoint);
         vehicle.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

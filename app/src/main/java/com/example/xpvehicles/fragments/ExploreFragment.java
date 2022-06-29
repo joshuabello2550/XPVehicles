@@ -178,7 +178,8 @@ public class ExploreFragment extends Fragment {
         ivFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FilterDialogFragment.displayFilterDialogFragment(activity.getSupportFragmentManager());
+                FilterDialogFragment filterDialogFragment = new FilterDialogFragment(exploreAdapter, activity);
+                filterDialogFragment.show(activity.getSupportFragmentManager(), TAG);
             }
         });
     }
