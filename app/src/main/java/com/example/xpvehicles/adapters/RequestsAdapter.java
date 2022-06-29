@@ -1,5 +1,6 @@
 package com.example.xpvehicles.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,11 @@ import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.models._User;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
