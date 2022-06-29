@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             loginEmailOTF.setError("Enter email address");
             shouldCreateNewUser = false;
         } else {
-            if (MainActivity.isValidEmail(username)) {
+            if (!MainActivity.isValidEmail(username)) {
                 loginEmailOTF.setError("Invalid email address");
                 shouldCreateNewUser = false;
             }

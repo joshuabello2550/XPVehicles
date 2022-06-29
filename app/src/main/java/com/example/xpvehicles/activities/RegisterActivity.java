@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerEmailOTF.setError("Enter email address");
             shouldCreateNewUser = false;
         } else {
-            if (MainActivity.isValidEmail(username)) {
+            if (!MainActivity.isValidEmail(username)) {
                 registerEmailOTF.setError("Invalid email address");
                 shouldCreateNewUser = false;
             }
