@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "Main_Activity";
     public String userLocation;
     final ExploreFragment explore_fragment = new ExploreFragment(this);
-    final InboxFragment inbox_fragment = new InboxFragment(this);
+    final InboxFragment inboxFragment = new InboxFragment(this);
     final SavedFragment saved_fragment = new SavedFragment(this);
     final RentingVehiclesFragment vehicles_fragment = new RentingVehiclesFragment(this);
     final ProfileFragment profile_fragment = new ProfileFragment(this);
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bind();
         setBottomNavigationOnClick();
+        setDefaultBottomNavigationSelection();
     }
 
     private void bind() {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = vehicles_fragment;
                         break;
                     case R.id.inbox:
-                        fragment = inbox_fragment;
+                        fragment = inboxFragment;
                         break;
                     case R.id.profile:
                         fragment = profile_fragment;
@@ -98,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        // Set default selection
+    }
+
+    private void setDefaultBottomNavigationSelection(){
         bottomNavigationView.setSelectedItemId(R.id.explore);
     }
 
@@ -128,7 +131,4 @@ public class MainActivity extends AppCompatActivity {
     public String getUserLocation() {
         return userLocation;
     }
-
-
-
 }
