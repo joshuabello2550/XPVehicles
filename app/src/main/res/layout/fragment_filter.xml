@@ -7,24 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FilterDialogFragment">
 
-    <Button
-        android:id="@+id/btnApplyPriceConstraints3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Apply"
-        app:layout_constraintBottom_toBottomOf="@+id/filterMaxPriceTextInputLayout"
-        app:layout_constraintEnd_toEndOf="@+id/btnApplyDistanceConstraints"
-        app:layout_constraintTop_toTopOf="@+id/filterMaxPriceTextInputLayout" />
-
-    <Button
-        android:id="@+id/btnApplyPriceConstraints2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Apply"
-        app:layout_constraintBottom_toBottomOf="@+id/filterMaxPriceTextInputLayout"
-        app:layout_constraintEnd_toEndOf="@+id/btnApplyDistanceConstraints"
-        app:layout_constraintTop_toTopOf="@+id/filterMaxPriceTextInputLayout" />
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout3"
         android:layout_width="match_parent"
@@ -58,10 +40,10 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/filterDistanceTextInputLayout"
-        android:layout_width="84dp"
+        android:layout_width="164dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="5mi."
+        android:hint="Distance"
         app:layout_constraintStart_toStartOf="@+id/tvMaxDistance"
         app:layout_constraintTop_toBottomOf="@+id/tvMaxDistance">
 
@@ -73,20 +55,6 @@
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/btnApplyDistanceConstraints"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:backgroundTint="#FDF1F4"
-        android:text="Apply"
-        android:textColor="#C32B00"
-        app:layout_constraintBottom_toBottomOf="@+id/filterDistanceTextInputLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/filterDistanceTextInputLayout"
-        app:strokeColor="#1C1C1C"
-        app:strokeWidth="1dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/filterMaxPriceTextInputLayout"
@@ -134,19 +102,6 @@
         app:layout_constraintStart_toStartOf="@+id/filterDistanceTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/filterDistanceTextInputLayout" />
 
-    <Button
-        android:id="@+id/btnApplyPriceConstraints"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FDF1F4"
-        android:text="Apply"
-        android:textColor="#C32B00"
-        app:layout_constraintBottom_toBottomOf="@+id/filterMaxPriceTextInputLayout"
-        app:layout_constraintEnd_toEndOf="@+id/btnApplyDistanceConstraints"
-        app:layout_constraintTop_toTopOf="@+id/filterMaxPriceTextInputLayout"
-        app:strokeColor="#1C1C1C"
-        app:strokeWidth="1dp" />
-
     <TextView
         android:id="@+id/tvType"
         style="@style/TextAppearance.Material3.TitleMedium"
@@ -167,5 +122,16 @@
         android:text="Show vehicles"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tvClearAll"
+        style="@style/TextAppearance.Material3.BodyLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Clear all"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnFilterShowVehicles" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

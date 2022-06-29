@@ -29,17 +29,19 @@ import com.example.xpvehicles.fragments.ProfileFragment;
 import com.example.xpvehicles.fragments.SavedFragment;
 import com.example.xpvehicles.fragments.RentingVehiclesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseGeoPoint;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "MainActivity";
-    public String userLocation;
+    private static final String TAG = "MainActivity";
+    private String userLocation;
+    private ParseGeoPoint userLocationGeoPoint;
+    private BottomNavigationView bottomNavigationView;
     final ExploreFragment exploreFragment = new ExploreFragment(this);
     final InboxFragment inboxFragment = new InboxFragment(this);
     final SavedFragment savedFragment = new SavedFragment(this);
     final RentingVehiclesFragment vehiclesFragment = new RentingVehiclesFragment(this);
     final ProfileFragment profileFragment = new ProfileFragment(this);
-    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 Double userLongitude = location.getLongitude();
                 Double userLatitude = location.getLatitude();
                 userLocation = userLatitude + " " + userLongitude;
+                userLocationGeoPoint = new ParseGeoPoint(userLatitude, userLongitude);
                 Log.i(TAG, "User's location is " + userLocation); exploreFragment.notifyAdapter();
             }
         });
@@ -118,5 +121,9 @@ public class MainActivity extends AppCompatActivity {
 
     public String getUserLocation() {
         return userLocation;
+    }
+
+    public ParseGeoPoint getUserLocationGeoPoint() {
+        return userLocationGeoPoint;
     }
 }
