@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         bind();
         setBottomNavigationOnClick();
+        setDefaultBottomNavigationSelection();
     }
 
     private void bind() {
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = vehiclesFragment;
                         break;
                     case R.id.inbox:
-                        fragment = inbox_fragment;
+                        fragment = inboxFragment;
                         break;
                     case R.id.profile:
                         fragment = profileFragment;
@@ -83,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        // Set default selection
+    }
+
+    private void setDefaultBottomNavigationSelection(){
         bottomNavigationView.setSelectedItemId(R.id.explore);
     }
 
