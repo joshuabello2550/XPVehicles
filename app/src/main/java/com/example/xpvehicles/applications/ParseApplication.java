@@ -11,6 +11,10 @@ import com.parse.ParseUser;
 
 public class ParseApplication extends Application {
 
+    private final String PARSE_APPLICATION_ID = "VSy9BgESdDvYNBhizAnwe8u4FQcvQpBTUSziFQ53";
+    private final String PARSE_CLIENT_KEY = "ZU2vfje4LiBUgZFaGQPNOhj4Xesv7c9PMdpbR8Et";
+    private final String PARSE_SERVER_HTTP_ADDRESS = "https://parseapi.back4app.com";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -21,9 +25,9 @@ public class ParseApplication extends Application {
 
         // Initializes Parse SDK as soon as the application is created
         Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId("VSy9BgESdDvYNBhizAnwe8u4FQcvQpBTUSziFQ53")
-                .clientKey("ZU2vfje4LiBUgZFaGQPNOhj4Xesv7c9PMdpbR8Et")
-                .server("https://parseapi.back4app.com")
+                .applicationId(PARSE_APPLICATION_ID)
+                .clientKey(PARSE_CLIENT_KEY)
+                .server(PARSE_SERVER_HTTP_ADDRESS)
                 .build()
         );
     }
