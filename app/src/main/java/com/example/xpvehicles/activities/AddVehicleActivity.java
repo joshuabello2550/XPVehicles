@@ -38,7 +38,8 @@ import okhttp3.Headers;
 
 public class AddVehicleActivity extends AppCompatActivity {
 
-    private static final String TAG = "Add_Vehicle_Activity";
+    private static final String TAG = "AddVehicleActivity";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
     private MaterialToolbar topAppBar;
     private EditText edtVehicleName;
     private EditText edtDescription;
@@ -50,7 +51,6 @@ public class AddVehicleActivity extends AppCompatActivity {
     private ImageView ivAddVehicleImage;
     private Button btnAddVehicle;
     private Button btnTakePicture;
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
     private File photoFile;
 
     @Override
@@ -88,9 +88,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create Intent to take a picture and return control to the calling application
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Create a File reference for future access
                 photoFile = getPhotoFileUri(photoFileName);
 
                 // wrap File object into a content provider
@@ -110,7 +108,6 @@ public class AddVehicleActivity extends AppCompatActivity {
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
@@ -119,7 +116,6 @@ public class AddVehicleActivity extends AppCompatActivity {
             Log.d(TAG, "failed to create directory");
         }
 
-        // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
@@ -130,12 +126,10 @@ public class AddVehicleActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivAddVehicleImage);
                 ivAddVehicleImage.setVisibility(View.VISIBLE);
                 ivPreview.setImageBitmap(takenImage);
-            } else { // Result was a failure
+            } else {
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -152,16 +146,18 @@ public class AddVehicleActivity extends AppCompatActivity {
     }
 
     private void getPlaceId(String streetAddress, String city, String state) {
-        String base_url = "https://maps.googleapis.com/maps/api/geocode/json?";
-        String address = streetAddress + " " + city + " " + state;
+        final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
+        final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
+        final String GOOGLE_GEOCODING_API_PARAMETER_ADDRESS = "address";
 
+        String address = streetAddress + " " + city + " " + state;
         RequestParams params = new RequestParams();
         Resources res = this.getResources();
-        params.put("key", res.getString(R.string.API_KEY));
-        params.put("address", address);
+        params.put(GOOGLE_GEOCODING_API_PARAMETER_KEY, res.getString(R.string.API_KEY));
+        params.put(GOOGLE_GEOCODING_API_PARAMETER_ADDRESS, address);
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(base_url, params, new JsonHttpResponseHandler() {
+        client.get(GOOGLE_GEOCODING_API_BASE_URL, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONObject jsonObject = json.jsonObject;
@@ -172,7 +168,6 @@ public class AddVehicleActivity extends AppCompatActivity {
                     Log.e(TAG, "hit json exception when getting the latitude and longitude");
                 }
             }
-
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "Error sending the JSON request", throwable);

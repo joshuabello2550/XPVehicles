@@ -19,6 +19,7 @@ public class RentVehicle extends ParseObject {
     public ParseObject getVehicle() {
         return getParseObject(KEY_VEHICLE);
     }
+
     public void setVehicle(Vehicle vehicle) {
         put(KEY_VEHICLE, vehicle);
     }
@@ -26,6 +27,7 @@ public class RentVehicle extends ParseObject {
     public ParseUser getRentee() {
         return getParseUser(KEY_RENTEE);
     }
+
     public void setRentee(_User rentee) {
         put(KEY_RENTEE, rentee);
     }
@@ -33,6 +35,7 @@ public class RentVehicle extends ParseObject {
     public Date getPickUpDate() {
         return getDate(KEY_PICK_UP_DATE);
     }
+
     public void setPickUpDate(Date pickUpDate) {
         put(KEY_PICK_UP_DATE, pickUpDate);
     }
@@ -40,6 +43,7 @@ public class RentVehicle extends ParseObject {
     public Date getReturnDate() {
         return getDate(KEY_RETURN_DATE);
     }
+
     public void setReturnDate(Date returnDate) {
         put(KEY_RETURN_DATE, returnDate);
     }
@@ -47,11 +51,8 @@ public class RentVehicle extends ParseObject {
     public String getStatus() {
         return getString(KEY_STATUS);
     }
+
     public void setStatus(String status) {
         put(KEY_STATUS, status);
     }
-
-
-
-
 }

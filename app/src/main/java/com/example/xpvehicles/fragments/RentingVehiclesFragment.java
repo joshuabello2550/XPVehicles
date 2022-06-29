@@ -30,7 +30,7 @@ import java.util.List;
 
 public class RentingVehiclesFragment extends Fragment {
 
-    private static final String TAG = "Vehicles_Fragment";
+    private static final String TAG = "RentingVehiclesFragment";
     private RentingVehiclesAdapter adapter;
     private TextView tvUserNoRentingVehicles;
 
@@ -39,7 +39,6 @@ public class RentingVehiclesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
         return inflater.inflate(R.layout.fragment_renting_vehicles, parent, false);
     }
 
@@ -64,9 +63,11 @@ public class RentingVehiclesFragment extends Fragment {
     }
 
     private void queryVehicles() {
+        final String QUERY_PARAMETER_RENTEE =  "rentee";
+
         _User currentUser = (_User) ParseUser.getCurrentUser();
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
-        query.whereEqualTo("rentee", currentUser);
+        query.whereEqualTo(QUERY_PARAMETER_RENTEE, currentUser);
 
         query.findInBackground(new FindCallback<RentVehicle>() {
             @Override
