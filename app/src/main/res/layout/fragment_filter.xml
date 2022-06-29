@@ -7,7 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FilterDialogFragment">
 
+    <Button
+        android:id="@+id/btnApplyPriceConstraints3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        app:layout_constraintBottom_toBottomOf="@+id/filterMaxPriceTextInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/btnApplyDistanceConstraints"
+        app:layout_constraintTop_toTopOf="@+id/filterMaxPriceTextInputLayout" />
+
+    <Button
+        android:id="@+id/btnApplyPriceConstraints2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        app:layout_constraintBottom_toBottomOf="@+id/filterMaxPriceTextInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/btnApplyDistanceConstraints"
+        app:layout_constraintTop_toTopOf="@+id/filterMaxPriceTextInputLayout" />
+
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:circularflow_radiusInDP="12dp"
@@ -19,10 +38,134 @@
             android:id="@+id/filterTopAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:backgroundTint="#FDF1F4"
             app:navigationIcon="@drawable/ic_close_24"
             app:title="Filters"
             app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:id="@+id/tvMaxDistance"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="Max Distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout3" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filterDistanceTextInputLayout"
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="5mi."
+        app:layout_constraintStart_toStartOf="@+id/tvMaxDistance"
+        app:layout_constraintTop_toBottomOf="@+id/tvMaxDistance">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMaxDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btnApplyDistanceConstraints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#FDF1F4"
+        android:text="Apply"
+        android:textColor="#C32B00"
+        app:layout_constraintBottom_toBottomOf="@+id/filterDistanceTextInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/filterDistanceTextInputLayout"
+        app:strokeColor="#1C1C1C"
+        app:strokeWidth="1dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filterMaxPriceTextInputLayout"
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:hint="$Max"
+        app:layout_constraintStart_toEndOf="@+id/filterMinPriceTextInputLayout"
+        app:layout_constraintTop_toTopOf="@+id/filterMinPriceTextInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMaxPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filterMinPriceTextInputLayout"
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="$Min"
+        app:layout_constraintStart_toStartOf="@+id/tvPrice"
+        app:layout_constraintTop_toBottomOf="@+id/tvPrice">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMinPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tvPrice"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Price"
+        app:layout_constraintStart_toStartOf="@+id/filterDistanceTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/filterDistanceTextInputLayout" />
+
+    <Button
+        android:id="@+id/btnApplyPriceConstraints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FDF1F4"
+        android:text="Apply"
+        android:textColor="#C32B00"
+        app:layout_constraintBottom_toBottomOf="@+id/filterMaxPriceTextInputLayout"
+        app:layout_constraintEnd_toEndOf="@+id/btnApplyDistanceConstraints"
+        app:layout_constraintTop_toTopOf="@+id/filterMaxPriceTextInputLayout"
+        app:strokeColor="#1C1C1C"
+        app:strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/tvType"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Type"
+        app:layout_constraintStart_toStartOf="@+id/filterMinPriceTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/filterMinPriceTextInputLayout" />
+
+
+    <Button
+        android:id="@+id/btnFilterShowVehicles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Show vehicles"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
