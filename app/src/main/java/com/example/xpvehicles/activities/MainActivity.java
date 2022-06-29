@@ -16,7 +16,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -30,13 +32,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "Main_Activity";
+    public static final String TAG = "MainActivity";
     public String userLocation;
-    final ExploreFragment explore_fragment = new ExploreFragment(this);
+    final ExploreFragment exploreFragment = new ExploreFragment(this);
     final InboxFragment inbox_fragment = new InboxFragment(this);
-    final SavedFragment saved_fragment = new SavedFragment(this);
-    final RentingVehiclesFragment vehicles_fragment = new RentingVehiclesFragment(this);
-    final ProfileFragment profile_fragment = new ProfileFragment(this);
+    final SavedFragment savedFragment = new SavedFragment(this);
+    final RentingVehiclesFragment vehiclesFragment = new RentingVehiclesFragment(this);
+    final ProfileFragment profileFragment = new ProfileFragment(this);
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -59,22 +61,22 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.explore:
-                        fragment = explore_fragment;
+                        fragment = exploreFragment;
                         break;
                     case R.id.saved:
-                        fragment = saved_fragment;
+                        fragment = savedFragment;
                         break;
                     case R.id.vehicles:
-                        fragment = vehicles_fragment;
+                        fragment = vehiclesFragment;
                         break;
                     case R.id.inbox:
                         fragment = inbox_fragment;
                         break;
                     case R.id.profile:
-                        fragment = profile_fragment;
+                        fragment = profileFragment;
                         break;
                     default:
-                        fragment = explore_fragment;
+                        fragment = exploreFragment;
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
@@ -101,17 +103,17 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 Double userLongitude = location.getLongitude();
                 Double userLatitude = location.getLatitude();
-                userLocation = userLatitude + " " + String.valueOf(userLongitude);
-                Log.i(TAG, "User's location is " + userLocation);
-                explore_fragment.notifyAdapter();
+                userLocation = userLatitude + " " + userLongitude;
+                Log.i(TAG, "User's location is " + userLocation); exploreFragment.notifyAdapter();
             }
         });
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     public String getUserLocation() {
         return userLocation;
     }
-
-
-
 }

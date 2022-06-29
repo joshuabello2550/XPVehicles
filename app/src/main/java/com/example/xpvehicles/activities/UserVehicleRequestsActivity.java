@@ -29,7 +29,7 @@ import java.util.List;
 
 public class UserVehicleRequestsActivity extends AppCompatActivity {
 
-    public static final String TAG = "User_Vehicle_Requests_Activity";
+    public static final String TAG = "UserVehicleRequestsActivity";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
     private RequestsAdapter adapter;
@@ -74,8 +74,10 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
     }
 
     private void setValues() {
+        final String DAILY_PRICE_PREFIX = "Daily Price: $";
+
         tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
-        tvUserVehicleDetailsDailyPrice.setText("Daily Price: $" + vehicle.getDailyPrice());
+        tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
         ParseFile image = vehicle.getVehicleImage();
         if (image != null) {
             Glide.with(this).load(image.getUrl()).into(ivUserVehicleDetails);
@@ -83,8 +85,10 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
     }
 
     private void queryUserVehicles() {
+        final String QUERY_PARAMETER_VEHICLE = "vehicle";
+
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
-        query.whereEqualTo("vehicle", vehicle);
+        query.whereEqualTo(QUERY_PARAMETER_VEHICLE, vehicle);
         query.findInBackground(new FindCallback<RentVehicle>() {
             @Override
             public void done(List<RentVehicle> requests, ParseException e) {

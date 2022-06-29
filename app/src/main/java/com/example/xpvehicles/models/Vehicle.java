@@ -25,7 +25,6 @@ public class Vehicle extends ParseObject {
     public static final String KEY_PLACE_ID = "placeId";
     private String distanceFromUser;
 
-
     public ParseUser getOwner() {
         return getParseUser(KEY_OWNER);
     }
@@ -89,7 +88,4 @@ public class Vehicle extends ParseObject {
     public void setDistanceFromUser(String distanceFromUser) {
         this.distanceFromUser = distanceFromUser;
     }
-
-
-
 }
