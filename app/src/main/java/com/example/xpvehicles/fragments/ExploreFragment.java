@@ -2,6 +2,7 @@ package com.example.xpvehicles.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Filter;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.xpvehicles.R;
@@ -27,6 +32,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExploreFragment extends Fragment {
@@ -37,9 +43,17 @@ public class ExploreFragment extends Fragment {
     private MainActivity activity;
     private TextView tvNoAvailableRentVehicle;
     private FloatingActionButton fabAddVehicle;
+    private SearchView searchView;
+    private ImageView ivFilter;
 
     public ExploreFragment(MainActivity mainActivity){
         activity = mainActivity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        searchView.clearFocus();
     }
 
     @Override
@@ -51,15 +65,19 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bind();
-        queryVehicles();
+        queryAllVehicles();
         bindExploreAdapter(view);
         bindRecommendedAdapter(view);
         setAddVehicleOnClickListener(fabAddVehicle);
+        setSearchViewOnClickListener();
+        setFilterOnClickListener();
     }
 
     private void bind() {
         tvNoAvailableRentVehicle = activity.findViewById(R.id.tvNoAvailableRentVehicle);
         fabAddVehicle = activity.findViewById(R.id.fabAddVehicle);
+        searchView = activity.findViewById(R.id.searchView);
+        ivFilter = activity.findViewById(R.id.ivFilter);
     }
 
     private void bindRecommendedAdapter(View view) {
@@ -87,7 +105,51 @@ public class ExploreFragment extends Fragment {
         });
     }
 
-    private void queryVehicles() {
+    private void setSearchViewOnClickListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String searchQuery) {
+                querySearchVehicles(searchQuery);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchQuery) {
+                if (searchQuery.isEmpty()){
+                    queryAllVehicles();
+                }
+                else{
+                    querySearchVehicles(searchQuery);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void querySearchVehicles(String searchQuery) {
+        ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
+        query.whereNotEqualTo("owner", ParseUser.getCurrentUser().getObjectId());
+        query.whereFullText("name", searchQuery);
+        query.findInBackground(new FindCallback<Vehicle>() {
+            @Override
+            public void done(List<Vehicle> vehicles, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting the vehicles",e);
+                    return;
+                }
+                exploreAdapter.clear();
+                if (vehicles.size() > 0) {
+//                    tvNoAvailableRentVehicle.setVisibility(View.GONE);
+                    exploreAdapter.addAll(vehicles);
+                } else {
+//                    tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void queryAllVehicles() {
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
         query.whereNotEqualTo("owner", ParseUser.getCurrentUser().getObjectId());
         query.findInBackground(new FindCallback<Vehicle>() {
@@ -105,7 +167,15 @@ public class ExploreFragment extends Fragment {
                 }
             }
         });
+    }
 
+    private void setFilterOnClickListener() {
+        ivFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterDialogFragment.display(activity.getSupportFragmentManager());
+            }
+        });
     }
 
     public void notifyAdapter() {

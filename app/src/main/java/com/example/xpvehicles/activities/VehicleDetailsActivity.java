@@ -1,10 +1,7 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,8 +21,6 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,7 +53,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vehicle = getIntent().getParcelableExtra("vehicle");
+        vehicle = (Vehicle) getIntent().getParcelableExtra("vehicle");
         setContentView(R.layout.activity_vehicle_details);
         bind();
         setValues();
@@ -78,7 +73,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         btnReserveNow = findViewById(R.id.btnReserveNow);
         edtPickUpDate = findViewById(R.id.edtPickUpDate);
         edtReturnDate = findViewById(R.id.edtReturnDate);
-        topAppBar = findViewById(R.id.topAppBar);
+        topAppBar = findViewById(R.id.filterTopAppBar);
         tvDetailsVehicleName = findViewById(R.id.tvDetailsVehicleName);
         ivDetailsVehicleImage = findViewById(R.id.ivDetailsVehicleImage);
         tvDetailsVehicleDescription = findViewById(R.id.tvDetailsVehicleDescription);
@@ -161,7 +156,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private void calculateNumberOfDays() {
         if (pickupDate != null && returnDate != null) {
             int conversionFactor = (1000 * 60 * 60 * 24);
-            int numberOfRentDays = (int) ((pickupDate.getTime() - returnDate.getTime()) / (conversionFactor));
+            int numberOfRentDays = (int) ((returnDate.getTime() - pickupDate.getTime()) / (conversionFactor));
             tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
             calculateOrderTotal(numberOfRentDays);
         }

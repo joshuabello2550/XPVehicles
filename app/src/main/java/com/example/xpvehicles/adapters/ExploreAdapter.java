@@ -78,6 +78,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        mVehicles.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvVehicleName;
         private TextView tvDistanceFromUser;
@@ -98,7 +103,6 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
             ibSave = itemView.findViewById(R.id.ibSave);
         }
-
 
         public void setValues(Vehicle vehicle) {
             // Vehicle name

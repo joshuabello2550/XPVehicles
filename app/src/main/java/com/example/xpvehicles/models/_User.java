@@ -70,10 +70,10 @@ public class _User extends ParseUser {
     }
 
     public ParseFile getProfileImage() {
-        return getParseFile("profileImage");
+        return getParseFile(KEY_PROFILE_IMAGE);
     }
     public void setProfileImage(ParseFile profileImage) {
-        put("profileImage", profileImage);
+        put(KEY_PROFILE_IMAGE, profileImage);
     }
 
 }
