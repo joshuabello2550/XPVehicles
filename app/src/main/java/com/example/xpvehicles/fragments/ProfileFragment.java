@@ -52,7 +52,7 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String TAG = "Profile_Fragment";
+    private static final String TAG = "ProfileFragment";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
     private File photoFile;
     private UserVehiclesAdapter adapter;
@@ -157,9 +157,7 @@ public class ProfileFragment extends Fragment {
         ivSetProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create Intent to take a picture and return control to the calling application
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Create a File reference for future access
                 photoFile = getPhotoFileUri(photoFileName);
 
                 // wrap File object into a content provider
@@ -178,9 +176,6 @@ public class ProfileFragment extends Fragment {
 
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
@@ -188,7 +183,6 @@ public class ProfileFragment extends Fragment {
             Log.d(TAG, "failed to create directory");
         }
 
-        // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
@@ -197,7 +191,6 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ivProfileImage.setImageBitmap(takenImage);
                 // save image in Parse Database
@@ -206,7 +199,7 @@ public class ProfileFragment extends Fragment {
                 currentUser.setProfileImage(profileImage);
                 currentUser.saveInBackground();
 
-            } else { // Result was a failure
+            } else {
                 Toast.makeText(activity, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }

@@ -18,14 +18,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 public class FilterDialogFragment extends DialogFragment {
 
-    public static final String TAG = "filter_dialog_fragment";
+    public static final String TAG = "FilterDialogFragment";
     private MaterialToolbar filterTopAppBar;
 
-    public FilterDialogFragment() {
-        // Required empty public constructor
-    }
-
-    public static FilterDialogFragment display(FragmentManager fragmentManager) {
+    public static FilterDialogFragment displayFilterDialogFragment(FragmentManager fragmentManager) {
         FilterDialogFragment exampleDialog = new FilterDialogFragment();
         exampleDialog.show(fragmentManager, TAG);
         return exampleDialog;
@@ -51,14 +47,14 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bind(view);
-        setFilterTopAppBarOnClickListener();
+        setTopAppBarOnClickListener();
     }
 
     private void bind(View view) {
         filterTopAppBar = view.findViewById(R.id.filterTopAppBar);
     }
 
-    private void setFilterTopAppBarOnClickListener() {
+    private void setTopAppBarOnClickListener() {
         filterTopAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
