@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
     public String userLocation;
     final ExploreFragment exploreFragment = new ExploreFragment(this);
-    final InboxFragment inbox_fragment = new InboxFragment(this);
+    final InboxFragment inboxFragment = new InboxFragment(this);
     final SavedFragment savedFragment = new SavedFragment(this);
     final RentingVehiclesFragment vehiclesFragment = new RentingVehiclesFragment(this);
     final ProfileFragment profileFragment = new ProfileFragment(this);
