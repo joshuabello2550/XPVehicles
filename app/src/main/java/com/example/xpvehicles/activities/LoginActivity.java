@@ -20,7 +20,7 @@ import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "Login_Activity";
+    private static final String TAG = "LoginActivity";
     private EditText edtLoginEmail;
     private EditText edtLoginPassword;
     private Button btnLogin;
@@ -69,13 +69,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Boolean checkValues(String username, String password) {
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         Boolean shouldCreateNewUser = true;
         if (username.isEmpty()){
             loginEmailOTF.setError("Enter email address");
             shouldCreateNewUser = false;
         } else {
-            if (!username.trim().matches(emailPattern)) {
+            if (MainActivity.isValidEmail(username)) {
                 loginEmailOTF.setError("Invalid email address");
                 shouldCreateNewUser = false;
             }

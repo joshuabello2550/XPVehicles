@@ -30,7 +30,7 @@ import java.util.List;
 
 public class SavedFragment extends Fragment {
 
-    private static final String TAG = "Saved_Fragment";
+    private static final String TAG = "SavedFragment";
     private ExploreAdapter adapter;
     private TextView tvNoSavedVehicles;
 
@@ -39,7 +39,6 @@ public class SavedFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
         return inflater.inflate(R.layout.fragment_saved, parent, false);
     }
 
@@ -64,10 +63,11 @@ public class SavedFragment extends Fragment {
     }
 
     private void queryVehicles() {
-        List<String> savedVehicles = ((_User) ParseUser.getCurrentUser()).getSavedVehicles();
+        final String QUERY_PARAMETER_OBJECT_ID = "objectId";
 
+        List<String> savedVehicles = ((_User) ParseUser.getCurrentUser()).getSavedVehicles();
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereContainedIn("objectId", savedVehicles);
+        query.whereContainedIn(QUERY_PARAMETER_OBJECT_ID, savedVehicles);
         query.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {

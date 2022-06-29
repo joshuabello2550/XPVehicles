@@ -39,13 +39,13 @@ import okhttp3.Headers;
 
 public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
 
-    public static final String TAG = "Vehicles_Adapter";
-    private List<Vehicle> mVehicles;
+    public static final String TAG = "ExploreAdapter";
+    private List<Vehicle> vehicles;
     private Fragment fragment;
     private MainActivity activity;
 
     public ExploreAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
-        mVehicles = vehicles;
+        this.vehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;
     }
@@ -54,8 +54,6 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-
-        // Inflate the custom layout
         View vehicleView =  inflater.inflate(R.layout.vehicle_card, parent, false);
         ViewHolder viewHolder = new ViewHolder(vehicleView);
         return viewHolder;
@@ -63,23 +61,23 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Vehicle vehicle = mVehicles.get(position);
+        Vehicle vehicle = vehicles.get(position);
         holder.setValues(vehicle);
         holder.setSaveBtnOnClickListener(vehicle);
     }
 
     @Override
     public int getItemCount() {
-        return mVehicles.size();
+        return vehicles.size();
     }
 
     public void addAll(List<Vehicle> allVehicles) {
-        mVehicles.addAll(allVehicles);
+        vehicles.addAll(allVehicles);
         notifyDataSetChanged();
     }
 
     public void clear() {
-        mVehicles.clear();
+        vehicles.clear();
         notifyDataSetChanged();
     }
 
@@ -107,13 +105,20 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         public void setValues(Vehicle vehicle) {
             // Vehicle name
             tvVehicleName.setText(vehicle.getVehicleName());
+
             // daily price
             String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
             tvDailyPrice.setText(dailyPrice);
+
             // distance from user
-            String vehiclePlaceId = vehicle.getPlaceId();
-            Log.i(TAG, "User's location is " + activity.getUserLocation());
-            getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
+            String distanceFromUser = vehicle.getDistanceFromUser();
+            if (distanceFromUser != null) {
+                tvDistanceFromUser.setText(distanceFromUser);
+            } else {
+                String vehiclePlaceId = vehicle.getPlaceId();
+                getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
+            }
+
             // vehicle image
             ParseFile image = vehicle.getVehicleImage();
             if (image != null) {
@@ -123,19 +128,23 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         }
 
         private void getDistanceFromUser(Vehicle vehicle, String vehiclePlaceId, String userLocation) {
-            String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+            final String GOOGLE_DISTANCE_MATRIX_API_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_DESTINATIONS = "destinations";
+            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_ORIGINS = "origins";
+            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_KEY = "key";
+            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_UNITS = "units";
 
             Log.i(TAG, "Vehicles " + vehiclePlaceId + " " + userLocation);
 
             RequestParams params = new RequestParams();
             Resources res = fragment.getContext().getResources();
-            params.put("destinations", "place_id:" + vehiclePlaceId);
-            params.put("origins", userLocation);
-            params.put("key", res.getString(R.string.API_KEY));
-            params.put("units", "imperial");
+            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_DESTINATIONS, "place_id:" + vehiclePlaceId);
+            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_ORIGINS, userLocation);
+            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_KEY, res.getString(R.string.API_KEY));
+            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_UNITS, "imperial");
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get(baseUrl, params, new JsonHttpResponseHandler() {
+            client.get(GOOGLE_DISTANCE_MATRIX_API_BASE_URL, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Headers headers, JSON json) {
                     Log.i(TAG, "Success " + json.toString());
@@ -158,9 +167,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
         private void setImageOnClickListener(Vehicle vehicle) {
             ivVehicle.setOnClickListener(v -> {
-                Intent i = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
-                i.putExtra("vehicle", vehicle);
-                fragment.startActivity(i);
+                Intent intent = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
+                intent.putExtra("vehicle", vehicle);
+                fragment.startActivity(intent);
             });
         }
 
@@ -168,7 +177,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             currentUser = (_User) ParseUser.getCurrentUser();
             List listSavedVehicles = currentUser.getSavedVehicles();
             if (listSavedVehicles.contains(vehicle.getObjectId())) {
-                setSaveBtnClicked(ibSave);
+                setSaveButtonClickedStyle(ibSave);
             } else {
                 ibSave.setImageResource(R.drawable.ic_favorite_border_24);
             }
@@ -181,7 +190,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
                         ibSave.setImageResource(R.drawable.ic_favorite_border_24);
                     } else {
                         listSavedVehicles.add(vehicle.getObjectId());
-                        setSaveBtnClicked(ibSave);
+                        setSaveButtonClickedStyle(ibSave);
                     }
                     currentUser.setSavedVehicles(listSavedVehicles);
                     currentUser.saveInBackground();
@@ -189,13 +198,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             });
         }
 
-        private void setSaveBtnClicked(ImageButton ibSave) {
+        private void setSaveButtonClickedStyle(ImageButton ibSave) {
             Drawable img = fragment.getActivity().getDrawable(R.drawable.ic_favorite_24);
             Resources res = fragment.getContext().getResources();
             img.setTint(res.getColor(R.color.md_theme_light_primary, activity.getTheme()));
             ibSave.setImageDrawable(img);
         }
-
     }
-
 }

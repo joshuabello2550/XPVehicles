@@ -31,7 +31,7 @@ import java.util.TimeZone;
 
 public class VehicleDetailsActivity extends AppCompatActivity {
 
-    public static final String TAG = "Vehicle_Details_Activity";
+    public static final String TAG = "VehicleDetailsActivity";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
     private EditText edtPickUpDate;
@@ -87,10 +87,11 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private void setValues() {
+        String distanceFromUser = vehicle.getDistanceFromUser();
         tvDetailsVehicleName.setText(vehicle.getVehicleName());
         tvDetailsVehicleDescription.setText(vehicle.getDescription());
         tvDetailsDailyPrice.setText("$" + vehicle.getDailyPrice() + "/day");
-        tvDetailsDistanceFromUser.setText(vehicle.getDistanceFromUser());
+        tvDetailsDistanceFromUser.setText(distanceFromUser);
         tvOrderSummaryDailyPrice.setText("$" + vehicle.getDailyPrice());
         tvOrderSummaryNumberOfDays.setText("0");
         tvOrderSummaryOrderTotal.setText("$0");
@@ -119,7 +120,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                         // Converts the string date back into a date Object
                         pickupDate = sdf.parse(formattedDate);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "error converting the pickup date into a date object",e);
                     }
                     calculateNumberOfDays();
                 }
@@ -145,7 +146,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                         // Converts the string date back into a date Object
                         returnDate = sdf.parse(formattedDate);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "error converting the return date into a date object",e);
                     }
                     calculateNumberOfDays();
                 }
@@ -198,12 +199,14 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private RentVehicle createRentVehicle(_User currentUser) {
+        final String INITIAL_VEHICLE_REQUEST_STATUS = "pending approval";
+
         RentVehicle rentVehicle = new RentVehicle();
         rentVehicle.setVehicle(vehicle);
         rentVehicle.setRentee(currentUser);
         rentVehicle.setPickUpDate(pickupDate);
         rentVehicle.setReturnDate(returnDate);
-        rentVehicle.setStatus("pending approval");
+        rentVehicle.setStatus(INITIAL_VEHICLE_REQUEST_STATUS);
         rentVehicle.saveInBackground();
         return rentVehicle;
     }
@@ -214,6 +217,4 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         currentUser.setRentedVehicles(rentedVehicles);
         currentUser.saveInBackground();
     }
-
-
 }

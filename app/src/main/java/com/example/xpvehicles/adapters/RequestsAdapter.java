@@ -1,5 +1,6 @@
 package com.example.xpvehicles.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,11 @@ import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.models._User;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,12 +31,14 @@ import java.util.Objects;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHolder>{
 
-    public static final String TAG = "Requests_Adapter";
-    private List<RentVehicle> mVehicles;
+    public static final String TAG = "RequestsAdapter";
+    private List<RentVehicle> vehicles;
     private UserVehicleRequestsActivity activity;
+    private final String STATUS_APPROVED = "approved";
+    private final String STATUS_PENDING_DENIED = "denied";
 
     public RequestsAdapter(List<RentVehicle> vehicles, UserVehicleRequestsActivity userVehicleRequestsActivity){
-        mVehicles = vehicles;
+        this.vehicles = vehicles;
         activity = userVehicleRequestsActivity;
     }
 
@@ -38,8 +46,6 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
     @Override
     public RequestsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
-        // Inflate the custom layout
         View vehicleView = inflater.inflate(R.layout.request_card, parent, false);
         RequestsAdapter.ViewHolder viewHolder = new RequestsAdapter.ViewHolder(vehicleView);
         return viewHolder;
@@ -47,22 +53,22 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RentVehicle vehicle = mVehicles.get(position);
+        RentVehicle vehicle = vehicles.get(position);
         try {
             holder.setValues(vehicle);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error setting the list of requests for a vehicle",e);
         }
-        holder.setAcceptDenyStatus(vehicle);
+        holder.setInitialAcceptOrDenyStatus(vehicle);
     }
 
     @Override
     public int getItemCount() {
-        return mVehicles.size();
+        return vehicles.size();
     }
 
     public void addAll(List<RentVehicle> allVehicles) {
-        mVehicles.addAll(allVehicles);
+        vehicles.addAll(allVehicles);
         notifyDataSetChanged();
     }
 
@@ -119,12 +125,12 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             tvRequestDates.setText(requestDates);
         }
 
-        private void setAcceptDenyStatus(RentVehicle request) {
-            if (Objects.equals(request.getStatus(), "approved")) {
+        private void setInitialAcceptOrDenyStatus(RentVehicle request) {
+            if (Objects.equals(request.getStatus(), STATUS_APPROVED)) {
                 hideAcceptDenyButtons();
                 btnRequestAccepted.setVisibility(View.VISIBLE);
             }
-            else if (Objects.equals(request.getStatus(), "denied")) {
+            else if (Objects.equals(request.getStatus(), STATUS_PENDING_DENIED)) {
                 hideAcceptDenyButtons();
                 btnRequestDenied.setVisibility(View.VISIBLE);
             }
@@ -136,7 +142,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
                     btnRequestAccepted.setVisibility(View.VISIBLE);
-                    request.setStatus("approved");
+                    request.setStatus(STATUS_APPROVED);
                     request.saveInBackground();
                 }
             });
@@ -148,7 +154,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
                     btnRequestDenied.setVisibility(View.VISIBLE);
-                    request.setStatus("denied");
+                    request.setStatus(STATUS_PENDING_DENIED);
                     request.saveInBackground();
                 }
             });
@@ -159,6 +165,4 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             btnRequestAccept.setVisibility(View.GONE);
         }
     }
-
-
 }

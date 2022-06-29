@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "Register_Activity";
+    private static final String TAG = "RegisterActivity";
     private EditText edtEmail;
     private EditText edtPassword;
     private EditText edtFirstName;
@@ -70,7 +70,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private Boolean checkValues(String username, String password, String firstName, String lastName) {
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         Boolean shouldCreateNewUser = true;
         if (firstName.isEmpty()) {
             registerFirstNameOTF.setError("Enter first name");
@@ -84,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerEmailOTF.setError("Enter email address");
             shouldCreateNewUser = false;
         } else {
-            if (!username.trim().matches(emailPattern)) {
+            if (MainActivity.isValidEmail(username)) {
                 registerEmailOTF.setError("Invalid email address");
                 shouldCreateNewUser = false;
             }
@@ -113,9 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void goMainActivity(){
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
-
 }
