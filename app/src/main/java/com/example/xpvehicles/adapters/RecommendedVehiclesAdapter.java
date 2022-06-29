@@ -34,7 +34,7 @@ import okhttp3.Headers;
 
 public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<RecommendedVehiclesAdapter.ViewHolder> {
 
-    public static final String TAG = "Vehicles_Adapter";
+    public static final String TAG = "RecommendedVehiclesAdapter";
     private List<Vehicle> mVehicles;
     private ExploreFragment fragment;
     private MainActivity activity;
@@ -49,7 +49,6 @@ public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<Recommended
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        // Inflate the custom layout
         View vehicleView =  inflater.inflate(R.layout.recommend_vehicle_card, parent, false);
         ViewHolder viewHolder = new ViewHolder(vehicleView);
         return viewHolder;
@@ -82,34 +81,7 @@ public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<Recommended
         }
 
         public void setValues(Vehicle vehicle){
-//            // Vehicle name
-//            Vehicle originalVehicle = (Vehicle) rentvehicle.getVehicle();
-//            String vehicleName = originalVehicle.fetchIfNeeded().getString("name");
-//            tvRentingVehicleName.setText(vehicleName);
-//
-//            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-//            // vehicle pickup date
-//            Date pickUpDate = rentvehicle.getPickUpDate();
-//            String formattedPickUpDate = sdf.format(pickUpDate);
-//            tvRentingPickUpDate.setText(formattedPickUpDate);
-//            // vehicle return date
-//            Date returnDate = rentvehicle.getReturnDate();
-//            String formattedReturnDate = sdf.format(returnDate);
-//            tvRentingReturnDate.setText(formattedReturnDate);
-//
-//            // status
-//            String status = rentvehicle.getStatus();
-//            tvStatus.setText(status);
-//            setStatusColor(status);
-//
-//            // vehicle image
-//            ParseFile image = originalVehicle.getVehicleImage();
-//            if (image != null) {
-//                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivRentingVehicleImage);
-//            }
         }
     }
-
-
 }
 

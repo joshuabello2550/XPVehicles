@@ -88,7 +88,4 @@ public class Vehicle extends ParseObject {
     public void setDistanceFromUser(String distanceFromUser) {
         put(KEY_DISTANCE_FROM_USER, distanceFromUser);
     }
-
-
-
 }

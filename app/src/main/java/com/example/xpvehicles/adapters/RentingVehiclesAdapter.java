@@ -45,13 +45,13 @@ import okhttp3.Headers;
 
 public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehiclesAdapter.ViewHolder> {
 
-    public static final String TAG = "Vehicles_Adapter";
-    private List<RentVehicle> mVehicles;
+    public static final String TAG = "RentingVehiclesAdapter";
+    private List<RentVehicle> vehicles;
     private RentingVehiclesFragment fragment;
     private MainActivity activity;
 
     public RentingVehiclesAdapter(RentingVehiclesFragment fragment, List<RentVehicle> vehicles, MainActivity activity){
-        mVehicles = vehicles;
+        this.vehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;
     }
@@ -60,8 +60,6 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-
-        // Inflate the custom layout
         View vehicleView =  inflater.inflate(R.layout.renting_vehicles_card, parent, false);
         ViewHolder viewHolder = new ViewHolder(vehicleView);
         return viewHolder;
@@ -69,21 +67,21 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RentVehicle vehicle = mVehicles.get(position);
+        RentVehicle vehicle = vehicles.get(position);
         try {
             holder.setValues(vehicle);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error setting the values for the vehicles the user is renting", e);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mVehicles.size();
+        return vehicles.size();
     }
 
     public void addAll(List<RentVehicle> rentingVehicles) {
-        mVehicles.addAll(rentingVehicles);
+        vehicles.addAll(rentingVehicles);
         notifyDataSetChanged();
     }
 
@@ -136,16 +134,23 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
         }
 
         private void setStatusColor(String status) {
+            final String STATUS_PENDING_APPROVAL = "pending approval";
+            final String STATUS_APPROVED = "approved";
+            final String STATUS_PENDING_DENIED = "denied";
+            final String STATUS_PENDING_APPROVAL_COLOR = "#FFC107";
+            final String STATUS_APPROVED_COLOR = "#4CAF50";
+            final String STATUS_PENDING_DENIED_COLOR = "#F44336";
+
             int statusColor;
             switch (status) {
-                case "pending approval":
-                    statusColor = Color.parseColor("#FFC107");
+                case STATUS_PENDING_APPROVAL:
+                    statusColor = Color.parseColor(STATUS_PENDING_APPROVAL_COLOR);
                     break;
-                case "approved":
-                    statusColor = Color.parseColor("#4CAF50");
+                case STATUS_APPROVED:
+                    statusColor = Color.parseColor(STATUS_APPROVED_COLOR);
                     break;
-                case "denied":
-                    statusColor = Color.parseColor("#F44336");
+                case STATUS_PENDING_DENIED:
+                    statusColor = Color.parseColor(STATUS_PENDING_DENIED_COLOR);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + status);
@@ -153,6 +158,4 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
             tvStatus.setBackgroundColor(statusColor);
         }
     }
-
-
 }

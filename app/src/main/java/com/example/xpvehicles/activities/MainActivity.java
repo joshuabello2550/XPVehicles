@@ -16,7 +16,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -30,31 +32,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "Main_Activity";
+    public static final String TAG = "MainActivity";
     public String userLocation;
-    final ExploreFragment explore_fragment = new ExploreFragment(this);
+    final ExploreFragment exploreFragment = new ExploreFragment(this);
     final InboxFragment inboxFragment = new InboxFragment(this);
-    final SavedFragment saved_fragment = new SavedFragment(this);
-    final RentingVehiclesFragment vehicles_fragment = new RentingVehiclesFragment(this);
-    final ProfileFragment profile_fragment = new ProfileFragment(this);
+    final SavedFragment savedFragment = new SavedFragment(this);
+    final RentingVehiclesFragment vehiclesFragment = new RentingVehiclesFragment(this);
+    final ProfileFragment profileFragment = new ProfileFragment(this);
     private BottomNavigationView bottomNavigationView;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the options menu from XML
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.top_navigation_search, menu);
-
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
-        return true;
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,22 +62,22 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.explore:
-                        fragment = explore_fragment;
+                        fragment = exploreFragment;
                         break;
                     case R.id.saved:
-                        fragment = saved_fragment;
+                        fragment = savedFragment;
                         break;
                     case R.id.vehicles:
-                        fragment = vehicles_fragment;
+                        fragment = vehiclesFragment;
                         break;
                     case R.id.inbox:
                         fragment = inboxFragment;
                         break;
                     case R.id.profile:
-                        fragment = profile_fragment;
+                        fragment = profileFragment;
                         break;
                     default:
-                        fragment = explore_fragment;
+                        fragment = exploreFragment;
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
@@ -121,11 +106,14 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 Double userLongitude = location.getLongitude();
                 Double userLatitude = location.getLatitude();
-                userLocation = userLatitude + " " + String.valueOf(userLongitude);
-                Log.i(TAG, "User's location is " + userLocation);
-                explore_fragment.notifyAdapter();
+                userLocation = userLatitude + " " + userLongitude;
+                Log.i(TAG, "User's location is " + userLocation); exploreFragment.notifyAdapter();
             }
         });
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     public String getUserLocation() {
