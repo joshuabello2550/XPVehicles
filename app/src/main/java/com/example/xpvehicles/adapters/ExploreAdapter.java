@@ -103,13 +103,20 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         public void setValues(Vehicle vehicle) {
             // Vehicle name
             tvVehicleName.setText(vehicle.getVehicleName());
+
             // daily price
             String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
             tvDailyPrice.setText(dailyPrice);
+
             // distance from user
-            String vehiclePlaceId = vehicle.getPlaceId();
-            Log.i(TAG, "User's location is " + activity.getUserLocation());
-            getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
+            String distanceFromUser = vehicle.getDistanceFromUser();
+            if (distanceFromUser != null) {
+                tvDistanceFromUser.setText(distanceFromUser);
+            } else {
+                String vehiclePlaceId = vehicle.getPlaceId();
+                getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
+            }
+
             // vehicle image
             ParseFile image = vehicle.getVehicleImage();
             if (image != null) {
