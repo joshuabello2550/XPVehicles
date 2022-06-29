@@ -122,7 +122,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                     edtPickUpDate.setText(formattedDate);
                     try {
                         // Converts the string date back into a date Object
-                        returnDate = sdf.parse(formattedDate);
+                        pickupDate = sdf.parse(formattedDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -148,7 +148,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                     edtReturnDate.setText(formattedDate);
                     try {
                         // Converts the string date back into a date Object
-                        pickupDate = sdf.parse(formattedDate);
+                        returnDate = sdf.parse(formattedDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

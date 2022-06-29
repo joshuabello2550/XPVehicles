@@ -15,6 +15,9 @@ import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.UserVehicleRequestsActivity;
 import com.example.xpvehicles.models.RentVehicle;
+import com.example.xpvehicles.models._User;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseException;
@@ -24,6 +27,7 @@ import com.parse.ParseUser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHolder>{
 
@@ -55,6 +59,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        holder.setAcceptDenyStatus(vehicle);
     }
 
     @Override
@@ -69,8 +74,10 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private RentVehicle vehicle;
+        private RentVehicle request;
         private Button btnRequestAccept;
+        private Button btnRequestAccepted;
+        private Button btnRequestDenied;
         private Button btnRequestDeny;
         private TextView tvRequestDates;
         private TextView tvRequestName;
@@ -79,8 +86,8 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             bind(itemView);
-            setAcceptOnClickListener();
-            setDenyOnClickListener();
+            setAcceptOnClickListener(itemView);
+            setDenyOnClickListener(itemView);
         }
 
         private void bind(View itemView) {
@@ -89,10 +96,12 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             tvRequestDates = itemView.findViewById(R.id.tvRequestDates);
             tvRequestName = itemView.findViewById(R.id.tvRequestName);
             ivRequestProfileImage = itemView.findViewById(R.id.ivRequestProfileImage);
+            btnRequestAccepted = itemView.findViewById(R.id.btnRequestAccepted);
+            btnRequestDenied = itemView.findViewById(R.id.btnRequestDenied);
         }
 
-        public void setValues(RentVehicle vehicle) throws ParseException {
-            this.vehicle = vehicle;
+        private void setValues(RentVehicle vehicle) throws ParseException {
+            request = vehicle;
             // user requesting name
             _User userRequesting = (_User) vehicle.getRentee();
             String userRequestingName = userRequesting.fetchIfNeeded().getString("firstName") + " " + userRequesting.fetchIfNeeded().getString("lastName");
@@ -105,7 +114,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             }
 
             // request dates
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy");
             // vehicle pickup date
             Date pickUpDate = vehicle.getPickUpDate();
             String formattedPickUpDate = sdf.format(pickUpDate);
@@ -114,27 +123,46 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
             String formattedReturnDate = sdf.format(returnDate);
             String requestDates = formattedPickUpDate + " - " + formattedReturnDate;
             tvRequestDates.setText(requestDates);
-
         }
 
-        private void setAcceptOnClickListener() {
+        private void setAcceptDenyStatus(RentVehicle request) {
+            if (Objects.equals(request.getStatus(), "approved")) {
+                hideAcceptDenyButtons();
+                btnRequestAccepted.setVisibility(View.VISIBLE);
+            }
+            else if (Objects.equals(request.getStatus(), "denied")) {
+                hideAcceptDenyButtons();
+                btnRequestDenied.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void setAcceptOnClickListener(View itemView) {
             btnRequestAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    vehicle.setStatus("approved");
-                    vehicle.saveInBackground();
+                    hideAcceptDenyButtons();
+                    btnRequestAccepted.setVisibility(View.VISIBLE);
+                    request.setStatus("approved");
+                    request.saveInBackground();
                 }
             });
         }
 
-        private void setDenyOnClickListener() {
+        private void setDenyOnClickListener(View itemView) {
             btnRequestDeny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    vehicle.setStatus("denied");
-                    vehicle.saveInBackground();
+                    hideAcceptDenyButtons();
+                    btnRequestDenied.setVisibility(View.VISIBLE);
+                    request.setStatus("denied");
+                    request.saveInBackground();
                 }
             });
+        }
+
+        private void hideAcceptDenyButtons() {
+            btnRequestDeny.setVisibility(View.GONE);
+            btnRequestAccept.setVisibility(View.GONE);
         }
     }
 
