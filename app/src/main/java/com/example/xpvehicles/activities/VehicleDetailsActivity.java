@@ -87,11 +87,13 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private void setValues() {
-        String distanceFromUser = vehicle.getDistanceFromUser();
+        if (MainActivity.getUserLocationGeoPoint() != null) {
+            int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
+            tvDetailsDistanceFromUser.setText(distanceFromUser + "mi");
+        }
         tvDetailsVehicleName.setText(vehicle.getVehicleName());
         tvDetailsVehicleDescription.setText(vehicle.getDescription());
         tvDetailsDailyPrice.setText("$" + vehicle.getDailyPrice() + "/day");
-        tvDetailsDistanceFromUser.setText(distanceFromUser);
         tvOrderSummaryDailyPrice.setText("$" + vehicle.getDailyPrice());
         tvOrderSummaryNumberOfDays.setText("0");
         tvOrderSummaryOrderTotal.setText("$0");

@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="TextView"
+                    android:text="..."
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:layout_editor_absoluteY="251dp" />
@@ -137,7 +137,7 @@
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card"
+                android:id="@+id/materialCardVehicle"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

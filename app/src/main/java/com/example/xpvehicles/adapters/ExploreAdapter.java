@@ -26,7 +26,9 @@ import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
+import com.google.android.material.card.MaterialCardView;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
@@ -63,6 +65,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vehicle vehicle = vehicles.get(position);
         holder.setValues(vehicle);
+        holder.setSaveBtnInitialColor(vehicle);
         holder.setSaveBtnOnClickListener(vehicle);
     }
 
@@ -87,6 +90,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private TextView tvDailyPrice;
         private ImageView ivVehicle;
         private ImageButton ibSave;
+        private MaterialCardView materialCardVehicle;
         private _User currentUser;
 
         public ViewHolder(View itemView) {
@@ -100,6 +104,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             ivVehicle = itemView.findViewById(R.id.ivVehicle);
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
             ibSave = itemView.findViewById(R.id.ibSave);
+            materialCardVehicle = itemView.findViewById(R.id.materialCardVehicle);
         }
 
         public void setValues(Vehicle vehicle) {
@@ -111,12 +116,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             tvDailyPrice.setText(dailyPrice);
 
             // distance from user
-            String distanceFromUser = vehicle.getDistanceFromUser();
-            if (distanceFromUser != null) {
-                tvDistanceFromUser.setText(distanceFromUser);
-            } else {
-                String vehiclePlaceId = vehicle.getPlaceId();
-                getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
+            if (MainActivity.getUserLocationGeoPoint() != null) {
+                int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
+                tvDistanceFromUser.setText(distanceFromUser + " mi");
             }
 
             // vehicle image
@@ -124,56 +126,18 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             if (image != null) {
                 Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
             }
-            setImageOnClickListener(vehicle);
+            setMaterialCardVehicleOnClickListener(vehicle);
         }
 
-        private void getDistanceFromUser(Vehicle vehicle, String vehiclePlaceId, String userLocation) {
-            final String GOOGLE_DISTANCE_MATRIX_API_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_DESTINATIONS = "destinations";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_ORIGINS = "origins";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_KEY = "key";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_UNITS = "units";
-
-            Log.i(TAG, "Vehicles " + vehiclePlaceId + " " + userLocation);
-
-            RequestParams params = new RequestParams();
-            Resources res = fragment.getContext().getResources();
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_DESTINATIONS, "place_id:" + vehiclePlaceId);
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_ORIGINS, userLocation);
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_KEY, res.getString(R.string.API_KEY));
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_UNITS, "imperial");
-
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.get(GOOGLE_DISTANCE_MATRIX_API_BASE_URL, params, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Headers headers, JSON json) {
-                    Log.i(TAG, "Success " + json.toString());
-                    JSONObject jsonObject = json.jsonObject;
-                    try {
-                        JSONArray elements = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
-                        String distance = elements.getJSONObject(0).getJSONObject("distance").getString("text");
-                        vehicle.setDistanceFromUser(distance);
-                        tvDistanceFromUser.setText(distance);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error retrieve distance from json object", e);
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                    Log.e(TAG, "Error getting the distance from the user" + response, throwable);
-                }
-            });
-        }
-
-        private void setImageOnClickListener(Vehicle vehicle) {
-            ivVehicle.setOnClickListener(v -> {
+        private void setMaterialCardVehicleOnClickListener(Vehicle vehicle) {
+            materialCardVehicle.setOnClickListener(v -> {
                 Intent intent = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
                 intent.putExtra("vehicle", vehicle);
                 fragment.startActivity(intent);
             });
         }
 
-        private void setSaveBtnOnClickListener(Vehicle vehicle) {
+        private void setSaveBtnInitialColor(Vehicle vehicle) {
             currentUser = (_User) ParseUser.getCurrentUser();
             List listSavedVehicles = currentUser.getSavedVehicles();
             if (listSavedVehicles.contains(vehicle.getObjectId())) {
@@ -181,7 +145,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             } else {
                 ibSave.setImageResource(R.drawable.ic_favorite_border_24);
             }
+        }
 
+        private void setSaveBtnOnClickListener(Vehicle vehicle) {
+            currentUser = (_User) ParseUser.getCurrentUser();
+            List listSavedVehicles = currentUser.getSavedVehicles();
             ibSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -80,12 +80,4 @@ public class Vehicle extends ParseObject {
     public void setVehicleImage(ParseFile image) {
         put(KEY_VEHICLE_IMAGE,image);
     }
-
-    public String getDistanceFromUser() {
-        return getString(KEY_DISTANCE_FROM_USER);
-    }
-
-    public void setDistanceFromUser(String distanceFromUser) {
-        put(KEY_DISTANCE_FROM_USER, distanceFromUser);
-    }
 }
