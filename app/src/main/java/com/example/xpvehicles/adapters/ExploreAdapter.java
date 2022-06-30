@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -118,7 +119,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             // distance from user
             if (MainActivity.getUserLocationGeoPoint() != null) {
                 int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
-                tvDistanceFromUser.setText(distanceFromUser + " mi");
+                tvDistanceFromUser.setText(distanceFromUser + " mi.");
             }
 
             // vehicle image
@@ -133,7 +134,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             materialCardVehicle.setOnClickListener(v -> {
                 Intent intent = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
                 intent.putExtra("vehicle", vehicle);
-                fragment.startActivity(intent);
+                activity.startActivity(intent);
             });
         }
 

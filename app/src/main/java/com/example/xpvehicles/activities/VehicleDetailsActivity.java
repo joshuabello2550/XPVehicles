@@ -89,7 +89,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private void setValues() {
         if (MainActivity.getUserLocationGeoPoint() != null) {
             int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
-            tvDetailsDistanceFromUser.setText(distanceFromUser + "mi");
+            tvDetailsDistanceFromUser.setText(distanceFromUser + "mi.");
         }
         tvDetailsVehicleName.setText(vehicle.getVehicleName());
         tvDetailsVehicleDescription.setText(vehicle.getDescription());

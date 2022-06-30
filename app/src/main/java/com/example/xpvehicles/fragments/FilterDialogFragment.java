@@ -67,6 +67,9 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // fragment slides in and down to exit
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.DialogAnimation;
         return inflater.inflate(R.layout.fragment_filter, container, false);
     }
 
