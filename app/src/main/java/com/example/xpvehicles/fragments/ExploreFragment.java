@@ -28,11 +28,13 @@ import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class ExploreFragment extends Fragment {
@@ -129,12 +131,14 @@ public class ExploreFragment extends Fragment {
 
     private void querySearchVehicles(String searchQuery) {
         final String QUERY_PARAMETER_OWNER = "owner";
-        final String QUERY_PARAMETER_NAME = "owner";
+        final String QUERY_PARAMETER_NAME = "name";
 
-        ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
-        query.whereFullText(QUERY_PARAMETER_NAME, searchQuery);
-        query.findInBackground(new FindCallback<Vehicle>() {
+        ParseQuery<Vehicle> parseQuery = ParseQuery.getQuery(Vehicle.class);
+        parseQuery.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
+        parseQuery.whereMatches(QUERY_PARAMETER_NAME, searchQuery, "i");
+
+        // Fetches the vehicles that start with the searchQuery or include teh searchQuery within the name
+        parseQuery.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {
                 if (e != null) {
@@ -164,6 +168,7 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
+                exploreAdapter.clear();
                 if (vehicles.size() > 0) {
                     tvNoAvailableRentVehicle.setVisibility(View.GONE);
                     exploreAdapter.addAll(vehicles);

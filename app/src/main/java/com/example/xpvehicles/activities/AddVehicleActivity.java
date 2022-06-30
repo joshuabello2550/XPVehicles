@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private Button btnAddVehicle;
     private Button btnTakePicture;
     private File photoFile;
+    private FrameLayout takePictureFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         ivAddVehicleImage = findViewById(R.id.ivAddVehicleImage);
         btnAddVehicle = findViewById(R.id.btnAddVehicle);
         btnTakePicture = findViewById(R.id.btnTakePicture);
+        takePictureFrameLayout = findViewById(R.id.takePictureFrameLayout);
     }
 
     private void setTakePictureOnClickListener() {
@@ -128,6 +131,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivAddVehicleImage);
+                takePictureFrameLayout.setVisibility(View.GONE);
                 ivAddVehicleImage.setVisibility(View.VISIBLE);
                 ivPreview.setImageBitmap(takenImage);
             } else {
@@ -199,6 +203,7 @@ public class AddVehicleActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error while saving the vehicle to parse", e);
+                    Toast.makeText(AddVehicleActivity.this, "Unable to save vehicle to parse", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.i(TAG, "Post was successful");
