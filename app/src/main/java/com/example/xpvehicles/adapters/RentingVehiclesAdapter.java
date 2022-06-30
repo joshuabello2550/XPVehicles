@@ -85,6 +85,11 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        vehicles.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvRentingVehicleName;
         private TextView tvRentingPickUpDate;

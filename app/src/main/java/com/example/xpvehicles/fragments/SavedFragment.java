@@ -75,6 +75,7 @@ public class SavedFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
+                adapter.clear();
                 if (vehicles.size() > 0) {
                     tvNoSavedVehicles.setVisibility(View.GONE);
                     adapter.addAll(vehicles);

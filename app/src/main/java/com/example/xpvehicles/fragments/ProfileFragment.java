@@ -142,6 +142,7 @@ public class ProfileFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the user's vehicles",e);
                     return;
                 }
+                adapter.clear();
                 if (vehicles.size() > 0) {
                     tvUserNoVehiclesListed.setVisibility(View.GONE);
                     adapter.addAll(vehicles);

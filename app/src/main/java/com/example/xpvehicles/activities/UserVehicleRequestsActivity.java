@@ -96,6 +96,7 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
                     Log.e(TAG, "Issue with getting the requests", e);
                     return;
                 }
+                adapter.clear();
                 if (requests.size() > 0) {
                     tvNoRequests.setVisibility(View.GONE);
                     adapter.addAll(requests);

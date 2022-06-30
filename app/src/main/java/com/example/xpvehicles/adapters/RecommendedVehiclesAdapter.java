@@ -35,12 +35,12 @@ import okhttp3.Headers;
 public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<RecommendedVehiclesAdapter.ViewHolder> {
 
     public static final String TAG = "RecommendedVehiclesAdapter";
-    private List<Vehicle> mVehicles;
+    private List<Vehicle> vehicles;
     private ExploreFragment fragment;
     private MainActivity activity;
 
     public RecommendedVehiclesAdapter(ExploreFragment fragment, List<Vehicle> vehicles, MainActivity activity){
-        mVehicles = vehicles;
+        this.vehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;
     }
@@ -56,17 +56,17 @@ public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<Recommended
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Vehicle vehicle = mVehicles.get(position);
+        Vehicle vehicle = vehicles.get(position);
         holder.setValues(vehicle);
     }
 
     @Override
     public int getItemCount() {
-        return mVehicles.size();
+        return vehicles.size();
     }
 
     public void addAll(List<Vehicle> recommendedVehicles) {
-        mVehicles.addAll(recommendedVehicles);
+        vehicles.addAll(recommendedVehicles);
         notifyDataSetChanged();
     }
 
