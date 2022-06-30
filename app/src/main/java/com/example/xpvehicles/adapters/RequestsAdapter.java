@@ -67,6 +67,11 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
         return vehicles.size();
     }
 
+    public void clear() {
+        vehicles.clear();
+        notifyDataSetChanged();
+    }
+
     public void addAll(List<RentVehicle> allVehicles) {
         vehicles.addAll(allVehicles);
         notifyDataSetChanged();

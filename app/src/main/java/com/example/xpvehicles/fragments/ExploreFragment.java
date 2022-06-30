@@ -1,8 +1,12 @@
 package com.example.xpvehicles.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -47,6 +52,7 @@ public class ExploreFragment extends Fragment {
     private FloatingActionButton fabAddVehicle;
     private SearchView searchView;
     private ImageView ivFilter;
+    private View main_layout;
 
     public ExploreFragment(MainActivity mainActivity){
         activity = mainActivity;
@@ -55,18 +61,19 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        searchView.setQuery("", false);
         searchView.clearFocus();
+        main_layout.requestFocus();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
         return inflater.inflate(R.layout.fragment_explore, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        bind();
+        bind(view);
         queryAllVehicles();
         bindExploreAdapter(view);
         bindRecommendedAdapter(view);
@@ -75,11 +82,18 @@ public class ExploreFragment extends Fragment {
         setFilterOnClickListener();
     }
 
-    private void bind() {
-        tvNoAvailableRentVehicle = activity.findViewById(R.id.tvNoAvailableRentVehicle);
-        fabAddVehicle = activity.findViewById(R.id.fabAddVehicle);
-        searchView = activity.findViewById(R.id.searchView);
-        ivFilter = activity.findViewById(R.id.ivFilter);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        tvNoAvailableRentVehicle.setVisibility(View.GONE);
+    }
+
+    private void bind(View view) {
+        main_layout =  view.findViewById(R.id.main_layout);
+        tvNoAvailableRentVehicle = view.findViewById(R.id.tvNoAvailableRentVehicle);
+        fabAddVehicle = view.findViewById(R.id.fabAddVehicle);
+        searchView = view.findViewById(R.id.searchView);
+        ivFilter = view.findViewById(R.id.ivFilter);
     }
 
     private void bindRecommendedAdapter(View view) {
@@ -137,7 +151,7 @@ public class ExploreFragment extends Fragment {
         parseQuery.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
         parseQuery.whereMatches(QUERY_PARAMETER_NAME, searchQuery, "i");
 
-        // Fetches the vehicles that start with the searchQuery or include teh searchQuery within the name
+        // Fetches the vehicles that start with the searchQuery or include the searchQuery within the name
         parseQuery.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {
@@ -145,13 +159,7 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                exploreAdapter.clear();
-                if (vehicles.size() > 0) {
-                    tvNoAvailableRentVehicle.setVisibility(View.GONE);
-                    exploreAdapter.addAll(vehicles);
-                } else {
-                    tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
-                }
+                addVehiclesToAdapter(vehicles);
             }
         });
     }
@@ -168,15 +176,19 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                exploreAdapter.clear();
-                if (vehicles.size() > 0) {
-                    tvNoAvailableRentVehicle.setVisibility(View.GONE);
-                    exploreAdapter.addAll(vehicles);
-                } else {
-                    tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
-                }
+                addVehiclesToAdapter(vehicles);
             }
         });
+    }
+
+    private void addVehiclesToAdapter(List<Vehicle> vehicles) {
+        exploreAdapter.clear();
+        if (vehicles.size() > 0) {
+            tvNoAvailableRentVehicle.setVisibility(View.GONE);
+            exploreAdapter.addAll(vehicles);
+        } else {
+            tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setFilterOnClickListener() {
@@ -192,4 +204,5 @@ public class ExploreFragment extends Fragment {
     public void notifyAdapter() {
         exploreAdapter.notifyDataSetChanged();
     }
+
 }

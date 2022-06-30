@@ -76,6 +76,7 @@ public class RentingVehiclesFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
+                adapter.clear();
                 if (vehicles.size() > 0) {
                     tvUserNoRentingVehicles.setVisibility(View.GONE);
                     adapter.addAll(vehicles);

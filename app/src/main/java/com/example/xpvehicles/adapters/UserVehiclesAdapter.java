@@ -58,6 +58,11 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        vehicles.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivUserVehicle;
