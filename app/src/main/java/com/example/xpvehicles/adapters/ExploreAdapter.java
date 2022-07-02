@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.codepath.asynchttpclient.AsyncHttpClient;
@@ -56,10 +57,8 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        View vehicleView =  inflater.inflate(R.layout.vehicle_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.vehicle_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override
@@ -68,6 +67,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         holder.setValues(vehicle);
         holder.setSaveBtnInitialColor(vehicle);
         holder.setSaveBtnOnClickListener(vehicle);
+        holder.setMaterialCardVehicleOnClickListener(vehicle);
     }
 
     @Override
@@ -89,10 +89,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private TextView tvVehicleName;
         private TextView tvDistanceFromUser;
         private TextView tvDailyPrice;
-        private ImageView ivVehicle;
         private ImageButton ibSave;
         private MaterialCardView materialCardVehicle;
-        private _User currentUser;
+        private ViewPager2 viewPager;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -102,13 +101,13 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private void bind(View itemView) {
             tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
             tvDistanceFromUser = itemView.findViewById(R.id.tvDistanceFromUser);
-            ivVehicle = itemView.findViewById(R.id.ivVehicle);
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
             ibSave = itemView.findViewById(R.id.ibSave);
             materialCardVehicle = itemView.findViewById(R.id.materialCardVehicle);
+            viewPager = itemView.findViewById(R.id.viewPagerExploreVehicleImages);
         }
 
-        public void setValues(Vehicle vehicle) {
+        private void setValues(Vehicle vehicle) {
             // Vehicle name
             tvVehicleName.setText(vehicle.getVehicleName());
 
@@ -123,11 +122,14 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             }
 
             // vehicle image
-            ParseFile image = vehicle.getVehicleImage();
-            if (image != null) {
-                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
-            }
-            setMaterialCardVehicleOnClickListener(vehicle);
+            bindVehicleImagesAdapter(vehicle);
+        }
+
+        private void bindVehicleImagesAdapter(Vehicle vehicle) {
+            List<ParseFile> images = vehicle.getVehicleImages();
+            VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
+            viewPager.setAdapter(vehicleImagesAdapter);
+//            setVehicleSwipeListener(viewPager, images.size());
         }
 
         private void setMaterialCardVehicleOnClickListener(Vehicle vehicle) {
@@ -139,7 +141,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         }
 
         private void setSaveBtnInitialColor(Vehicle vehicle) {
-            currentUser = (_User) ParseUser.getCurrentUser();
+            _User currentUser = (_User) ParseUser.getCurrentUser();
             List listSavedVehicles = currentUser.getSavedVehicles();
             if (listSavedVehicles.contains(vehicle.getObjectId())) {
                 setSaveButtonClickedStyle(ibSave);
@@ -149,7 +151,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         }
 
         private void setSaveBtnOnClickListener(Vehicle vehicle) {
-            currentUser = (_User) ParseUser.getCurrentUser();
+            _User currentUser = (_User) ParseUser.getCurrentUser();
             List listSavedVehicles = currentUser.getSavedVehicles();
             ibSave.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -11,6 +11,8 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.List;
+
 import okhttp3.Headers;
 
 @ParseClassName("Vehicle")
@@ -18,12 +20,11 @@ public class Vehicle extends ParseObject {
 
     public static final String KEY_VEHICLE_NAME =  "name";
     public static final String KEY_DESCRIPTION =  "description";
-    public static final String KEY_VEHICLE_IMAGE =  "image";
     public static final String KEY_OWNER = "owner";
     public static final String KEY_DAILY_PRICE = "dailyPrice";
     public static final String KEY_GEO_LOCATION = "geoLocation";
     public static final String KEY_PLACE_ID = "placeId";
-    public static final String KEY_DISTANCE_FROM_USER = "distanceFromUser";
+    public static final String KEY_VEHICLE_IMAGES = "images";
 
     public ParseUser getOwner() {
         return getParseUser(KEY_OWNER);
@@ -73,11 +74,11 @@ public class Vehicle extends ParseObject {
         put(KEY_PLACE_ID, placeId);
     }
 
-    public ParseFile getVehicleImage(){
-        return getParseFile(KEY_VEHICLE_IMAGE);
+    public List<ParseFile> getVehicleImages() {
+        return getList(KEY_VEHICLE_IMAGES);
     }
 
-    public void setVehicleImage(ParseFile image) {
-        put(KEY_VEHICLE_IMAGE,image);
+    public void setVehicleImages(List<ParseFile> vehicleImages) {
+        put(KEY_VEHICLE_IMAGES, vehicleImages);
     }
 }

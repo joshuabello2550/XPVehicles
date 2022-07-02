@@ -35,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Headers;
 
@@ -53,8 +55,9 @@ public class AddVehicleActivity extends AppCompatActivity {
     private ImageView ivAddVehicleImage;
     private Button btnAddVehicle;
     private Button btnTakePicture;
-    private File photoFile;
     private FrameLayout takePictureFrameLayout;
+    private File photoFile;
+    private List<ParseFile> vehicleImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +92,13 @@ public class AddVehicleActivity extends AppCompatActivity {
 
     private void setTakePictureOnClickListener() {
         String photoFileName = "photo.jpg";
+        vehicleImages =  new ArrayList<>();
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 photoFile = getPhotoFileUri(photoFileName);
+                vehicleImages.add(new ParseFile(photoFile));
 
                 // wrap File object into a content provider
                 Uri fileProvider = FileProvider.getUriForFile(AddVehicleActivity.this, "com.codepath.fileprovider", photoFile);
@@ -131,7 +136,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivAddVehicleImage);
-                takePictureFrameLayout.setVisibility(View.GONE);
+//                takePictureFrameLayout.setVisibility(View.GONE);
                 ivAddVehicleImage.setVisibility(View.VISIBLE);
                 ivPreview.setImageBitmap(takenImage);
             } else {
@@ -196,7 +201,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         vehicle.setDescription(description);
         vehicle.setDailyPrice(dailyPrice);
         vehicle.setPlaceId(placeId);
-        vehicle.setVehicleImage(new ParseFile(photoFile));
+        vehicle.setVehicleImages(vehicleImages);
         vehicle.setGeoLocation(vehicleLocationGeoPoint);
         vehicle.saveInBackground(new SaveCallback() {
             @Override
@@ -207,7 +212,6 @@ public class AddVehicleActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "Post was successful");
-                clearComponents();
                 goMainActivity();
             }
         });
@@ -216,16 +220,5 @@ public class AddVehicleActivity extends AppCompatActivity {
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
-    }
-
-    private void clearComponents() {
-        edtVehicleName.setText("");
-        edtDescription.setText("");
-        edtStreetAddress.setText("");
-        edtCity.setText("");
-        edtState.setText("");
-        edtZipCode.setText("");
-        edtDailyPrice.setText("");
-        ivAddVehicleImage.setVisibility(View.GONE);
     }
 }

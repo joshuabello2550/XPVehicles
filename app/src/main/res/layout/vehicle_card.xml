@@ -20,17 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/ivVehicle"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerExploreVehicleImages"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:adjustViewBounds="true"
+                android:clickable="true"
                 android:maxHeight="200dp"
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvVehicleName"
@@ -41,7 +41,7 @@
                 android:text="TextView"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivVehicle" />
+                app:layout_constraintTop_toBottomOf="@+id/viewPagerExploreVehicleImages" />
 
             <TextView
                 android:id="@+id/tvDailyPrice"
@@ -82,8 +82,6 @@
                 android:outlineProvider="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivVehicle"
-                app:layout_constraintVertical_bias="1.0"
                 app:srcCompat="@drawable/ic_favorite_border_24" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

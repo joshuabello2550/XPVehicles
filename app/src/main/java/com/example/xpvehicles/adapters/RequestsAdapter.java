@@ -45,10 +45,8 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
     @NonNull
     @Override
     public RequestsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View vehicleView = inflater.inflate(R.layout.request_card, parent, false);
-        RequestsAdapter.ViewHolder viewHolder = new RequestsAdapter.ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.request_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override

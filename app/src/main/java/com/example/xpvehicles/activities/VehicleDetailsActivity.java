@@ -1,7 +1,10 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,8 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
@@ -43,18 +46,24 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private TextView tvOrderSummaryDailyPrice;
     private TextView tvOrderSummaryNumberOfDays;
     private TextView tvOrderSummaryOrderTotal;
-    private ImageView ivDetailsVehicleImage;
     private Button btnReserveNow;
     private TextInputLayout detailsPickupDateOTF;
     private TextInputLayout detailsReturnDateOTF;
     private Date pickupDate;
     private Date returnDate;
 
+    private void setTopAppBarOnClickListener() {
+        topAppBar.setNavigationOnClickListener(v -> {
+            this.finish();
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vehicle = (Vehicle) getIntent().getParcelableExtra("vehicle");
         setContentView(R.layout.activity_vehicle_details);
+        bindVehicleImagesAdapter();
         bind();
         setValues();
         setTopAppBarOnClickListener();
@@ -63,9 +72,23 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         setReserveNowOnClickListener();
     }
 
-    private void setTopAppBarOnClickListener() {
-        topAppBar.setNavigationOnClickListener(v -> {
-            this.finish();
+    private void bindVehicleImagesAdapter() {
+        List<ParseFile> images = vehicle.getVehicleImages();
+        ViewPager2 viewPager = findViewById(R.id.viewPagerDetailsVehicleImages);
+        VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
+        viewPager.setAdapter(vehicleImagesAdapter);
+        setVehicleSwipeListener(viewPager, images.size());
+    }
+
+    private void setVehicleSwipeListener(ViewPager2 viewPager, int totalNumberOfImages) {
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                TextView tvVehicleImagePosition =  findViewById(R.id.tvVehicleImagePosition);
+                int currentPosition = position + 1;
+                tvVehicleImagePosition.setText(currentPosition + " / " + totalNumberOfImages);
+            }
         });
     }
 
@@ -75,7 +98,6 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         edtReturnDate = findViewById(R.id.edtReturnDate);
         topAppBar = findViewById(R.id.filterTopAppBar);
         tvDetailsVehicleName = findViewById(R.id.tvDetailsVehicleName);
-        ivDetailsVehicleImage = findViewById(R.id.ivDetailsVehicleImage);
         tvDetailsVehicleDescription = findViewById(R.id.tvDetailsVehicleDescription);
         tvDetailsDailyPrice = findViewById(R.id.tvDetailsDailyPrice);
         tvDetailsDistanceFromUser = findViewById(R.id.tvDetailsDistanceFromUser);
@@ -97,18 +119,13 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         tvOrderSummaryDailyPrice.setText("$" + vehicle.getDailyPrice());
         tvOrderSummaryNumberOfDays.setText("0");
         tvOrderSummaryOrderTotal.setText("$0");
-
-        ParseFile image = vehicle.getVehicleImage();
-        if (image != null) {
-            Glide.with(this).load(image.getUrl()).into(ivDetailsVehicleImage);
-        }
     }
 
     private void setPickupDateOnClickListener() {
         edtPickUpDate.setOnClickListener(v -> {
-            MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+            MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
             materialDateBuilder.setTitleText("PICKUP DATE");
-            MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+            MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
             materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
             // positive button == ok button
             materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
@@ -132,16 +149,16 @@ public class VehicleDetailsActivity extends AppCompatActivity {
 
     private void setReturnDateOnClickListener() {
         edtReturnDate.setOnClickListener(v -> {
-            MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+            MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
             materialDateBuilder.setTitleText("PICKUP DATE");
-            MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+            MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
             materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
             // positive button == ok button
             materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
                 @Override public void onPositiveButtonClick(Long selection) {
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis(selection);
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
                     String formattedDate  = sdf.format(calendar.getTime());
                     edtReturnDate.setText(formattedDate);
                     try {

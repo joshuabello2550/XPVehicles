@@ -59,10 +59,8 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        View vehicleView =  inflater.inflate(R.layout.renting_vehicles_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.renting_vehicles_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override
@@ -132,10 +130,10 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
             setStatusColor(status);
 
             // vehicle image
-            ParseFile image = originalVehicle.getVehicleImage();
-            if (image != null) {
-                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivRentingVehicleImage);
-            }
+//            ParseFile image = originalVehicle.getVehicleImage();
+//            if (image != null) {
+//                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivRentingVehicleImage);
+//            }
         }
 
         private void setStatusColor(String status) {

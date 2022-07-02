@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1360578540195089" />
+        <entry key="app/src/main/res/drawable/dailog_rounded_corners.xml" value="0.1635" />
+        <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.1635" />
         <entry key="app/src/main/res/drawable/selector_explore.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/selector_mail.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/selector_profile.xml" value="0.2155" />
@@ -31,6 +33,7 @@
         <entry key="app/src/main/res/layout/reting_vehicle_card.xml" value="0.1" />
         <entry key="app/src/main/res/layout/user_vehicle_card.xml" value="0.15568862275449102" />
         <entry key="app/src/main/res/layout/vehicle_card.xml" value="0.40076335877862596" />
+        <entry key="app/src/main/res/layout/vehicle_image.xml" value="0.2722222222222222" />
         <entry key="app/src/main/res/menu/add_vehicle_top_bar.xml" value="0.4111111111111111" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1111111111111111" />
         <entry key="app/src/main/res/menu/profile_top_app_bar.xml" value="0.32222222222222224" />

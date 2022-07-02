@@ -78,10 +78,10 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
 
         tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
         tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
-        ParseFile image = vehicle.getVehicleImage();
-        if (image != null) {
-            Glide.with(this).load(image.getUrl()).into(ivUserVehicleDetails);
-        }
+//        ParseFile image = vehicle.getVehicleImage();
+//        if (image != null) {
+//            Glide.with(this).load(image.getUrl()).into(ivUserVehicleDetails);
+//        }
     }
 
     private void queryUserVehicles() {

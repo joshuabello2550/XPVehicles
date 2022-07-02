@@ -48,10 +48,8 @@ public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<Recommended
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        View vehicleView =  inflater.inflate(R.layout.recommend_vehicle_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.recommend_vehicle_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override

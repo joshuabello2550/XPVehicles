@@ -36,10 +36,8 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        View vehicleView = inflater.inflate(R.layout.user_vehicle_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.user_vehicle_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override
@@ -83,11 +81,11 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
             tvUserVehicleName.setText(vehicle.getVehicleName());
 
             // Vehicle image
-            ParseFile image = vehicle.getVehicleImage();
-            if (image != null) {
-                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivUserVehicle);
-            }
-            setUserVehicleImageOnClickListener(vehicle);
+//            ParseFile image = vehicle.getVehicleImage();
+//            if (image != null) {
+//                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivUserVehicle);
+//            }
+//            setUserVehicleImageOnClickListener(vehicle);
         }
 
         private void setUserVehicleImageOnClickListener(Vehicle vehicle) {
