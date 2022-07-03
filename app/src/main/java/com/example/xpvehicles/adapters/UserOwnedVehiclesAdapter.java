@@ -4,30 +4,29 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.activities.UserVehicleRequestsActivity;
+import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapter.ViewHolder> {
+public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehiclesAdapter.ViewHolder> {
 
     public static final String TAG = "UserVehiclesAdapter";
     private List<Vehicle> vehicles;
     private Fragment fragment;
     private MainActivity activity;
 
-    public UserVehiclesAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
+    public UserOwnedVehiclesAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
         this.vehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;
@@ -44,6 +43,7 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vehicle vehicle = vehicles.get(position);
         holder.setValues(vehicle);
+        holder.setViewHolderOnClickListener(holder, vehicle);
     }
 
     @Override
@@ -63,8 +63,9 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivUserVehicle;
         private TextView tvUserVehicleName;
+        private ViewPager2 viewPager;
+        private View viewUserOwnedVehicleDummyView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -72,8 +73,9 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
         }
 
         private void bind(View itemView) {
-            ivUserVehicle = itemView.findViewById(R.id.ivUserVehicle);
             tvUserVehicleName = itemView.findViewById(R.id.tvUserVehicleName);
+            viewPager = itemView.findViewById(R.id.viewPagerUserVehicleImage);
+            viewUserOwnedVehicleDummyView = itemView.findViewById(R.id.viewUserOwnedVehicleDummyView);
         }
 
         public void setValues(Vehicle vehicle) {
@@ -81,18 +83,21 @@ public class UserVehiclesAdapter extends RecyclerView.Adapter<UserVehiclesAdapte
             tvUserVehicleName.setText(vehicle.getVehicleName());
 
             // Vehicle image
-//            ParseFile image = vehicle.getVehicleImage();
-//            if (image != null) {
-//                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivUserVehicle);
-//            }
-//            setUserVehicleImageOnClickListener(vehicle);
+            bindVehicleImagesAdapter(vehicle);
         }
 
-        private void setUserVehicleImageOnClickListener(Vehicle vehicle) {
-            ivUserVehicle.setOnClickListener(new View.OnClickListener() {
+        private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
+            List<ParseFile> images = rentVehicle.getVehicleImages();
+            VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
+            viewPager.setAdapter(vehicleImagesAdapter);
+//            setVehicleSwipeListener(viewPager, images.size());
+        }
+
+        private void setViewHolderOnClickListener(ViewHolder holder, Vehicle vehicle) {
+            viewUserOwnedVehicleDummyView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(activity, UserVehicleRequestsActivity.class);
+                    Intent i = new Intent(activity, UserOwnedVehicleRequestsActivity.class);
                     i.putExtra("userVehicle", vehicle);
                     fragment.startActivity(i);
                 }

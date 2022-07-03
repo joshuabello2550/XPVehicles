@@ -8,11 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,19 +16,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.SearchView;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.fragments.InboxFragment;
 import com.example.xpvehicles.fragments.ProfileFragment;
 import com.example.xpvehicles.fragments.SavedFragment;
-import com.example.xpvehicles.fragments.RentingVehiclesFragment;
+import com.example.xpvehicles.fragments.RentingRequestsFragment;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseGeoPoint;
@@ -45,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     final ExploreFragment exploreFragment = new ExploreFragment(this);
     final InboxFragment inboxFragment = new InboxFragment(this);
     final SavedFragment savedFragment = new SavedFragment(this);
-    final RentingVehiclesFragment vehiclesFragment = new RentingVehiclesFragment(this);
+    final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
     final ProfileFragment profileFragment = new ProfileFragment(this);
 
     @Override

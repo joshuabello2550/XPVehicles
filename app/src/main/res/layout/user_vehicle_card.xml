@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardVehicle"
+        android:id="@+id/materialCardView2"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="0dp"
         android:layout_height="150dp"
@@ -21,13 +21,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/ivUserVehicle"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerUserVehicleImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:alpha=".8"
-                android:scaleType="centerCrop"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/tvUserVehicleName"
@@ -42,5 +41,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/viewUserOwnedVehicleDummyView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

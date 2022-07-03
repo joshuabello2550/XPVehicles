@@ -3,43 +3,27 @@ package com.example.xpvehicles.adapters;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.RequestParams;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
-import com.example.xpvehicles.fragments.ExploreFragment;
-import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.card.MaterialCardView;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
-
-import okhttp3.Headers;
 
 public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
 
@@ -90,7 +74,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private TextView tvDistanceFromUser;
         private TextView tvDailyPrice;
         private ImageButton ibSave;
-        private MaterialCardView materialCardVehicle;
+        private MaterialCardView materialCardView;
         private ViewPager2 viewPager;
 
         public ViewHolder(View itemView) {
@@ -103,7 +87,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             tvDistanceFromUser = itemView.findViewById(R.id.tvDistanceFromUser);
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
             ibSave = itemView.findViewById(R.id.ibSave);
-            materialCardVehicle = itemView.findViewById(R.id.materialCardVehicle);
+            materialCardView = itemView.findViewById(R.id.materialCardVehicleContainer);
             viewPager = itemView.findViewById(R.id.viewPagerExploreVehicleImages);
         }
 
@@ -133,7 +117,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         }
 
         private void setMaterialCardVehicleOnClickListener(Vehicle vehicle) {
-            materialCardVehicle.setOnClickListener(v -> {
+            materialCardView.setOnClickListener(v -> {
                 Intent intent = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
                 intent.putExtra("vehicle", vehicle);
                 activity.startActivity(intent);

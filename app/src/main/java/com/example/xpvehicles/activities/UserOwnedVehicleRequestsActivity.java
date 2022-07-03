@@ -1,42 +1,39 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.adapters.RequestsAdapter;
+import com.example.xpvehicles.adapters.UserOwnedVehicleRequestsAdapter;
+import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
-import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserVehicleRequestsActivity extends AppCompatActivity {
+public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
 
     public static final String TAG = "UserVehicleRequestsActivity";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
-    private RequestsAdapter adapter;
+    private UserOwnedVehicleRequestsAdapter adapter;
     private TextView tvUserVehicleDetailsName;
     private TextView tvUserVehicleDetailsDailyPrice;
     private TextView tvNoRequests;
-    private ImageView ivUserVehicleDetails;
+    private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +57,24 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
         topAppBar = findViewById(R.id.userVehicleTopAppBar);
         tvUserVehicleDetailsName = findViewById(R.id.tvUserVehicleDetailsName);
         tvUserVehicleDetailsDailyPrice = findViewById(R.id.tvUserVehicleDetailsDailyPrice);
-        ivUserVehicleDetails = findViewById(R.id.ivUserVehicleDetails);
+        viewPager = findViewById(R.id.viewPagerUserVehicleDetails);
         tvNoRequests = findViewById(R.id.tvNoRequests);
     }
 
     private void bindAdapter() {
         List<RentVehicle> allVehicles = new ArrayList<>();
-        adapter = new RequestsAdapter(allVehicles, this);
+        adapter = new UserOwnedVehicleRequestsAdapter(allVehicles, this);
 
         RecyclerView rvVehicles = findViewById(R.id.rvRequests);
         rvVehicles.setAdapter(adapter);
         rvVehicles.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
+        List<ParseFile> images = rentVehicle.getVehicleImages();
+        VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
+        viewPager.setAdapter(vehicleImagesAdapter);
+//            setVehicleSwipeListener(viewPager, images.size());
     }
 
     private void setValues() {
@@ -78,10 +82,7 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
 
         tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
         tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
-//        ParseFile image = vehicle.getVehicleImage();
-//        if (image != null) {
-//            Glide.with(this).load(image.getUrl()).into(ivUserVehicleDetails);
-//        }
+        bindVehicleImagesAdapter(vehicle);
     }
 
     private void queryUserVehicles() {

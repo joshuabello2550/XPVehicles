@@ -39,7 +39,7 @@
         </provider>
 
         <activity
-            android:name=".activities.UserVehicleRequestsActivity"
+            android:name=".activities.UserOwnedVehicleRequestsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.VehicleDetailsActivity"

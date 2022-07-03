@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardVehicle"
+        android:id="@+id/materialCardVehicleContainer"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,6 @@
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
-                android:clickable="true"
                 android:maxHeight="200dp"
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"

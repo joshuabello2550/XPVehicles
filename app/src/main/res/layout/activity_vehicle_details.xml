@@ -162,7 +162,7 @@
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/materialCardVehicle"
+                android:id="@+id/materialCardPaymentSummary"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
