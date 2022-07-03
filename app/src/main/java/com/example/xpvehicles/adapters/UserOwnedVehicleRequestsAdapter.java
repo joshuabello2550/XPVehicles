@@ -40,7 +40,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
     @NonNull
     @Override
     public UserOwnedVehicleRequestsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vehicleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_vehicle_request_card, parent, false);
+        View vehicleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_owned_vehicle_request_card, parent, false);
         return new ViewHolder(vehicleView);
     }
 

@@ -150,7 +150,6 @@ public class FilterDialogFragment extends DialogFragment {
         });
     }
 
-
     private void setClearAllOnCLickListener() {
         tvClearAll.setOnClickListener(new View.OnClickListener() {
             @Override

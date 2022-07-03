@@ -1,5 +1,6 @@
 package com.example.xpvehicles.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,8 @@ import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -34,6 +37,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
     private TextView tvUserVehicleDetailsDailyPrice;
     private TextView tvNoRequests;
     private ViewPager2 viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
         tvUserVehicleDetailsDailyPrice = findViewById(R.id.tvUserVehicleDetailsDailyPrice);
         viewPager = findViewById(R.id.viewPagerUserVehicleDetails);
         tvNoRequests = findViewById(R.id.tvNoRequests);
+        tabLayout =  findViewById(R.id.tabLayout);
     }
 
     private void bindAdapter() {
@@ -74,7 +79,16 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
         List<ParseFile> images = rentVehicle.getVehicleImages();
         VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
         viewPager.setAdapter(vehicleImagesAdapter);
-//            setVehicleSwipeListener(viewPager, images.size());
+
+        //indicator dots at the bottom
+        TabLayoutMediator tabLayoutMediator =
+                new TabLayoutMediator(tabLayout, viewPager, true,
+                        new TabLayoutMediator.TabConfigurationStrategy() {
+                            @Override public void onConfigureTab(
+                                    @NonNull TabLayout.Tab tab, int position) { }
+                        }
+                );
+        tabLayoutMediator.attach();
     }
 
     private void setValues() {

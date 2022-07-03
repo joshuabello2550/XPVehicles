@@ -84,9 +84,4 @@ public class RentingRequestsFragment extends Fragment {
         });
 
     }
-
-
-
-
-
 }

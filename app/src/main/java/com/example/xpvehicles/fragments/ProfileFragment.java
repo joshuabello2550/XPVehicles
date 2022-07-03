@@ -208,7 +208,4 @@ public class ProfileFragment extends Fragment {
         ParseFile parseFile = new ParseFile("image_file.png",imageByte);
         return parseFile;
     }
-
-
-
 }

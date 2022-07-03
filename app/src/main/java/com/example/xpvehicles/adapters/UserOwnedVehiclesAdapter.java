@@ -15,6 +15,8 @@ import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.Vehicle;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseFile;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.user_vehicle_card, parent, false);
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.user_owned_vehicle_card, parent, false);
         return new ViewHolder(vehicleView);
     }
 
@@ -66,6 +68,7 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
         private TextView tvUserVehicleName;
         private ViewPager2 viewPager;
         private View viewUserOwnedVehicleDummyView;
+        private TabLayout tabLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -76,6 +79,7 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
             tvUserVehicleName = itemView.findViewById(R.id.tvUserVehicleName);
             viewPager = itemView.findViewById(R.id.viewPagerUserVehicleImage);
             viewUserOwnedVehicleDummyView = itemView.findViewById(R.id.viewUserOwnedVehicleDummyView);
+            tabLayout =  itemView.findViewById(R.id.tabLayout);
         }
 
         public void setValues(Vehicle vehicle) {
@@ -90,7 +94,16 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
             List<ParseFile> images = rentVehicle.getVehicleImages();
             VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
             viewPager.setAdapter(vehicleImagesAdapter);
-//            setVehicleSwipeListener(viewPager, images.size());
+
+            //indicator dots at the bottom
+            TabLayoutMediator tabLayoutMediator =
+                    new TabLayoutMediator(tabLayout, viewPager, true,
+                            new TabLayoutMediator.TabConfigurationStrategy() {
+                                @Override public void onConfigureTab(
+                                        @NonNull TabLayout.Tab tab, int position) { }
+                            }
+                    );
+            tabLayoutMediator.attach();
         }
 
         private void setViewHolderOnClickListener(ViewHolder holder, Vehicle vehicle) {

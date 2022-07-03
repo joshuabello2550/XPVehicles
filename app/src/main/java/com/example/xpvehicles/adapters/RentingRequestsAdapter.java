@@ -16,6 +16,8 @@ import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.fragments.RentingRequestsFragment;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 
@@ -74,6 +76,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
         private TextView tvRentingReturnDate;
         private TextView tvStatus;
         private ViewPager2 viewPager;
+        private TabLayout tabLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -86,6 +89,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             tvRentingReturnDate = itemView.findViewById(R.id.tvRentingReturnDate);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             viewPager = itemView.findViewById(R.id.viewPagerRentingVehicleImages);
+            tabLayout =  itemView.findViewById(R.id.tabLayout);
         }
 
         public void setValues(RentVehicle rentVehicle) throws ParseException{
@@ -117,7 +121,16 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             List<ParseFile> images = rentVehicle.getVehicleImages();
             VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
             viewPager.setAdapter(vehicleImagesAdapter);
-//            setVehicleSwipeListener(viewPager, images.size());
+
+            //indicator dots at the bottom
+            TabLayoutMediator tabLayoutMediator =
+                    new TabLayoutMediator(tabLayout, viewPager, true,
+                            new TabLayoutMediator.TabConfigurationStrategy() {
+                                @Override public void onConfigureTab(
+                                        @NonNull TabLayout.Tab tab, int position) { }
+                            }
+                    );
+            tabLayoutMediator.attach();
         }
 
         private void setStatusColor(String status) {

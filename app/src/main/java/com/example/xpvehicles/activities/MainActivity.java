@@ -30,13 +30,13 @@ import com.parse.ParseGeoPoint;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static ParseGeoPoint userLocationGeoPoint;
-    private BottomNavigationView bottomNavigationView;
     final ExploreFragment exploreFragment = new ExploreFragment(this);
     final InboxFragment inboxFragment = new InboxFragment(this);
     final SavedFragment savedFragment = new SavedFragment(this);
     final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
     final ProfileFragment profileFragment = new ProfileFragment(this);
+    private static ParseGeoPoint userLocationGeoPoint;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
