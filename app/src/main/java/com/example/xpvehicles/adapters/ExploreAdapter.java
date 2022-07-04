@@ -2,6 +2,7 @@ package com.example.xpvehicles.adapters;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +105,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             tvVehicleName.setText(vehicle.getVehicleName());
 
             // daily price
-            String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
+            String dailyPrice = "$" + vehicle.getDailyPrice() + " day";
             tvDailyPrice.setText(dailyPrice);
 
             // distance from user

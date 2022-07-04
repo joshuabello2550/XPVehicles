@@ -1,7 +1,9 @@
 package com.example.xpvehicles.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -23,8 +25,11 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -52,12 +57,13 @@ public class AddVehicleActivity extends AppCompatActivity {
     private EditText edtState;
     private EditText edtZipCode;
     private EditText edtDailyPrice;
-    private ImageView ivAddVehicleImage;
     private Button btnAddVehicle;
     private Button btnTakePicture;
-    private FrameLayout takePictureFrameLayout;
     private File photoFile;
-    private List<ParseFile> vehicleImages;
+    private List<ParseFile> vehicleImages = new ArrayList<>();
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private VehicleImagesAdapter vehicleImagesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +73,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         setTopAppBarOnClickListener();
         setAddVehicleOnClickListener();
         setTakePictureOnClickListener();
+        bindVehicleImagesAdapter();
     }
 
     private void setTopAppBarOnClickListener() {
@@ -84,10 +91,25 @@ public class AddVehicleActivity extends AppCompatActivity {
         edtState = findViewById(R.id.edtState);
         edtZipCode = findViewById(R.id.edtZipCode);
         edtDailyPrice = findViewById(R.id.edtDailyPrice);
-        ivAddVehicleImage = findViewById(R.id.ivAddVehicleImage);
         btnAddVehicle = findViewById(R.id.btnAddVehicle);
         btnTakePicture = findViewById(R.id.btnTakePicture);
-        takePictureFrameLayout = findViewById(R.id.takePictureFrameLayout);
+        viewPager =  findViewById(R.id.viewPagerAddVehicleImages);
+        tabLayout = findViewById(R.id.tabLayout);
+    }
+
+    private void bindVehicleImagesAdapter() {
+        vehicleImagesAdapter =  new VehicleImagesAdapter(AddVehicleActivity.this, vehicleImages);
+        viewPager.setAdapter(vehicleImagesAdapter);
+
+        //indicator dots at the bottom
+        TabLayoutMediator tabLayoutMediator =
+                new TabLayoutMediator(tabLayout, viewPager, true,
+                        new TabLayoutMediator.TabConfigurationStrategy() {
+                            @Override public void onConfigureTab(
+                                    @NonNull TabLayout.Tab tab, int position) { }
+                        }
+                );
+        tabLayoutMediator.attach();
     }
 
     private void setTakePictureOnClickListener() {
@@ -98,7 +120,6 @@ public class AddVehicleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 photoFile = getPhotoFileUri(photoFileName);
-                vehicleImages.add(new ParseFile(photoFile));
 
                 // wrap File object into a content provider
                 Uri fileProvider = FileProvider.getUriForFile(AddVehicleActivity.this, "com.codepath.fileprovider", photoFile);
@@ -135,10 +156,8 @@ public class AddVehicleActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivAddVehicleImage);
-//                takePictureFrameLayout.setVisibility(View.GONE);
-                ivAddVehicleImage.setVisibility(View.VISIBLE);
-                ivPreview.setImageBitmap(takenImage);
+                vehicleImages.add(new ParseFile(photoFile));
+                notifyAdapter();
             } else {
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -220,5 +239,9 @@ public class AddVehicleActivity extends AppCompatActivity {
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
+    }
+
+    private void notifyAdapter() {
+        vehicleImagesAdapter.notifyDataSetChanged();
     }
 }

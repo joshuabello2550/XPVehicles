@@ -45,8 +45,8 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
         vehicle = getIntent().getParcelableExtra("userVehicle");
         setContentView(R.layout.activity_user_vehicle_requests);
         bind();
-        queryUserVehicles();
-        bindAdapter();
+        queryUserOwnedVehicleRequests();
+        bindUserOwnedVehicleRequestsAdapter();
         setValues();
         setTopAppBarOnClickListener();
     }
@@ -61,12 +61,12 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
         topAppBar = findViewById(R.id.userVehicleTopAppBar);
         tvUserVehicleDetailsName = findViewById(R.id.tvUserVehicleDetailsName);
         tvUserVehicleDetailsDailyPrice = findViewById(R.id.tvUserVehicleDetailsDailyPrice);
-        viewPager = findViewById(R.id.viewPagerUserVehicleDetails);
         tvNoRequests = findViewById(R.id.tvNoRequests);
+        viewPager = findViewById(R.id.viewPagerUserVehicleDetails);
         tabLayout =  findViewById(R.id.tabLayout);
     }
 
-    private void bindAdapter() {
+    private void bindUserOwnedVehicleRequestsAdapter() {
         List<RentVehicle> allVehicles = new ArrayList<>();
         adapter = new UserOwnedVehicleRequestsAdapter(allVehicles, this);
 
@@ -75,31 +75,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
         rvVehicles.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
-        List<ParseFile> images = rentVehicle.getVehicleImages();
-        VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
-        viewPager.setAdapter(vehicleImagesAdapter);
-
-        //indicator dots at the bottom
-        TabLayoutMediator tabLayoutMediator =
-                new TabLayoutMediator(tabLayout, viewPager, true,
-                        new TabLayoutMediator.TabConfigurationStrategy() {
-                            @Override public void onConfigureTab(
-                                    @NonNull TabLayout.Tab tab, int position) { }
-                        }
-                );
-        tabLayoutMediator.attach();
-    }
-
-    private void setValues() {
-        final String DAILY_PRICE_PREFIX = "Daily Price: $";
-
-        tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
-        tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
-        bindVehicleImagesAdapter(vehicle);
-    }
-
-    private void queryUserVehicles() {
+    private void queryUserOwnedVehicleRequests() {
         final String QUERY_PARAMETER_VEHICLE = "vehicle";
 
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
@@ -120,5 +96,29 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setValues() {
+        final String DAILY_PRICE_PREFIX = "Daily Price: $";
+
+        tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
+        tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
+        bindVehicleImagesAdapter(vehicle);
+    }
+
+    private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
+        List<ParseFile> images = rentVehicle.getVehicleImages();
+        VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
+        viewPager.setAdapter(vehicleImagesAdapter);
+
+        //indicator dots at the bottom
+        TabLayoutMediator tabLayoutMediator =
+                new TabLayoutMediator(tabLayout, viewPager, true,
+                        new TabLayoutMediator.TabConfigurationStrategy() {
+                            @Override public void onConfigureTab(
+                                    @NonNull TabLayout.Tab tab, int position) { }
+                        }
+                );
+        tabLayoutMediator.attach();
     }
 }

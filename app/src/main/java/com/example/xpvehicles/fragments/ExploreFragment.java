@@ -63,7 +63,6 @@ public class ExploreFragment extends Fragment {
         super.onResume();
         searchView.setQuery("", false);
         searchView.clearFocus();
-        main_layout.requestFocus();
     }
 
     @Override
@@ -204,5 +203,4 @@ public class ExploreFragment extends Fragment {
     public void notifyAdapter() {
         exploreAdapter.notifyDataSetChanged();
     }
-
 }
