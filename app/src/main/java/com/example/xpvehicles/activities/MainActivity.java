@@ -32,21 +32,21 @@ import com.example.xpvehicles.fragments.ExploreFragment;
 import com.example.xpvehicles.fragments.InboxFragment;
 import com.example.xpvehicles.fragments.ProfileFragment;
 import com.example.xpvehicles.fragments.SavedFragment;
-import com.example.xpvehicles.fragments.RentingVehiclesFragment;
+import com.example.xpvehicles.fragments.RentingRequestsFragment;
+import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseGeoPoint;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private String userLocation;
-    private ParseGeoPoint userLocationGeoPoint;
-    private BottomNavigationView bottomNavigationView;
     final ExploreFragment exploreFragment = new ExploreFragment(this);
     final InboxFragment inboxFragment = new InboxFragment(this);
     final SavedFragment savedFragment = new SavedFragment(this);
-    final RentingVehiclesFragment vehiclesFragment = new RentingVehiclesFragment(this);
+    final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
     final ProfileFragment profileFragment = new ProfileFragment(this);
+    private static ParseGeoPoint userLocationGeoPoint;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationChanged(@NonNull Location location) {
                 Double userLongitude = location.getLongitude();
                 Double userLatitude = location.getLatitude();
-                userLocation = userLatitude + " " + userLongitude;
                 userLocationGeoPoint = new ParseGeoPoint(userLatitude, userLongitude);
-                Log.i(TAG, "User's location is " + userLocation); exploreFragment.notifyAdapter();
+                Log.i(TAG, "User's location is " + userLocationGeoPoint);
+                exploreFragment.notifyAdapter();
             }
         });
     }
@@ -124,11 +124,14 @@ public class MainActivity extends AppCompatActivity {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    public String getUserLocation() {
-        return userLocation;
+    public static ParseGeoPoint getUserLocationGeoPoint() {
+        return userLocationGeoPoint;
     }
 
-    public ParseGeoPoint getUserLocationGeoPoint() {
-        return userLocationGeoPoint;
+    public static int getDistanceFromUser(Vehicle vehicle) {
+        ParseGeoPoint vehicleGeoLocation = vehicle.getGeoLocation();
+        ParseGeoPoint userGeoLocation = MainActivity.getUserLocationGeoPoint();
+        int distanceFromUser = (int) vehicleGeoLocation.distanceInMilesTo(userGeoLocation);
+        return distanceFromUser;
     }
 }

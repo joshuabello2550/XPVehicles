@@ -1,56 +1,38 @@
 package com.example.xpvehicles.adapters;
 
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.RequestParams;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.activities.VehicleDetailsActivity;
-import com.example.xpvehicles.fragments.RentingVehiclesFragment;
+import com.example.xpvehicles.fragments.RentingRequestsFragment;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
-import com.example.xpvehicles.models._User;
-import com.parse.GetCallback;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.Headers;
-
-public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehiclesAdapter.ViewHolder> {
+public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequestsAdapter.ViewHolder> {
 
     public static final String TAG = "RentingVehiclesAdapter";
     private List<RentVehicle> vehicles;
-    private RentingVehiclesFragment fragment;
+    private RentingRequestsFragment fragment;
     private MainActivity activity;
 
-    public RentingVehiclesAdapter(RentingVehiclesFragment fragment, List<RentVehicle> vehicles, MainActivity activity){
+    public RentingRequestsAdapter(RentingRequestsFragment fragment, List<RentVehicle> vehicles, MainActivity activity){
         this.vehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;
@@ -59,10 +41,8 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        View vehicleView =  inflater.inflate(R.layout.renting_vehicles_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.renting_request_vehicle_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override
@@ -95,7 +75,8 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
         private TextView tvRentingPickUpDate;
         private TextView tvRentingReturnDate;
         private TextView tvStatus;
-        private ImageView ivRentingVehicleImage;
+        private ViewPager2 viewPager;
+        private TabLayout tabLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -106,36 +87,50 @@ public class RentingVehiclesAdapter extends RecyclerView.Adapter<RentingVehicles
             tvRentingVehicleName = itemView.findViewById(R.id.tvRentingVehicleName);
             tvRentingPickUpDate = itemView.findViewById(R.id.tvRentingPickUpDate);
             tvRentingReturnDate = itemView.findViewById(R.id.tvRentingReturnDate);
-            ivRentingVehicleImage = itemView.findViewById(R.id.ivRentingVehicleImage);
             tvStatus = itemView.findViewById(R.id.tvStatus);
+            viewPager = itemView.findViewById(R.id.viewPagerRentingVehicleImages);
+            tabLayout =  itemView.findViewById(R.id.tabLayout);
         }
 
-        public void setValues(RentVehicle rentvehicle) throws ParseException{
+        public void setValues(RentVehicle rentVehicle) throws ParseException{
             // Vehicle name
-            Vehicle originalVehicle = (Vehicle) rentvehicle.getVehicle();
+            Vehicle originalVehicle = (Vehicle) rentVehicle.getVehicle();
             String vehicleName = originalVehicle.fetchIfNeeded().getString("name");
             tvRentingVehicleName.setText(vehicleName);
 
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             // vehicle pickup date
-            Date pickUpDate = rentvehicle.getPickUpDate();
+            Date pickUpDate = rentVehicle.getPickUpDate();
             String formattedPickUpDate = sdf.format(pickUpDate);
             tvRentingPickUpDate.setText(formattedPickUpDate);
             // vehicle return date
-            Date returnDate = rentvehicle.getReturnDate();
+            Date returnDate = rentVehicle.getReturnDate();
             String formattedReturnDate = sdf.format(returnDate);
             tvRentingReturnDate.setText(formattedReturnDate);
 
             // status
-            String status = rentvehicle.getStatus();
+            String status = rentVehicle.getStatus();
             tvStatus.setText(status);
             setStatusColor(status);
 
             // vehicle image
-            ParseFile image = originalVehicle.getVehicleImage();
-            if (image != null) {
-                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivRentingVehicleImage);
-            }
+            bindVehicleImagesAdapter(originalVehicle);
+        }
+
+        private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
+            List<ParseFile> images = rentVehicle.getVehicleImages();
+            VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
+            viewPager.setAdapter(vehicleImagesAdapter);
+
+            //indicator dots at the bottom
+            TabLayoutMediator tabLayoutMediator =
+                    new TabLayoutMediator(tabLayout, viewPager, true,
+                            new TabLayoutMediator.TabConfigurationStrategy() {
+                                @Override public void onConfigureTab(
+                                        @NonNull TabLayout.Tab tab, int position) { }
+                            }
+                    );
+            tabLayoutMediator.attach();
         }
 
         private void setStatusColor(String status) {

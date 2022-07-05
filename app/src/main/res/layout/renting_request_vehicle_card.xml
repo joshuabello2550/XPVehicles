@@ -20,15 +20,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/ivRentingVehicleImage"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerRentingVehicleImages"
                 android:layout_width="128dp"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/tvStatus"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:background="#00FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@+id/viewPagerRentingVehicleImages"
+                app:layout_constraintEnd_toEndOf="@+id/viewPagerRentingVehicleImages"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicator="@null"
+                app:tabIndicatorHeight="0dp"
+                app:tabPaddingEnd="6dp"
+                app:tabPaddingStart="6dp"
+                app:tabRippleColor="@null" />
 
             <TextView
                 android:id="@+id/tvRentingVehicleName"
@@ -38,7 +53,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/ivRentingVehicleImage"
+                app:layout_constraintStart_toEndOf="@+id/viewPagerRentingVehicleImages"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -49,7 +64,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Pickup Date:"
-                app:layout_constraintStart_toEndOf="@+id/ivRentingVehicleImage"
+                app:layout_constraintStart_toEndOf="@+id/viewPagerRentingVehicleImages"
                 app:layout_constraintTop_toBottomOf="@+id/tvRentingVehicleName" />
 
             <TextView
@@ -70,7 +85,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Return Date:"
-                app:layout_constraintStart_toEndOf="@+id/ivRentingVehicleImage"
+                app:layout_constraintStart_toEndOf="@+id/viewPagerRentingVehicleImages"
                 app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
             <TextView

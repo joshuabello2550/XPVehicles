@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.UserVehicleRequestsActivity">
+    tools:context=".activities.UserOwnedVehicleRequestsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout4"
@@ -31,16 +31,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout4">
 
-        <ImageView
-            android:id="@+id/ivUserVehicleDetails"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPagerUserVehicleDetails"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:background="#00FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/viewPagerUserVehicleDetails"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicator="@null"
+            app:tabIndicatorHeight="0dp"
+            app:tabPaddingEnd="6dp"
+            app:tabPaddingStart="6dp"
+            app:tabRippleColor="@null" />
 
         <TextView
             android:id="@+id/tvUserVehicleDetailsName"
@@ -50,7 +64,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/ivUserVehicleDetails"
+            app:layout_constraintStart_toEndOf="@+id/viewPagerUserVehicleDetails"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -61,7 +75,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/ivUserVehicleDetails"
+            app:layout_constraintStart_toEndOf="@+id/viewPagerUserVehicleDetails"
             app:layout_constraintTop_toBottomOf="@+id/tvUserVehicleDetailsName" />
 
         <ImageButton
@@ -80,7 +94,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivUserVehicleDetails" />
+            app:layout_constraintTop_toBottomOf="@+id/viewPagerUserVehicleDetails" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

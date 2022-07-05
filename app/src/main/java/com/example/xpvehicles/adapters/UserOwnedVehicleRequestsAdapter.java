@@ -13,42 +13,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.activities.UserVehicleRequestsActivity;
+import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.example.xpvehicles.models.Vehicle;
-import com.example.xpvehicles.models._User;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHolder>{
+public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder>{
 
     public static final String TAG = "RequestsAdapter";
     private List<RentVehicle> vehicles;
-    private UserVehicleRequestsActivity activity;
+    private UserOwnedVehicleRequestsActivity activity;
     private final String STATUS_APPROVED = "approved";
     private final String STATUS_PENDING_DENIED = "denied";
 
-    public RequestsAdapter(List<RentVehicle> vehicles, UserVehicleRequestsActivity userVehicleRequestsActivity){
+    public UserOwnedVehicleRequestsAdapter(List<RentVehicle> vehicles, UserOwnedVehicleRequestsActivity userOwnedVehicleRequestsActivity){
         this.vehicles = vehicles;
-        activity = userVehicleRequestsActivity;
+        activity = userOwnedVehicleRequestsActivity;
     }
 
     @NonNull
     @Override
-    public RequestsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View vehicleView = inflater.inflate(R.layout.request_card, parent, false);
-        RequestsAdapter.ViewHolder viewHolder = new RequestsAdapter.ViewHolder(vehicleView);
-        return viewHolder;
+    public UserOwnedVehicleRequestsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View vehicleView = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_owned_vehicle_request_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override

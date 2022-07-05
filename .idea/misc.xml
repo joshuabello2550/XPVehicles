@@ -4,13 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1360578540195089" />
+        <entry key="app/src/main/res/drawable/dailog_rounded_corners.xml" value="0.1635" />
+        <entry key="app/src/main/res/drawable/dots_indicator.xml" value="0.199" />
+        <entry key="app/src/main/res/drawable/ic_favorite_24.xml" value="0.134" />
+        <entry key="app/src/main/res/drawable/ic_favorite_border_24.xml" value="0.134" />
+        <entry key="app/src/main/res/drawable/round_corners.xml" value="0.199" />
+        <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.1635" />
         <entry key="app/src/main/res/drawable/selector_explore.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/selector_mail.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/selector_profile.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/selector_saved.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/tab_default_dot.xml" value="0.199" />
+        <entry key="app/src/main/res/drawable/tab_selector.xml" value="0.199" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.24765625" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.302734375" />
-        <entry key="app/src/main/res/layout/activity_add_vehicle.xml" value="0.38065843621399176" />
+        <entry key="app/src/main/res/layout/activity_add_vehicle.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.375" />
@@ -25,12 +33,16 @@
         <entry key="app/src/main/res/layout/fragment_saved.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_vehicles.xml" value="0.375" />
         <entry key="app/src/main/res/layout/recommend_vehicle_card.xml" value="0.6929955376519097" />
+        <entry key="app/src/main/res/layout/renting_request_vehicle_card.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/renting_vehicle_card.xml" value="0.45" />
         <entry key="app/src/main/res/layout/renting_vehicles_card.xml" value="0.371007371007371" />
         <entry key="app/src/main/res/layout/request_card.xml" value="0.5" />
         <entry key="app/src/main/res/layout/reting_vehicle_card.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/user_vehicle_card.xml" value="0.15568862275449102" />
-        <entry key="app/src/main/res/layout/vehicle_card.xml" value="0.40076335877862596" />
+        <entry key="app/src/main/res/layout/user_owned_vehicle_card.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/user_vehicle_card.xml" value="0.5136720211919911" />
+        <entry key="app/src/main/res/layout/user_vehicle_request_card.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/vehicle_card.xml" value="0.48596491228070177" />
+        <entry key="app/src/main/res/layout/vehicle_image.xml" value="0.2722222222222222" />
         <entry key="app/src/main/res/menu/add_vehicle_top_bar.xml" value="0.4111111111111111" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1111111111111111" />
         <entry key="app/src/main/res/menu/profile_top_app_bar.xml" value="0.32222222222222224" />

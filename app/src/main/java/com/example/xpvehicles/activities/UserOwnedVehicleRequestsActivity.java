@@ -1,42 +1,43 @@
 package com.example.xpvehicles.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.adapters.RequestsAdapter;
+import com.example.xpvehicles.adapters.UserOwnedVehicleRequestsAdapter;
+import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
-import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserVehicleRequestsActivity extends AppCompatActivity {
+public class UserOwnedVehicleRequestsActivity extends AppCompatActivity {
 
     public static final String TAG = "UserVehicleRequestsActivity";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
-    private RequestsAdapter adapter;
+    private UserOwnedVehicleRequestsAdapter adapter;
     private TextView tvUserVehicleDetailsName;
     private TextView tvUserVehicleDetailsDailyPrice;
     private TextView tvNoRequests;
-    private ImageView ivUserVehicleDetails;
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,8 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
         vehicle = getIntent().getParcelableExtra("userVehicle");
         setContentView(R.layout.activity_user_vehicle_requests);
         bind();
-        queryUserVehicles();
-        bindAdapter();
+        queryUserOwnedVehicleRequests();
+        bindUserOwnedVehicleRequestsAdapter();
         setValues();
         setTopAppBarOnClickListener();
     }
@@ -60,31 +61,21 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
         topAppBar = findViewById(R.id.userVehicleTopAppBar);
         tvUserVehicleDetailsName = findViewById(R.id.tvUserVehicleDetailsName);
         tvUserVehicleDetailsDailyPrice = findViewById(R.id.tvUserVehicleDetailsDailyPrice);
-        ivUserVehicleDetails = findViewById(R.id.ivUserVehicleDetails);
         tvNoRequests = findViewById(R.id.tvNoRequests);
+        viewPager = findViewById(R.id.viewPagerUserVehicleDetails);
+        tabLayout =  findViewById(R.id.tabLayout);
     }
 
-    private void bindAdapter() {
+    private void bindUserOwnedVehicleRequestsAdapter() {
         List<RentVehicle> allVehicles = new ArrayList<>();
-        adapter = new RequestsAdapter(allVehicles, this);
+        adapter = new UserOwnedVehicleRequestsAdapter(allVehicles, this);
 
         RecyclerView rvVehicles = findViewById(R.id.rvRequests);
         rvVehicles.setAdapter(adapter);
         rvVehicles.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void setValues() {
-        final String DAILY_PRICE_PREFIX = "Daily Price: $";
-
-        tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
-        tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
-        ParseFile image = vehicle.getVehicleImage();
-        if (image != null) {
-            Glide.with(this).load(image.getUrl()).into(ivUserVehicleDetails);
-        }
-    }
-
-    private void queryUserVehicles() {
+    private void queryUserOwnedVehicleRequests() {
         final String QUERY_PARAMETER_VEHICLE = "vehicle";
 
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
@@ -105,5 +96,29 @@ public class UserVehicleRequestsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setValues() {
+        final String DAILY_PRICE_PREFIX = "Daily Price: $";
+
+        tvUserVehicleDetailsName.setText(vehicle.getVehicleName());
+        tvUserVehicleDetailsDailyPrice.setText(DAILY_PRICE_PREFIX + vehicle.getDailyPrice());
+        bindVehicleImagesAdapter(vehicle);
+    }
+
+    private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
+        List<ParseFile> images = rentVehicle.getVehicleImages();
+        VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
+        viewPager.setAdapter(vehicleImagesAdapter);
+
+        //indicator dots at the bottom
+        TabLayoutMediator tabLayoutMediator =
+                new TabLayoutMediator(tabLayout, viewPager, true,
+                        new TabLayoutMediator.TabConfigurationStrategy() {
+                            @Override public void onConfigureTab(
+                                    @NonNull TabLayout.Tab tab, int position) { }
+                        }
+                );
+        tabLayoutMediator.attach();
     }
 }

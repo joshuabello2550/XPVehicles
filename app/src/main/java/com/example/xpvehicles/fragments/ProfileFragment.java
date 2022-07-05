@@ -13,7 +13,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,18 +21,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.activities.AddVehicleActivity;
 import com.example.xpvehicles.activities.LoginActivity;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.adapters.ExploreAdapter;
-import com.example.xpvehicles.adapters.UserVehiclesAdapter;
+import com.example.xpvehicles.adapters.UserOwnedVehiclesAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -46,7 +42,6 @@ import com.parse.ParseUser;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -55,7 +50,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
     private File photoFile;
-    private UserVehiclesAdapter adapter;
+    private UserOwnedVehiclesAdapter adapter;
     private MaterialToolbar profileTopAppBar;
     private MainActivity activity;
     private TextView tvProfileUserName;
@@ -104,7 +99,7 @@ public class ProfileFragment extends Fragment {
 
     private void bindAdapter(View view) {
         List<Vehicle> allVehicles = new ArrayList<>();
-        adapter = new UserVehiclesAdapter(this, allVehicles, (MainActivity)getActivity());
+        adapter = new UserOwnedVehiclesAdapter(this, allVehicles, (MainActivity)getActivity());
 
         RecyclerView rvVehicles = view.findViewById(R.id.rvUserVehicles);
         rvVehicles.setAdapter(adapter);
@@ -213,7 +208,4 @@ public class ProfileFragment extends Fragment {
         ParseFile parseFile = new ParseFile("image_file.png",imageByte);
         return parseFile;
     }
-
-
-
 }

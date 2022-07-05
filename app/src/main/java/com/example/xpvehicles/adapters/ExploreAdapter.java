@@ -2,40 +2,34 @@ package com.example.xpvehicles.adapters;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.codepath.asynchttpclient.AsyncHttpClient;
-import com.codepath.asynchttpclient.RequestParams;
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
-import com.example.xpvehicles.fragments.ExploreFragment;
-import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
+import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.List;
-
-import okhttp3.Headers;
 
 public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
 
@@ -53,17 +47,17 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(fragment.getContext());
-        View vehicleView =  inflater.inflate(R.layout.vehicle_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(vehicleView);
-        return viewHolder;
+        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.vehicle_card, parent, false);
+        return new ViewHolder(vehicleView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Vehicle vehicle = vehicles.get(position);
         holder.setValues(vehicle);
+        holder.setSaveBtnInitialColor(vehicle);
         holder.setSaveBtnOnClickListener(vehicle);
+        holder.setMaterialCardVehicleOnClickListener(vehicle);
     }
 
     @Override
@@ -85,9 +79,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private TextView tvVehicleName;
         private TextView tvDistanceFromUser;
         private TextView tvDailyPrice;
-        private ImageView ivVehicle;
         private ImageButton ibSave;
-        private _User currentUser;
+        private View materialCardView;
+        private ViewPager2 viewPager;
+        private TabLayout tabLayout;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -97,91 +93,68 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private void bind(View itemView) {
             tvVehicleName = itemView.findViewById(R.id.tvVehicleName);
             tvDistanceFromUser = itemView.findViewById(R.id.tvDistanceFromUser);
-            ivVehicle = itemView.findViewById(R.id.ivVehicle);
             tvDailyPrice = itemView.findViewById(R.id.tvDailyPrice);
             ibSave = itemView.findViewById(R.id.ibSave);
+            materialCardView = itemView.findViewById(R.id.materialCardVehicleContainer);
+            viewPager = itemView.findViewById(R.id.viewPagerExploreVehicleImages);
+            tabLayout =  itemView.findViewById(R.id.tabLayout);
         }
 
-        public void setValues(Vehicle vehicle) {
+        private void setValues(Vehicle vehicle) {
             // Vehicle name
             tvVehicleName.setText(vehicle.getVehicleName());
 
             // daily price
-            String dailyPrice = "$" + vehicle.getDailyPrice() + " /day";
+            String dailyPrice = "$" + vehicle.getDailyPrice() + " day";
             tvDailyPrice.setText(dailyPrice);
 
             // distance from user
-            String distanceFromUser = vehicle.getDistanceFromUser();
-            if (distanceFromUser != null) {
-                tvDistanceFromUser.setText(distanceFromUser);
-            } else {
-                String vehiclePlaceId = vehicle.getPlaceId();
-                getDistanceFromUser(vehicle, vehiclePlaceId, activity.getUserLocation());
+            if (MainActivity.getUserLocationGeoPoint() != null) {
+                int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
+                tvDistanceFromUser.setText(distanceFromUser + " mi.");
             }
 
             // vehicle image
-            ParseFile image = vehicle.getVehicleImage();
-            if (image != null) {
-                Glide.with(fragment.getContext()).load(image.getUrl()).into(ivVehicle);
-            }
-            setImageOnClickListener(vehicle);
+            bindVehicleImagesAdapter(vehicle);
         }
 
-        private void getDistanceFromUser(Vehicle vehicle, String vehiclePlaceId, String userLocation) {
-            final String GOOGLE_DISTANCE_MATRIX_API_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_DESTINATIONS = "destinations";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_ORIGINS = "origins";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_KEY = "key";
-            final String GOOGLE_DISTANCE_MATRIX_API_PARAMETER_UNITS = "units";
+        private void bindVehicleImagesAdapter(Vehicle vehicle) {
+            List<ParseFile> images = vehicle.getVehicleImages();
+            VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
+            viewPager.setAdapter(vehicleImagesAdapter);
 
-            Log.i(TAG, "Vehicles " + vehiclePlaceId + " " + userLocation);
-
-            RequestParams params = new RequestParams();
-            Resources res = fragment.getContext().getResources();
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_DESTINATIONS, "place_id:" + vehiclePlaceId);
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_ORIGINS, userLocation);
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_KEY, res.getString(R.string.API_KEY));
-            params.put(GOOGLE_DISTANCE_MATRIX_API_PARAMETER_UNITS, "imperial");
-
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.get(GOOGLE_DISTANCE_MATRIX_API_BASE_URL, params, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Headers headers, JSON json) {
-                    Log.i(TAG, "Success " + json.toString());
-                    JSONObject jsonObject = json.jsonObject;
-                    try {
-                        JSONArray elements = jsonObject.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
-                        String distance = elements.getJSONObject(0).getJSONObject("distance").getString("text");
-                        vehicle.setDistanceFromUser(distance);
-                        tvDistanceFromUser.setText(distance);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error retrieve distance from json object", e);
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                    Log.e(TAG, "Error getting the distance from the user" + response, throwable);
-                }
-            });
+            //indicator dots at the bottom
+            TabLayoutMediator tabLayoutMediator =
+                    new TabLayoutMediator(tabLayout, viewPager, true,
+                            new TabLayoutMediator.TabConfigurationStrategy() {
+                                @Override public void onConfigureTab(
+                                        @NonNull TabLayout.Tab tab, int position) { }
+                            }
+                    );
+            tabLayoutMediator.attach();
         }
 
-        private void setImageOnClickListener(Vehicle vehicle) {
-            ivVehicle.setOnClickListener(v -> {
+        private void setMaterialCardVehicleOnClickListener(Vehicle vehicle) {
+            materialCardView.setOnClickListener(v -> {
                 Intent intent = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
                 intent.putExtra("vehicle", vehicle);
-                fragment.startActivity(intent);
+                activity.startActivity(intent);
             });
         }
 
-        private void setSaveBtnOnClickListener(Vehicle vehicle) {
-            currentUser = (_User) ParseUser.getCurrentUser();
+        private void setSaveBtnInitialColor(Vehicle vehicle) {
+            _User currentUser = (_User) ParseUser.getCurrentUser();
             List listSavedVehicles = currentUser.getSavedVehicles();
             if (listSavedVehicles.contains(vehicle.getObjectId())) {
                 setSaveButtonClickedStyle(ibSave);
             } else {
                 ibSave.setImageResource(R.drawable.ic_favorite_border_24);
             }
+        }
 
+        private void setSaveBtnOnClickListener(Vehicle vehicle) {
+            _User currentUser = (_User) ParseUser.getCurrentUser();
+            List listSavedVehicles = currentUser.getSavedVehicles();
             ibSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

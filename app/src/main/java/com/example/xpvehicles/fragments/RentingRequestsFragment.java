@@ -14,9 +14,8 @@ import android.widget.TextView;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
-import com.example.xpvehicles.adapters.RentingVehiclesAdapter;
+import com.example.xpvehicles.adapters.RentingRequestsAdapter;
 import com.example.xpvehicles.models.RentVehicle;
-import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -24,22 +23,20 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-public class RentingVehiclesFragment extends Fragment {
+public class RentingRequestsFragment extends Fragment {
 
     private static final String TAG = "RentingVehiclesFragment";
-    private RentingVehiclesAdapter adapter;
+    private RentingRequestsAdapter adapter;
     private TextView tvUserNoRentingVehicles;
 
-    public RentingVehiclesFragment(MainActivity mainActivity) {
+    public RentingRequestsFragment(MainActivity mainActivity) {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_renting_vehicles, parent, false);
+        return inflater.inflate(R.layout.fragment_renting_requests, parent, false);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class RentingVehiclesFragment extends Fragment {
 
     private void bindAdapter(View view) {
         List<RentVehicle> allVehicles = new ArrayList<>();
-        adapter = new RentingVehiclesAdapter(this, allVehicles, (MainActivity)getActivity());
+        adapter = new RentingRequestsAdapter(this, allVehicles, (MainActivity)getActivity());
 
         RecyclerView rvVehicles = view.findViewById(R.id.rvRentingVehicles);
         rvVehicles.setAdapter(adapter);
@@ -87,9 +84,4 @@ public class RentingVehiclesFragment extends Fragment {
         });
 
     }
-
-
-
-
-
 }
