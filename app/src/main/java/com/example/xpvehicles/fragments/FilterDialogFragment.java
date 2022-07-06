@@ -37,7 +37,8 @@ import java.util.List;
 
 public class FilterDialogFragment extends DialogFragment {
 
-    public static final String TAG = "FilterDialogFragment";
+    private static final String TAG = "FilterDialogFragment";
+    private final String QUERY_PARAMETER_OWNER = "owner";
     private ExploreAdapter exploreAdapter;
     private MainActivity activity;
     private MaterialToolbar filterTopAppBar;
@@ -113,8 +114,6 @@ public class FilterDialogFragment extends DialogFragment {
     }
 
     private void queryFilterVehicles(String maxDistance, String minPrice, String maxPrice) {
-        final String QUERY_PARAMETER_OWNER = "owner";
-
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
         query.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
 
@@ -138,13 +137,7 @@ public class FilterDialogFragment extends DialogFragment {
                     Log.e(TAG, "Issue with filtering vehicles",e);
                     return;
                 }
-                exploreAdapter.clear();
-                if (vehicles.size() > 0) {
-                    tvNoAvailableRentVehicle.setVisibility(View.GONE);
-                    exploreAdapter.addAll(vehicles);
-                } else {
-                    tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
-                }
+                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
                 dismiss();
             }
         });

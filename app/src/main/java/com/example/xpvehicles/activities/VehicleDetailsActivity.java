@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.xpvehicles.Miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
@@ -51,6 +52,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private TextInputLayout detailsReturnDateOTF;
     private Date pickupDate;
     private Date returnDate;
+    private int distanceFromUser;
 
     private void setTopAppBarOnClickListener() {
         topAppBar.setNavigationOnClickListener(v -> {
@@ -62,6 +64,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vehicle = (Vehicle) getIntent().getParcelableExtra("vehicle");
+        distanceFromUser = getIntent().getIntExtra("distanceFromUser", 0);
         setContentView(R.layout.activity_vehicle_details);
         bindVehicleImagesAdapter();
         bind();
@@ -109,10 +112,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private void setValues() {
-        if (MainActivity.getUserLocationGeoPoint() != null) {
-            int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
-            tvDetailsDistanceFromUser.setText(distanceFromUser + "mi.");
-        }
+        tvDetailsDistanceFromUser.setText(distanceFromUser + " mi.");
         tvDetailsVehicleName.setText(vehicle.getVehicleName());
         tvDetailsVehicleDescription.setText(vehicle.getDescription());
         tvDetailsDailyPrice.setText("$" + vehicle.getDailyPrice() + "/day");
@@ -218,14 +218,12 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private RentVehicle createRentVehicle(_User currentUser) {
-        final String INITIAL_VEHICLE_REQUEST_STATUS = "pending approval";
-
         RentVehicle rentVehicle = new RentVehicle();
         rentVehicle.setVehicle(vehicle);
         rentVehicle.setRentee(currentUser);
         rentVehicle.setPickUpDate(pickupDate);
         rentVehicle.setReturnDate(returnDate);
-        rentVehicle.setStatus(INITIAL_VEHICLE_REQUEST_STATUS);
+        rentVehicle.setStatus(RentingStatus.PENDING_APPROVAL.name());
         rentVehicle.saveInBackground();
         return rentVehicle;
     }

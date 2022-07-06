@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.xpvehicles.Miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.RentVehicle;
@@ -29,8 +30,6 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
     public static final String TAG = "RequestsAdapter";
     private List<RentVehicle> vehicles;
     private UserOwnedVehicleRequestsActivity activity;
-    private final String STATUS_APPROVED = "approved";
-    private final String STATUS_PENDING_DENIED = "denied";
 
     public UserOwnedVehicleRequestsAdapter(List<RentVehicle> vehicles, UserOwnedVehicleRequestsActivity userOwnedVehicleRequestsActivity){
         this.vehicles = vehicles;
@@ -60,14 +59,16 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         return vehicles.size();
     }
 
-    public void clear() {
+    public void setVehicles(List<RentVehicle> allVehicles, TextView textViewNoVehicles) {
         vehicles.clear();
         notifyDataSetChanged();
-    }
-
-    public void addAll(List<RentVehicle> allVehicles) {
-        vehicles.addAll(allVehicles);
-        notifyDataSetChanged();
+        if (allVehicles.size() > 0) {
+            textViewNoVehicles.setVisibility(View.GONE);
+            vehicles.addAll(allVehicles);
+            notifyDataSetChanged();
+        } else {
+            textViewNoVehicles.setVisibility(View.VISIBLE);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -124,11 +125,11 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         }
 
         private void setInitialAcceptOrDenyStatus(RentVehicle request) {
-            if (Objects.equals(request.getStatus(), STATUS_APPROVED)) {
+            if (Objects.equals(request.getStatus(), RentingStatus.APPROVED.name())) {
                 hideAcceptDenyButtons();
                 btnRequestAccepted.setVisibility(View.VISIBLE);
             }
-            else if (Objects.equals(request.getStatus(), STATUS_PENDING_DENIED)) {
+            else if (Objects.equals(request.getStatus(), RentingStatus.DENIED.name())) {
                 hideAcceptDenyButtons();
                 btnRequestDenied.setVisibility(View.VISIBLE);
             }
@@ -140,7 +141,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
                     btnRequestAccepted.setVisibility(View.VISIBLE);
-                    request.setStatus(STATUS_APPROVED);
+                    request.setStatus(RentingStatus.APPROVED.name());
                     request.saveInBackground();
                 }
             });
@@ -152,7 +153,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
                     btnRequestDenied.setVisibility(View.VISIBLE);
-                    request.setStatus(STATUS_PENDING_DENIED);
+                    request.setStatus(RentingStatus.DENIED.name());
                     request.saveInBackground();
                 }
             });

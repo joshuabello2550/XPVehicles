@@ -28,6 +28,7 @@ import java.util.List;
 public class RentingRequestsFragment extends Fragment {
 
     private static final String TAG = "RentingVehiclesFragment";
+    private final String QUERY_PARAMETER_RENTEE =  "rentee";
     private RentingRequestsAdapter adapter;
     private TextView tvUserNoRentingVehicles;
 
@@ -60,8 +61,6 @@ public class RentingRequestsFragment extends Fragment {
     }
 
     private void queryVehicles() {
-        final String QUERY_PARAMETER_RENTEE =  "rentee";
-
         _User currentUser = (_User) ParseUser.getCurrentUser();
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
         query.whereEqualTo(QUERY_PARAMETER_RENTEE, currentUser);
@@ -73,13 +72,7 @@ public class RentingRequestsFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                adapter.clear();
-                if (vehicles.size() > 0) {
-                    tvUserNoRentingVehicles.setVisibility(View.GONE);
-                    adapter.addAll(vehicles);
-                } else {
-                    tvUserNoRentingVehicles.setVisibility(View.VISIBLE);
-                }
+                adapter.setVehicles(vehicles, tvUserNoRentingVehicles);
             }
         });
 

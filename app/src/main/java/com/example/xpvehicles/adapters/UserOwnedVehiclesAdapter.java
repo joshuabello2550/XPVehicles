@@ -11,17 +11,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.xpvehicles.Miscellaneous.IndicatorDots;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehiclesAdapter.ViewHolder> {
+public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehiclesAdapter.ViewHolder> implements IndicatorDots {
 
     public static final String TAG = "UserVehiclesAdapter";
     private List<Vehicle> vehicles;
@@ -53,14 +53,16 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
         return vehicles.size();
     }
 
-    public void addAll(List<Vehicle> allVehicles) {
-        vehicles.addAll(allVehicles);
-        notifyDataSetChanged();
-    }
-
-    public void clear() {
+    public void setVehicles(List<Vehicle> allVehicles, TextView textViewNoVehicles) {
         vehicles.clear();
         notifyDataSetChanged();
+        if (allVehicles.size() > 0) {
+            textViewNoVehicles.setVisibility(View.GONE);
+            vehicles.addAll(allVehicles);
+            notifyDataSetChanged();
+        } else {
+            textViewNoVehicles.setVisibility(View.VISIBLE);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -94,16 +96,7 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
             List<ParseFile> images = rentVehicle.getVehicleImages();
             VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
             viewPager.setAdapter(vehicleImagesAdapter);
-
-            //indicator dots at the bottom
-            TabLayoutMediator tabLayoutMediator =
-                    new TabLayoutMediator(tabLayout, viewPager, true,
-                            new TabLayoutMediator.TabConfigurationStrategy() {
-                                @Override public void onConfigureTab(
-                                        @NonNull TabLayout.Tab tab, int position) { }
-                            }
-                    );
-            tabLayoutMediator.attach();
+            setViewPagerIndicatorDots(tabLayout, viewPager);
         }
 
         private void setViewHolderOnClickListener(ViewHolder holder, Vehicle vehicle) {

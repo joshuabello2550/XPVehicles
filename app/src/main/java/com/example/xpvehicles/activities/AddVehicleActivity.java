@@ -1,6 +1,5 @@
 package com.example.xpvehicles.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -17,19 +16,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.Miscellaneous.IndicatorDots;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -45,10 +42,13 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class AddVehicleActivity extends AppCompatActivity {
+public class AddVehicleActivity extends AppCompatActivity implements IndicatorDots {
 
     private static final String TAG = "AddVehicleActivity";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
+    private final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
+    private final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
+    private final String GOOGLE_GEOCODING_API_PARAMETER_ADDRESS = "address";
     private MaterialToolbar topAppBar;
     private EditText edtVehicleName;
     private EditText edtDescription;
@@ -60,7 +60,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private Button btnAddVehicle;
     private Button btnTakePicture;
     private File photoFile;
-    private List<ParseFile> vehicleImages = new ArrayList<>();
+    private List<ParseFile> vehicleImages;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private VehicleImagesAdapter vehicleImagesAdapter;
@@ -100,16 +100,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private void bindVehicleImagesAdapter() {
         vehicleImagesAdapter =  new VehicleImagesAdapter(AddVehicleActivity.this, vehicleImages);
         viewPager.setAdapter(vehicleImagesAdapter);
-
-        //indicator dots at the bottom
-        TabLayoutMediator tabLayoutMediator =
-                new TabLayoutMediator(tabLayout, viewPager, true,
-                        new TabLayoutMediator.TabConfigurationStrategy() {
-                            @Override public void onConfigureTab(
-                                    @NonNull TabLayout.Tab tab, int position) { }
-                        }
-                );
-        tabLayoutMediator.attach();
+        setViewPagerIndicatorDots(tabLayout, viewPager);
     }
 
     private void setTakePictureOnClickListener() {
@@ -157,7 +148,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 vehicleImages.add(new ParseFile(photoFile));
-                notifyAdapter();
+                vehicleImagesAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -170,15 +161,11 @@ public class AddVehicleActivity extends AppCompatActivity {
             String city = edtCity.getText().toString();
             String state = edtState.getText().toString();
             String zipCode = edtZipCode.getText().toString();
-            getPlaceIdAndGeoPoint(streetAddress, city, state);
+            initializeLocationInformation(streetAddress, city, state);
         });
     }
 
-    private void getPlaceIdAndGeoPoint(String streetAddress, String city, String state) {
-        final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
-        final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
-        final String GOOGLE_GEOCODING_API_PARAMETER_ADDRESS = "address";
-
+    private void initializeLocationInformation(String streetAddress, String city, String state) {
         String address = streetAddress + " " + city + " " + state;
         RequestParams params = new RequestParams();
         Resources res = this.getResources();
@@ -193,8 +180,8 @@ public class AddVehicleActivity extends AppCompatActivity {
                 try {
                     String placeId = jsonObject.getJSONArray("results").getJSONObject(0).getString("place_id");
                     JSONObject location = jsonObject.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-                    Double vehicleLatitude =  location.getDouble("lat");
-                    Double vehicleLongitude =  location.getDouble("lng");
+                    final Double vehicleLatitude =  location.getDouble("lat");
+                    final Double vehicleLongitude =  location.getDouble("lng");
                     ParseGeoPoint vehicleLocationGeoPoint =  new ParseGeoPoint(vehicleLatitude, vehicleLongitude);
                     saveVehicle(placeId, vehicleLocationGeoPoint);
                 } catch (JSONException e) {
@@ -239,9 +226,5 @@ public class AddVehicleActivity extends AppCompatActivity {
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
-    }
-
-    private void notifyAdapter() {
-        vehicleImagesAdapter.notifyDataSetChanged();
     }
 }
