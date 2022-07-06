@@ -31,6 +31,7 @@ import java.util.List;
 public class SavedFragment extends Fragment {
 
     private static final String TAG = "SavedFragment";
+    private final String QUERY_PARAMETER_OBJECT_ID = "objectId";
     private ExploreAdapter adapter;
     private TextView tvNoSavedVehicles;
 
@@ -63,8 +64,6 @@ public class SavedFragment extends Fragment {
     }
 
     private void queryVehicles() {
-        final String QUERY_PARAMETER_OBJECT_ID = "objectId";
-
         List<String> savedVehicles = ((_User) ParseUser.getCurrentUser()).getSavedVehicles();
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
         query.whereContainedIn(QUERY_PARAMETER_OBJECT_ID, savedVehicles);
@@ -75,13 +74,7 @@ public class SavedFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                adapter.clear();
-                if (vehicles.size() > 0) {
-                    tvNoSavedVehicles.setVisibility(View.GONE);
-                    adapter.addAll(vehicles);
-                } else {
-                    tvNoSavedVehicles.setVisibility(View.VISIBLE);
-                }
+                adapter.setVehicles(vehicles, tvNoSavedVehicles);
             }
         });
     }

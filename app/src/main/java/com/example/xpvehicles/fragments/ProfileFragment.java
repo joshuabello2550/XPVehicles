@@ -137,13 +137,7 @@ public class ProfileFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the user's vehicles",e);
                     return;
                 }
-                adapter.clear();
-                if (vehicles.size() > 0) {
-                    tvUserNoVehiclesListed.setVisibility(View.GONE);
-                    adapter.addAll(vehicles);
-                } else {
-                    tvUserNoVehiclesListed.setVisibility(View.VISIBLE);
-                }
+                adapter.setVehicles(vehicles, tvUserNoVehiclesListed);
             }
         });
     }
@@ -191,21 +185,12 @@ public class ProfileFragment extends Fragment {
                 ivProfileImage.setImageBitmap(takenImage);
                 // save image in Parse Database
                 _User currentUser = (_User) ParseUser.getCurrentUser();
-                ParseFile profileImage = conversionBitmapParseFile(takenImage);
-                currentUser.setProfileImage(profileImage);
+                currentUser.setProfileImage(new ParseFile(photoFile));
                 currentUser.saveInBackground();
 
             } else {
                 Toast.makeText(activity, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private ParseFile conversionBitmapParseFile(Bitmap imageBitmap){
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
-        byte[] imageByte = byteArrayOutputStream.toByteArray();
-        ParseFile parseFile = new ParseFile("image_file.png",imageByte);
-        return parseFile;
     }
 }

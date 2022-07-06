@@ -11,13 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.xpvehicles.Miscellaneous.IndicatorDots;
+import com.example.xpvehicles.Miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.fragments.RentingRequestsFragment;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 
@@ -25,14 +26,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequestsAdapter.ViewHolder> {
+public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequestsAdapter.ViewHolder> implements IndicatorDots {
 
     public static final String TAG = "RentingVehiclesAdapter";
     private List<RentVehicle> vehicles;
     private RentingRequestsFragment fragment;
     private MainActivity activity;
 
-    public RentingRequestsAdapter(RentingRequestsFragment fragment, List<RentVehicle> vehicles, MainActivity activity){
+    public RentingRequestsAdapter(RentingRequestsFragment fragment, List<RentVehicle> vehicles, MainActivity activity) {
         this.vehicles = vehicles;
         this.fragment = fragment;
         this.activity = activity;
@@ -41,7 +42,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.renting_request_vehicle_card, parent, false);
+        View vehicleView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.renting_request_vehicle_card, parent, false);
         return new ViewHolder(vehicleView);
     }
 
@@ -60,14 +61,16 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
         return vehicles.size();
     }
 
-    public void addAll(List<RentVehicle> rentingVehicles) {
-        vehicles.addAll(rentingVehicles);
-        notifyDataSetChanged();
-    }
-
-    public void clear() {
+    public void setVehicles(List<RentVehicle> allVehicles, TextView textViewNoVehicles) {
         vehicles.clear();
         notifyDataSetChanged();
+        if (allVehicles.size() > 0) {
+            textViewNoVehicles.setVisibility(View.GONE);
+            vehicles.addAll(allVehicles);
+            notifyDataSetChanged();
+        } else {
+            textViewNoVehicles.setVisibility(View.VISIBLE);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -89,10 +92,10 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             tvRentingReturnDate = itemView.findViewById(R.id.tvRentingReturnDate);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             viewPager = itemView.findViewById(R.id.viewPagerRentingVehicleImages);
-            tabLayout =  itemView.findViewById(R.id.tabLayout);
+            tabLayout = itemView.findViewById(R.id.tabLayout);
         }
 
-        public void setValues(RentVehicle rentVehicle) throws ParseException{
+        public void setValues(RentVehicle rentVehicle) throws ParseException {
             // Vehicle name
             Vehicle originalVehicle = (Vehicle) rentVehicle.getVehicle();
             String vehicleName = originalVehicle.fetchIfNeeded().getString("name");
@@ -110,8 +113,9 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
 
             // status
             String status = rentVehicle.getStatus();
-            tvStatus.setText(status);
-            setStatusColor(status);
+            RentingStatus rentingStatus = RentingStatus.valueOf(status);
+            tvStatus.setText(rentingStatus.toString());
+            setStatusColor(rentingStatus);
 
             // vehicle image
             bindVehicleImagesAdapter(originalVehicle);
@@ -119,43 +123,27 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
 
         private void bindVehicleImagesAdapter(Vehicle rentVehicle) {
             List<ParseFile> images = rentVehicle.getVehicleImages();
-            VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
+            VehicleImagesAdapter vehicleImagesAdapter = new VehicleImagesAdapter(activity, images);
             viewPager.setAdapter(vehicleImagesAdapter);
-
-            //indicator dots at the bottom
-            TabLayoutMediator tabLayoutMediator =
-                    new TabLayoutMediator(tabLayout, viewPager, true,
-                            new TabLayoutMediator.TabConfigurationStrategy() {
-                                @Override public void onConfigureTab(
-                                        @NonNull TabLayout.Tab tab, int position) { }
-                            }
-                    );
-            tabLayoutMediator.attach();
+            setViewPagerIndicatorDots(tabLayout, viewPager);
         }
 
-        private void setStatusColor(String status) {
-            final String STATUS_PENDING_APPROVAL = "pending approval";
-            final String STATUS_APPROVED = "approved";
-            final String STATUS_PENDING_DENIED = "denied";
-            final String STATUS_PENDING_APPROVAL_COLOR = "#FFC107";
-            final String STATUS_APPROVED_COLOR = "#4CAF50";
-            final String STATUS_PENDING_DENIED_COLOR = "#F44336";
-
+        private void setStatusColor(RentingStatus status) {
             int statusColor;
             switch (status) {
-                case STATUS_PENDING_APPROVAL:
-                    statusColor = Color.parseColor(STATUS_PENDING_APPROVAL_COLOR);
+                case PENDING_APPROVAL:
+                    statusColor = Color.parseColor(String.valueOf(RentingStatus.PENDING_APPROVAL_COLOR));
                     break;
-                case STATUS_APPROVED:
-                    statusColor = Color.parseColor(STATUS_APPROVED_COLOR);
+                case APPROVED:
+                    statusColor = Color.parseColor(String.valueOf(RentingStatus.APPROVED_COLOR));
                     break;
-                case STATUS_PENDING_DENIED:
-                    statusColor = Color.parseColor(STATUS_PENDING_DENIED_COLOR);
+                case DENIED:
+                    statusColor = Color.parseColor(String.valueOf(RentingStatus.DENIED_COLOR));
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + status);
             }
             tvStatus.setBackgroundColor(statusColor);
         }
+        }
     }
-}
