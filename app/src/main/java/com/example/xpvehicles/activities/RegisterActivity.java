@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.xpvehicles.Miscellaneous.EmailChecker;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.textfield.TextInputLayout;
@@ -83,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerEmailOTF.setError("Enter email address");
             shouldCreateNewUser = false;
         } else {
-            if (!MainActivity.isValidEmail(username)) {
+            if (!EmailChecker.isValidEmail(username)) {
                 registerEmailOTF.setError("Invalid email address");
                 shouldCreateNewUser = false;
             }

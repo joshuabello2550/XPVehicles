@@ -40,12 +40,12 @@ import com.parse.ParseGeoPoint;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    final ExploreFragment exploreFragment = new ExploreFragment(this);
-    final InboxFragment inboxFragment = new InboxFragment(this);
-    final SavedFragment savedFragment = new SavedFragment(this);
-    final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
-    final ProfileFragment profileFragment = new ProfileFragment(this);
-    private static ParseGeoPoint userLocationGeoPoint;
+    private final ExploreFragment exploreFragment = new ExploreFragment(this);
+    private final InboxFragment inboxFragment = new InboxFragment(this);
+    private final SavedFragment savedFragment = new SavedFragment(this);
+    private final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
+    private final ProfileFragment profileFragment = new ProfileFragment(this);
+    private ParseGeoPoint userLocationGeoPoint;
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -120,17 +120,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
-    }
-
-    public static ParseGeoPoint getUserLocationGeoPoint() {
+    public ParseGeoPoint getUserLocationGeoPoint() {
         return userLocationGeoPoint;
     }
 
-    public static int getDistanceFromUser(Vehicle vehicle) {
+    public int getDistanceFromUser(Vehicle vehicle) {
         ParseGeoPoint vehicleGeoLocation = vehicle.getGeoLocation();
-        ParseGeoPoint userGeoLocation = MainActivity.getUserLocationGeoPoint();
+        ParseGeoPoint userGeoLocation = getUserLocationGeoPoint();
         int distanceFromUser = (int) vehicleGeoLocation.distanceInMilesTo(userGeoLocation);
         return distanceFromUser;
     }

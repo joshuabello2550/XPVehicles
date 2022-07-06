@@ -2,7 +2,6 @@ package com.example.xpvehicles.adapters;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,25 +12,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.xpvehicles.Miscellaneous.IndicatorDots;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
-import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import java.util.List;
 
-public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
+public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> implements IndicatorDots {
 
     public static final String TAG = "ExploreAdapter";
     private List<Vehicle> vehicles;
@@ -65,14 +60,16 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         return vehicles.size();
     }
 
-    public void addAll(List<Vehicle> allVehicles) {
-        vehicles.addAll(allVehicles);
-        notifyDataSetChanged();
-    }
-
-    public void clear() {
+    public void setVehicles(List<Vehicle> allVehicles, TextView textViewNoVehicles) {
         vehicles.clear();
         notifyDataSetChanged();
+        if (allVehicles.size() > 0) {
+            textViewNoVehicles.setVisibility(View.GONE);
+            vehicles.addAll(allVehicles);
+            notifyDataSetChanged();
+        } else {
+            textViewNoVehicles.setVisibility(View.VISIBLE);
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,6 +80,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         private View materialCardView;
         private ViewPager2 viewPager;
         private TabLayout tabLayout;
+        private int distanceFromUser;
 
 
         public ViewHolder(View itemView) {
@@ -109,8 +107,8 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             tvDailyPrice.setText(dailyPrice);
 
             // distance from user
-            if (MainActivity.getUserLocationGeoPoint() != null) {
-                int distanceFromUser = MainActivity.getDistanceFromUser(vehicle);
+            if (activity.getUserLocationGeoPoint() != null) {
+                distanceFromUser = activity.getDistanceFromUser(vehicle);
                 tvDistanceFromUser.setText(distanceFromUser + " mi.");
             }
 
@@ -122,22 +120,14 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             List<ParseFile> images = vehicle.getVehicleImages();
             VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(activity, images);
             viewPager.setAdapter(vehicleImagesAdapter);
-
-            //indicator dots at the bottom
-            TabLayoutMediator tabLayoutMediator =
-                    new TabLayoutMediator(tabLayout, viewPager, true,
-                            new TabLayoutMediator.TabConfigurationStrategy() {
-                                @Override public void onConfigureTab(
-                                        @NonNull TabLayout.Tab tab, int position) { }
-                            }
-                    );
-            tabLayoutMediator.attach();
+            setViewPagerIndicatorDots(tabLayout, viewPager);
         }
 
         private void setMaterialCardVehicleOnClickListener(Vehicle vehicle) {
             materialCardView.setOnClickListener(v -> {
-                Intent intent = new Intent(fragment.getContext(), VehicleDetailsActivity.class);
+                Intent intent = new Intent(fragment.getActivity(), VehicleDetailsActivity.class);
                 intent.putExtra("vehicle", vehicle);
+                intent.putExtra("distanceFromUser", distanceFromUser);
                 activity.startActivity(intent);
             });
         }
@@ -146,7 +136,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             _User currentUser = (_User) ParseUser.getCurrentUser();
             List listSavedVehicles = currentUser.getSavedVehicles();
             if (listSavedVehicles.contains(vehicle.getObjectId())) {
-                setSaveButtonClickedStyle(ibSave);
+                setSaveButtonClickedStyle();
             } else {
                 ibSave.setImageResource(R.drawable.ic_favorite_border_24);
             }
@@ -163,7 +153,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
                         ibSave.setImageResource(R.drawable.ic_favorite_border_24);
                     } else {
                         listSavedVehicles.add(vehicle.getObjectId());
-                        setSaveButtonClickedStyle(ibSave);
+                        setSaveButtonClickedStyle();
                     }
                     currentUser.setSavedVehicles(listSavedVehicles);
                     currentUser.saveInBackground();
@@ -171,7 +161,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             });
         }
 
-        private void setSaveButtonClickedStyle(ImageButton ibSave) {
+        private void setSaveButtonClickedStyle() {
             Drawable img = fragment.getActivity().getDrawable(R.drawable.ic_favorite_24);
             Resources res = fragment.getContext().getResources();
             img.setTint(res.getColor(R.color.md_theme_light_primary, activity.getTheme()));

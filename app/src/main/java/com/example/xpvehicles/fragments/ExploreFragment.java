@@ -45,6 +45,8 @@ import java.util.List;
 public class ExploreFragment extends Fragment {
 
     private static final String TAG = "ExploreFragment";
+    private final String QUERY_PARAMETER_OWNER = "owner";
+    private final String QUERY_PARAMETER_NAME = "name";
     private ExploreAdapter exploreAdapter;
     private RecommendedVehiclesAdapter recommendedVehiclesAdapter;
     private MainActivity activity;
@@ -144,9 +146,6 @@ public class ExploreFragment extends Fragment {
     }
 
     private void querySearchVehicles(String searchQuery) {
-        final String QUERY_PARAMETER_OWNER = "owner";
-        final String QUERY_PARAMETER_NAME = "name";
-
         ParseQuery<Vehicle> parseQuery = ParseQuery.getQuery(Vehicle.class);
         parseQuery.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
         parseQuery.whereMatches(QUERY_PARAMETER_NAME, searchQuery, "i");
@@ -159,14 +158,12 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                addVehiclesToAdapter(vehicles);
+                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
             }
         });
     }
 
     private void queryAllVehicles() {
-        final String QUERY_PARAMETER_OWNER = "owner";
-
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
         query.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
         query.findInBackground(new FindCallback<Vehicle>() {
@@ -176,19 +173,9 @@ public class ExploreFragment extends Fragment {
                     Log.e(TAG, "Issue with getting the vehicles",e);
                     return;
                 }
-                addVehiclesToAdapter(vehicles);
+                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
             }
         });
-    }
-
-    private void addVehiclesToAdapter(List<Vehicle> vehicles) {
-        exploreAdapter.clear();
-        if (vehicles.size() > 0) {
-            tvNoAvailableRentVehicle.setVisibility(View.GONE);
-            exploreAdapter.addAll(vehicles);
-        } else {
-            tvNoAvailableRentVehicle.setVisibility(View.VISIBLE);
-        }
     }
 
     private void setFilterOnClickListener() {
@@ -204,5 +191,4 @@ public class ExploreFragment extends Fragment {
     public void notifyAdapter() {
         exploreAdapter.notifyDataSetChanged();
     }
-
 }
