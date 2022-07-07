@@ -56,6 +56,8 @@ public class ExploreFragment extends Fragment {
     private ImageView ivFilter;
     private View main_layout;
 
+    public ExploreFragment() {}
+
     public ExploreFragment(MainActivity mainActivity){
         activity = mainActivity;
     }

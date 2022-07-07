@@ -1,17 +1,16 @@
 package com.example.xpvehicles.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.xpvehicles.Miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
@@ -23,13 +22,19 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -53,6 +58,10 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private Date pickupDate;
     private Date returnDate;
     private int distanceFromUser;
+    private PaymentSheet paymentSheet;
+    private String paymentIntentClientSecret;
+    private PaymentSheet.CustomerConfiguration customerConfig;
+    private Number orderTotal;
 
     private void setTopAppBarOnClickListener() {
         topAppBar.setNavigationOnClickListener(v -> {
@@ -63,6 +72,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        paymentSheet = new PaymentSheet(this, this::onPaymentSheetResult);
         vehicle = (Vehicle) getIntent().getParcelableExtra("vehicle");
         distanceFromUser = getIntent().getIntExtra("distanceFromUser", 0);
         setContentView(R.layout.activity_vehicle_details);
@@ -78,7 +88,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private void bindVehicleImagesAdapter() {
         List<ParseFile> images = vehicle.getVehicleImages();
         ViewPager2 viewPager = findViewById(R.id.viewPagerDetailsVehicleImages);
-        VehicleImagesAdapter vehicleImagesAdapter =  new VehicleImagesAdapter(this, images);
+        VehicleImagesAdapter vehicleImagesAdapter = new VehicleImagesAdapter(this, images);
         viewPager.setAdapter(vehicleImagesAdapter);
         setVehicleSwipeListener(viewPager, images.size());
     }
@@ -88,7 +98,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                TextView tvVehicleImagePosition =  findViewById(R.id.tvVehicleImagePosition);
+                TextView tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
                 int currentPosition = position + 1;
                 tvVehicleImagePosition.setText(currentPosition + " / " + totalNumberOfImages);
             }
@@ -129,17 +139,18 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
             // positive button == ok button
             materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                @Override public void onPositiveButtonClick(Long selection) {
+                @Override
+                public void onPositiveButtonClick(Long selection) {
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis(selection);
                     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                    String formattedDate  = sdf.format(calendar.getTime());
+                    String formattedDate = sdf.format(calendar.getTime());
                     edtPickUpDate.setText(formattedDate);
                     try {
                         // Converts the string date back into a date Object
                         pickupDate = sdf.parse(formattedDate);
                     } catch (ParseException e) {
-                        Log.e(TAG, "error converting the pickup date into a date object",e);
+                        Log.e(TAG, "error converting the pickup date into a date object", e);
                     }
                     calculateNumberOfDays();
                 }
@@ -155,17 +166,18 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
             // positive button == ok button
             materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                @Override public void onPositiveButtonClick(Long selection) {
+                @Override
+                public void onPositiveButtonClick(Long selection) {
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                     calendar.setTimeInMillis(selection);
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                    String formattedDate  = sdf.format(calendar.getTime());
+                    String formattedDate = sdf.format(calendar.getTime());
                     edtReturnDate.setText(formattedDate);
                     try {
                         // Converts the string date back into a date Object
                         returnDate = sdf.parse(formattedDate);
                     } catch (ParseException e) {
-                        Log.e(TAG, "error converting the return date into a date object",e);
+                        Log.e(TAG, "error converting the return date into a date object", e);
                     }
                     calculateNumberOfDays();
                 }
@@ -183,7 +195,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private void calculateOrderTotal(int numberOfRentDays) {
-        Number orderTotal = numberOfRentDays * (int) vehicle.getDailyPrice();
+        orderTotal = numberOfRentDays * (int) vehicle.getDailyPrice();
         Log.i(TAG, String.valueOf(orderTotal));
         tvOrderSummaryOrderTotal.setText("$" + orderTotal);
     }
@@ -201,20 +213,51 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         return validDates;
     }
 
-
     private void setReserveNowOnClickListener() {
         btnReserveNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Boolean validDates = checkValidDates();
                 if (validDates) {
-                    _User currentUser = (_User) ParseUser.getCurrentUser();
-                    RentVehicle rentVehicle = createRentVehicle(currentUser);
-                    requestVehicle(currentUser, rentVehicle);
-                    finish();
+                    HashMap<String, Object> params = new HashMap<>();
+                    params.put("amount", (Integer) orderTotal * 100);
+                    params.put("currency", "usd");
+                    ParseCloud.callFunctionInBackground("paymentSheet", params, new FunctionCallback<HashMap<String, String>>() {
+                        @Override
+                        public void done(HashMap<String, String> result, com.parse.ParseException e) {
+                            PaymentConfiguration.init(getApplicationContext(), result.get("publishableKey"));
+                            customerConfig = new PaymentSheet.CustomerConfiguration(
+                                    result.get("customer"),
+                                    result.get("ephemeralKey"));
+                            paymentIntentClientSecret = result.get("paymentIntent");
+                            presentPaymentSheet();
+                        }
+                    });
                 }
             }
         });
+    }
+
+    private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            Log.d(TAG, "Canceled");
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            Log.e(TAG, "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            // Display for example, an order confirmation screen
+            Log.d(TAG, "Completed");
+            _User currentUser = (_User) ParseUser.getCurrentUser();
+            RentVehicle rentVehicle = createRentVehicle(currentUser);
+            requestVehicle(currentUser, rentVehicle);
+            finish();
+        }
+    }
+
+    private void presentPaymentSheet() {
+        final PaymentSheet.Configuration configuration = new PaymentSheet.Configuration.Builder("XP Vehicles")
+                .customer(customerConfig)
+                .allowsDelayedPaymentMethods(false).build();
+        paymentSheet.presentWithPaymentIntent(paymentIntentClientSecret, configuration);
     }
 
     private RentVehicle createRentVehicle(_User currentUser) {

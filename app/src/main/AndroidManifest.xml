@@ -38,6 +38,9 @@
         </provider>
 
         <activity
+            android:name=".activities.CheckoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.UserOwnedVehicleRequestsActivity"
             android:exported="false" />
         <activity
