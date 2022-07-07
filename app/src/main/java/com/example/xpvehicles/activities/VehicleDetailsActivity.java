@@ -237,7 +237,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             }
         });
     }
-
+    
     private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
             Log.d(TAG, "Canceled");
