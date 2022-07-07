@@ -3,11 +3,14 @@ package com.example.xpvehicles.activities;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -144,95 +147,112 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     }
 
     private void setPickupDateOnClickListener() {
-        edtPickUpDate.setOnClickListener(v -> {
-            CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
-            // prevent users form selecting any previous dates from current day
-            calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
-
-            MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-            materialDateBuilder.setTitleText("PICKUP DATE");
-            materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
-            MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
-            materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
-            // positive button == ok button
-            materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                @Override
-                public void onPositiveButtonClick(Long selection) {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                    calendar.setTimeInMillis(selection);
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                    sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    String formattedDate = sdf.format(calendar.getTime());
-                    edtPickUpDate.setText(formattedDate);
-                    try {
-                        // Converts the string date back into a date Object
-                        pickupDate = sdf.parse(formattedDate);
-                    } catch (ParseException e) {
-                        Log.e(TAG, "error converting the pickup date into a date object", e);
-                    }
-                    resetPickUpDateError();
-                    if (checkValidPickUpDate()) {
-                        resetPickUpDateError();
-                        calculateNumberOfDays();
-                    }
+        //prevents keyboard from popping up
+        edtPickUpDate.setInputType(InputType.TYPE_NULL);
+        edtPickUpDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayPickUpDateCalender();
+            }
+        });
+        edtPickUpDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    displayPickUpDateCalender();
                 }
-            });
+            }
         });
     }
+
+    private void displayPickUpDateCalender() {
+        CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
+        // prevent users form selecting any previous dates from current day
+        calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
+
+        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("PICKUP DATE");
+        materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
+        MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
+        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+
+        // positive button == ok button
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+                calendar.setTimeInMillis(selection);
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String formattedDate = sdf.format(calendar.getTime());
+                edtPickUpDate.setText(formattedDate);
+                try {
+                    // Converts the string date back into a date Object
+                    pickupDate = sdf.parse(formattedDate);
+                } catch (ParseException e) {
+                    Log.e(TAG, "error converting the pickup date into a date object", e);
+                }
+                if (checkValidPickUpDate()) {
+                    resetPickUpDateError();
+                    calculateNumberOfDays();
+                }
+            }
+        });
+    }
+
 
     private void setReturnDateOnClickListener() {
-        edtReturnDate.setOnClickListener(v -> {
-            CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
-            // prevent users form selecting any previous dates from current day
-            calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
-
-            MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-            materialDateBuilder.setTitleText("RETURN DATE");
-            materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
-            MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
-            materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
-            // positive button == ok button
-            materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                @Override
-                public void onPositiveButtonClick(Long selection) {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                    calendar.setTimeInMillis(selection);
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                    sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-                    String formattedDate = sdf.format(calendar.getTime());
-                    edtReturnDate.setText(formattedDate);
-                    try {
-                        // Converts the string date back into a date Object
-                        returnDate = sdf.parse(formattedDate);
-                    } catch (ParseException e) {
-                        Log.e(TAG, "error converting the return date into a date object", e);
-                    }
-                    resetReturnDateError();
-                    if (checkValidReturnDate()) {
-                        resetReturnDateError();
-                        calculateNumberOfDays();
-                    }
+        //prevents keyboard from popping up
+        edtReturnDate.setInputType(InputType.TYPE_NULL);
+        edtReturnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayReturnDateCalender();
+            }
+        });
+        edtReturnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    displayReturnDateCalender();
                 }
-            });
+            }
         });
     }
 
-    private void calculateNumberOfDays() {
-        if (pickupDate != null && returnDate != null) {
-            int conversionDifference = 1;
-            int conversionFactor = (1000 * 60 * 60 * 24);
-            int numberOfRentDays = (int) ((returnDate.getTime() - pickupDate.getTime()) / (conversionFactor)) + conversionDifference;
-            tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
-            calculateOrderTotal(numberOfRentDays);
-        }
-    }
+    private void displayReturnDateCalender() {
+        CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
+        // prevent users form selecting any previous dates from current day
+        calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
 
-    private void calculateOrderTotal(int numberOfRentDays) {
-        orderTotal = numberOfRentDays * (int) vehicle.getDailyPrice();
-        Log.i(TAG, String.valueOf(orderTotal));
-        tvOrderSummaryOrderTotal.setText("$" + orderTotal);
+        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("RETURN DATE");
+        materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
+        MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
+        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+
+        // positive button == ok button
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+                calendar.setTimeInMillis(selection);
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String formattedDate = sdf.format(calendar.getTime());
+                edtReturnDate.setText(formattedDate);
+                try {
+                    // Converts the string date back into a date Object
+                    returnDate = sdf.parse(formattedDate);
+                } catch (ParseException e) {
+                    Log.e(TAG, "error converting the return date into a date object", e);
+                }
+                if (checkValidReturnDate()) {
+                    resetReturnDateError();
+                    calculateNumberOfDays();
+                }
+            }
+        });
     }
 
     private Boolean checkValidPickUpDate() {
@@ -253,6 +273,24 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         return validReturnDate;
     }
 
+    private void calculateNumberOfDays() {
+        if (pickupDate != null && returnDate != null) {
+            resetReturnDateError();
+            resetPickUpDateError();
+            int conversionDifference = 1;
+            int conversionFactor = (1000 * 60 * 60 * 24);
+            int numberOfRentDays = (int) ((returnDate.getTime() - pickupDate.getTime()) / (conversionFactor)) + conversionDifference;
+            tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
+            calculateOrderTotal(numberOfRentDays);
+        }
+    }
+
+    private void calculateOrderTotal(int numberOfRentDays) {
+        orderTotal = numberOfRentDays * (int) vehicle.getDailyPrice();
+        Log.i(TAG, String.valueOf(orderTotal));
+        tvOrderSummaryOrderTotal.setText("$" + orderTotal);
+    }
+
     private Boolean checkValidDates() {
         Boolean validDates = true;
         if (pickupDate == null) {
@@ -261,6 +299,10 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         }
         if (returnDate == null) {
             detailsReturnDateOTF.setError("Enter a valid date");
+            validDates =  false;
+        }
+        if (pickupDate != null && returnDate != null && returnDate.getTime() - pickupDate.getTime() < 0) {
+            Toast.makeText(VehicleDetailsActivity.this, "Invalid Pickup or Return date", Toast.LENGTH_SHORT);
             validDates =  false;
         }
         return validDates;
