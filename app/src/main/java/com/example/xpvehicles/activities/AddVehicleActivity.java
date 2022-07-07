@@ -146,7 +146,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+//                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 vehicleImages.add(new ParseFile(photoFile));
                 vehicleImagesAdapter.notifyDataSetChanged();
             } else {

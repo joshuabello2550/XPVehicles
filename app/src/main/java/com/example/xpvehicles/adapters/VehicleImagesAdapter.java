@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 
 import java.util.List;
