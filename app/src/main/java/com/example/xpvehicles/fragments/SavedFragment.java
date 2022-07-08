@@ -78,4 +78,11 @@ public class SavedFragment extends Fragment {
             }
         });
     }
+
+    public void notifyAdapter() {
+        // prevent edge case where adapter has not been initialized
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 }
