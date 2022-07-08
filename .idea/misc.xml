@@ -6,6 +6,8 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.1360578540195089" />
         <entry key="app/src/main/res/drawable/dailog_rounded_corners.xml" value="0.1635" />
         <entry key="app/src/main/res/drawable/dots_indicator.xml" value="0.199" />
+        <entry key="app/src/main/res/drawable/ic_calendar_event_48.xml" value="0.28" />
+        <entry key="app/src/main/res/drawable/ic_calendar_month_24.xml" value="0.28" />
         <entry key="app/src/main/res/drawable/ic_favorite_24.xml" value="0.134" />
         <entry key="app/src/main/res/drawable/ic_favorite_border_24.xml" value="0.134" />
         <entry key="app/src/main/res/drawable/round_corners.xml" value="0.199" />
@@ -31,6 +33,7 @@
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.45" />
         <entry key="app/src/main/res/layout/fragment_inbox.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.33827160493827163" />
+        <entry key="app/src/main/res/layout/fragment_renting_requests.xml" value="0.42291666666666666" />
         <entry key="app/src/main/res/layout/fragment_renting_vehicles.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_saved.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_vehicles.xml" value="0.375" />

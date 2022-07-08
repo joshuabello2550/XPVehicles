@@ -130,17 +130,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:clickable="false"
                     android:hint="Pickup Date"
                     app:counterEnabled="false"
-                    app:errorEnabled="false"
-                    app:passwordToggleEnabled="false">
+                    app:errorEnabled="true"
+                    app:helperText="MM/DD/YYYY"
+                    app:helperTextEnabled="true"
+                    app:passwordToggleEnabled="false"
+                    app:startIconDrawable="@drawable/ic_calendar_month_24">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtPickUpDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="false" />
+                        android:clickable="false"
+                        android:inputType="datetime"
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -150,12 +154,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="Return Date">
+                    android:hint="Return Date"
+                    app:errorEnabled="true"
+                    app:helperText="MM/DD/YYYY"
+                    app:helperTextEnabled="true"
+                    app:startIconDrawable="@drawable/ic_calendar_month_24">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtReturnDate"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="datetime"
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
