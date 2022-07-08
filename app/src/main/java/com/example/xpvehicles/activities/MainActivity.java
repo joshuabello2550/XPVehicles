@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 userLocationGeoPoint = new ParseGeoPoint(userLatitude, userLongitude);
                 Log.i(TAG, "User's location is " + userLocationGeoPoint);
                 exploreFragment.notifyAdapter();
+                savedFragment.notifyAdapter();
             }
         });
     }

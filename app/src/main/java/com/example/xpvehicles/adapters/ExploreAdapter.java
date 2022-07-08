@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,6 +34,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     private List<Vehicle> vehicles;
     private Fragment fragment;
     private MainActivity activity;
+    private FrameLayout frameLayout;
 
     public ExploreAdapter(Fragment fragment, List<Vehicle> vehicles, MainActivity activity){
         this.vehicles = vehicles;
@@ -42,6 +45,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        frameLayout = activity.findViewById(R.id.flProgressContainer);
         View vehicleView =  LayoutInflater.from(fragment.getContext()).inflate(R.layout.vehicle_card, parent, false);
         return new ViewHolder(vehicleView);
     }
@@ -109,6 +113,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             // distance from user
             if (activity.getUserLocationGeoPoint() != null) {
                 distanceFromUser = activity.getDistanceFromUser(vehicle);
+                frameLayout.setVisibility(View.GONE);
                 tvDistanceFromUser.setText(distanceFromUser + " mi.");
             }
 
