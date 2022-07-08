@@ -1,5 +1,6 @@
 package com.example.xpvehicles.adapters;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +16,11 @@ import com.example.xpvehicles.Miscellaneous.IndicatorDots;
 import com.example.xpvehicles.Miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
+import com.example.xpvehicles.activities.RentingRequestsActivity;
 import com.example.xpvehicles.fragments.RentingRequestsFragment;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -54,6 +57,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
         } catch (ParseException e) {
             Log.e(TAG, "Error setting the values for the vehicles the user is renting", e);
         }
+        holder.setCardOnClickListener(vehicle);
     }
 
     @Override
@@ -80,6 +84,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
         private TextView tvStatus;
         private ViewPager2 viewPager;
         private TabLayout tabLayout;
+        private MaterialCardView rentingRequestsVehicleCard;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -93,6 +98,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             tvStatus = itemView.findViewById(R.id.tvStatus);
             viewPager = itemView.findViewById(R.id.viewPagerRentingVehicleImages);
             tabLayout = itemView.findViewById(R.id.tabLayout);
+            rentingRequestsVehicleCard =  itemView.findViewById(R.id.rentingRequestsVehicleCard);
         }
 
         public void setValues(RentVehicle rentVehicle) throws ParseException {
@@ -101,7 +107,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             String vehicleName = originalVehicle.fetchIfNeeded().getString("name");
             tvRentingVehicleName.setText(vehicleName);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy");
             // vehicle pickup date
             Date pickUpDate = rentVehicle.getPickUpDate();
             String formattedPickUpDate = sdf.format(pickUpDate);
@@ -145,5 +151,16 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             }
             tvStatus.setBackgroundColor(statusColor);
         }
+
+        private void setCardOnClickListener(RentVehicle vehicle) {
+            rentingRequestsVehicleCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(activity, RentingRequestsActivity.class);
+                    intent.putExtra("rentVehicle", vehicle);
+                    activity.startActivity(intent);
+                }
+            });
         }
     }
+}

@@ -25,6 +25,7 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_renting_requests.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/layout/activity_user_vehicle_details.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_user_vehicle_requests.xml" value="0.45" />
