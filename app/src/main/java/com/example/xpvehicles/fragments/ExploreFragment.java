@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Filter;
 import android.widget.ImageView;
@@ -122,6 +124,8 @@ public class ExploreFragment extends Fragment {
     }
 
     private void setAddVehicleOnClickListener(FloatingActionButton fabAddVehicle) {
+        Animation expandIn = AnimationUtils.loadAnimation(activity, R.anim.expand_in);
+        fabAddVehicle.startAnimation(expandIn);
         fabAddVehicle.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), AddVehicleActivity.class);
             startActivity(i);
