@@ -1,11 +1,13 @@
 package com.example.xpvehicles.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.xpvehicles.Miscellaneous.RentingStatus;
@@ -83,8 +86,8 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         vehicle = (Vehicle) getIntent().getParcelableExtra("vehicle");
         distanceFromUser = getIntent().getIntExtra("distanceFromUser", 0);
         setContentView(R.layout.activity_vehicle_details);
-        bindVehicleImagesAdapter();
         bind();
+        bindVehicleImagesAdapter();
         setValues();
         setTopAppBarOnClickListener();
         setPickupDateOnClickListener();
