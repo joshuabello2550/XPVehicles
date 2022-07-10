@@ -1,4 +1,4 @@
-package com.example.xpvehicles.Miscellaneous;
+package com.example.xpvehicles.interfaces;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;

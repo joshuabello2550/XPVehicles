@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.xpvehicles.Miscellaneous.RentingStatus;
+import com.example.xpvehicles.interfaces.ParentAdapter;
+import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.RentVehicle;
+import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -25,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder>{
+public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder> implements ParentAdapter {
 
     public static final String TAG = "RequestsAdapter";
     private List<RentVehicle> vehicles;
@@ -59,16 +61,8 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         return vehicles.size();
     }
 
-    public void setVehicles(List<RentVehicle> allVehicles, TextView textViewNoVehicles) {
-        vehicles.clear();
-        notifyDataSetChanged();
-        if (allVehicles.size() > 0) {
-            textViewNoVehicles.setVisibility(View.GONE);
-            vehicles.addAll(allVehicles);
-            notifyDataSetChanged();
-        } else {
-            textViewNoVehicles.setVisibility(View.VISIBLE);
-        }
+    public void setVehicles(List<RentVehicle> addVehicles, TextView textViewNoVehicles) {
+        setRentVehicles(vehicles, addVehicles, textViewNoVehicles, this);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

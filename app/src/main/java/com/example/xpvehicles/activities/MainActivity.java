@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private final SavedFragment savedFragment = new SavedFragment(this);
     private final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
     private final ProfileFragment profileFragment = new ProfileFragment(this);
-    private long UPDATE_INTERVAL = 1;  /* 10 secs */
-    private long MIN_DISTANCE = 1 * 1609; /* 1 mile */
-    private int REQUEST_CODE = 1;
+    private static final long UPDATE_INTERVAL = 1;  /* 10 secs */
+    private static final long MIN_DISTANCE = 1 * 1609; /* 1 mile */
+    private static final int REQUEST_CODE = 1;
     private ParseGeoPoint userLocationGeoPoint;
     private BottomNavigationView bottomNavigationView;
 

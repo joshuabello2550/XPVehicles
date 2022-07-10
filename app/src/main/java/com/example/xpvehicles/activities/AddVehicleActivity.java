@@ -22,8 +22,9 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.Miscellaneous.IndicatorDots;
+import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
+import com.example.xpvehicles.interfaces.ParentActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
@@ -42,13 +43,13 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class AddVehicleActivity extends AppCompatActivity implements IndicatorDots {
+public class AddVehicleActivity extends AppCompatActivity implements IndicatorDots, ParentActivity {
 
     private static final String TAG = "AddVehicleActivity";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
-    private final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
-    private final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
-    private final String GOOGLE_GEOCODING_API_PARAMETER_ADDRESS = "address";
+    private static final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
+    private static final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
+    private static final String GOOGLE_GEOCODING_API_PARAMETER_ADDRESS = "address";
     private MaterialToolbar topAppBar;
     private EditText edtVehicleName;
     private EditText edtDescription;
@@ -70,16 +71,10 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
         bind();
-        setTopAppBarOnClickListener();
+        setTopAppBarOnClickListener(topAppBar, this);
         setAddVehicleOnClickListener();
         setTakePictureOnClickListener();
         bindVehicleImagesAdapter();
-    }
-
-    private void setTopAppBarOnClickListener() {
-        topAppBar.setNavigationOnClickListener(v -> {
-            this.finish();
-        });
     }
 
     private void bind() {

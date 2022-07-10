@@ -63,7 +63,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_layout"
+        android:id="@+id/mainLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clickable="true"

@@ -28,7 +28,7 @@ import java.util.List;
 public class RentingRequestsFragment extends Fragment {
 
     private static final String TAG = "RentingVehiclesFragment";
-    private final String QUERY_PARAMETER_RENTEE =  "rentee";
+    private static final String QUERY_PARAMETER_RENTEE =  "rentee";
     private RentingRequestsAdapter adapter;
     private TextView tvUserNoRentingVehicles;
 
