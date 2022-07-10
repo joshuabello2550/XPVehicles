@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.xpvehicles.R;
@@ -28,11 +29,13 @@ import java.util.List;
 public class RentingRequestsFragment extends Fragment {
 
     private static final String TAG = "RentingVehiclesFragment";
-    private static final String QUERY_PARAMETER_RENTEE =  "rentee";
+    private static final String QUERY_PARAMETER_RENTEE = "rentee";
     private RentingRequestsAdapter adapter;
+    private MainActivity activity;
     private TextView tvUserNoRentingVehicles;
 
     public RentingRequestsFragment(MainActivity mainActivity) {
+        activity = mainActivity;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class RentingRequestsFragment extends Fragment {
     }
 
     private void bind() {
-        tvUserNoRentingVehicles = getActivity().findViewById(R.id.tvUserNoRentingVehicles);
+        tvUserNoRentingVehicles = activity.findViewById(R.id.tvUserNoRentingVehicles);
     }
 
     private void bindAdapter(View view) {

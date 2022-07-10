@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
     private List<RentVehicle> vehicles;
     private RentingRequestsFragment fragment;
     private MainActivity activity;
+    private FrameLayout frameLayout;
 
     public RentingRequestsAdapter(RentingRequestsFragment fragment, List<RentVehicle> vehicles, MainActivity activity) {
         this.vehicles = vehicles;
@@ -46,6 +48,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        frameLayout =  activity.findViewById(R.id.flProgressContainer);
         View vehicleView = LayoutInflater.from(fragment.getContext()).inflate(R.layout.renting_request_vehicle_card, parent, false);
         return new ViewHolder(vehicleView);
     }
@@ -54,6 +57,7 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RentVehicle vehicle = vehicles.get(position);
         try {
+            frameLayout.setVisibility(View.GONE);
             holder.setValues(vehicle);
         } catch (ParseException e) {
             Log.e(TAG, "Error setting the values for the vehicles the user is renting", e);
