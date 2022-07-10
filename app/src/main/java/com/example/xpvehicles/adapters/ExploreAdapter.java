@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,10 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.xpvehicles.Miscellaneous.IndicatorDots;
+import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
+import com.example.xpvehicles.interfaces.ParentAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.tabs.TabLayout;
@@ -28,9 +28,9 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> implements IndicatorDots {
+public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> implements IndicatorDots, ParentAdapter {
 
-    public static final String TAG = "ExploreAdapter";
+    private static final String TAG = "ExploreAdapter";
     private List<Vehicle> vehicles;
     private Fragment fragment;
     private MainActivity activity;
@@ -64,16 +64,8 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         return vehicles.size();
     }
 
-    public void setVehicles(List<Vehicle> allVehicles, TextView textViewNoVehicles) {
-        vehicles.clear();
-        notifyDataSetChanged();
-        if (allVehicles.size() > 0) {
-            textViewNoVehicles.setVisibility(View.GONE);
-            vehicles.addAll(allVehicles);
-            notifyDataSetChanged();
-        } else {
-            textViewNoVehicles.setVisibility(View.VISIBLE);
-        }
+    public void setVehicles(List<Vehicle> addVehicles, TextView textViewNoVehicles) {
+        setVehicles(vehicles, addVehicles, textViewNoVehicles, this);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

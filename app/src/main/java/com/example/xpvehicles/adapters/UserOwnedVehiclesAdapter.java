@@ -11,17 +11,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.xpvehicles.Miscellaneous.IndicatorDots;
+import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
+import com.example.xpvehicles.interfaces.ParentAdapter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehiclesAdapter.ViewHolder> implements IndicatorDots {
+public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehiclesAdapter.ViewHolder> implements IndicatorDots, ParentAdapter {
 
     public static final String TAG = "UserVehiclesAdapter";
     private List<Vehicle> vehicles;
@@ -53,16 +54,9 @@ public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehi
         return vehicles.size();
     }
 
-    public void setVehicles(List<Vehicle> allVehicles, TextView textViewNoVehicles) {
-        vehicles.clear();
-        notifyDataSetChanged();
-        if (allVehicles.size() > 0) {
-            textViewNoVehicles.setVisibility(View.GONE);
-            vehicles.addAll(allVehicles);
-            notifyDataSetChanged();
-        } else {
-            textViewNoVehicles.setVisibility(View.VISIBLE);
-        }
+
+    public void setVehicles(List<Vehicle> addVehicles, TextView textViewNoVehicles) {
+        setVehicles(vehicles, addVehicles, textViewNoVehicles, this);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -31,7 +31,7 @@ import java.util.List;
 public class SavedFragment extends Fragment {
 
     private static final String TAG = "SavedFragment";
-    private final String QUERY_PARAMETER_OBJECT_ID = "objectId";
+    private static final String QUERY_PARAMETER_OBJECT_ID = "objectId";
     private ExploreAdapter adapter;
     private TextView tvNoSavedVehicles;
 

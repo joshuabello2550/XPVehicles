@@ -1,16 +1,14 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.xpvehicles.Miscellaneous.EmailChecker;
+import com.example.xpvehicles.miscellaneous.EmailChecker;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.textfield.TextInputLayout;

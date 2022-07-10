@@ -11,9 +11,9 @@ import com.parse.ParseUser;
 
 public class ParseApplication extends Application {
 
-    private final String PARSE_APPLICATION_ID = "VSy9BgESdDvYNBhizAnwe8u4FQcvQpBTUSziFQ53";
-    private final String PARSE_CLIENT_KEY = "ZU2vfje4LiBUgZFaGQPNOhj4Xesv7c9PMdpbR8Et";
-    private final String PARSE_SERVER_HTTP_ADDRESS = "https://parseapi.back4app.com";
+    private static final String PARSE_APPLICATION_ID = "VSy9BgESdDvYNBhizAnwe8u4FQcvQpBTUSziFQ53";
+    private static final String PARSE_CLIENT_KEY = "ZU2vfje4LiBUgZFaGQPNOhj4Xesv7c9PMdpbR8Et";
+    private static final String PARSE_SERVER_HTTP_ADDRESS = "https://parseapi.back4app.com";
 
     @Override
     public void onCreate() {

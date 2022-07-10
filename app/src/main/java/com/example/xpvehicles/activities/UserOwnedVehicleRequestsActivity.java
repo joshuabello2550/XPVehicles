@@ -10,9 +10,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.Miscellaneous.IndicatorDots;
+import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.adapters.UserOwnedVehicleRequestsAdapter;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
+import com.example.xpvehicles.interfaces.ParentActivity;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -25,11 +26,11 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implements IndicatorDots {
+public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implements IndicatorDots, ParentActivity {
 
     public static final String TAG = "UserVehicleRequestsActivity";
-    private final String QUERY_PARAMETER_VEHICLE = "vehicle";
-    private final String DAILY_PRICE_PREFIX = "Daily Price: $";
+    private static final String QUERY_PARAMETER_VEHICLE = "vehicle";
+    private static final String DAILY_PRICE_PREFIX = "Daily Price: $";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
     private UserOwnedVehicleRequestsAdapter adapter;
@@ -48,13 +49,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
         queryUserOwnedVehicleRequests();
         bindUserOwnedVehicleRequestsAdapter();
         setValues();
-        setTopAppBarOnClickListener();
-    }
-
-    private void setTopAppBarOnClickListener() {
-        topAppBar.setNavigationOnClickListener(v -> {
-            this.finish();
-        });
+        setTopAppBarOnClickListener(topAppBar, this);
     }
 
     private void bind() {

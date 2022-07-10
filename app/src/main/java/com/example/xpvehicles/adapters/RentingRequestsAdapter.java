@@ -1,7 +1,6 @@
 package com.example.xpvehicles.adapters;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.xpvehicles.Miscellaneous.IndicatorDots;
-import com.example.xpvehicles.Miscellaneous.RentingStatus;
+import com.example.xpvehicles.interfaces.IndicatorDots;
+import com.example.xpvehicles.interfaces.ParentAdapter;
+import com.example.xpvehicles.interfaces.OrderInformation;
+import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.activities.RentingRequestsActivity;
@@ -29,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequestsAdapter.ViewHolder> implements IndicatorDots {
+public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequestsAdapter.ViewHolder> implements IndicatorDots, ParentAdapter, OrderInformation {
 
     public static final String TAG = "RentingVehiclesAdapter";
     private List<RentVehicle> vehicles;
@@ -65,16 +66,8 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
         return vehicles.size();
     }
 
-    public void setVehicles(List<RentVehicle> allVehicles, TextView textViewNoVehicles) {
-        vehicles.clear();
-        notifyDataSetChanged();
-        if (allVehicles.size() > 0) {
-            textViewNoVehicles.setVisibility(View.GONE);
-            vehicles.addAll(allVehicles);
-            notifyDataSetChanged();
-        } else {
-            textViewNoVehicles.setVisibility(View.VISIBLE);
-        }
+    public void setVehicles(List<RentVehicle> addVehicles, TextView textViewNoVehicles) {
+        setRentVehicles(vehicles, addVehicles, textViewNoVehicles, this);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -121,7 +114,8 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             String status = rentVehicle.getStatus();
             RentingStatus rentingStatus = RentingStatus.valueOf(status);
             tvStatus.setText(rentingStatus.toString());
-            setStatusColor(rentingStatus);
+            int statusColor = getStatusColor(rentingStatus);
+            tvStatus.setBackgroundColor(statusColor);
 
             // vehicle image
             bindVehicleImagesAdapter(originalVehicle);
@@ -132,24 +126,6 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
             VehicleImagesAdapter vehicleImagesAdapter = new VehicleImagesAdapter(activity, images);
             viewPager.setAdapter(vehicleImagesAdapter);
             setViewPagerIndicatorDots(tabLayout, viewPager);
-        }
-
-        private void setStatusColor(RentingStatus status) {
-            int statusColor;
-            switch (status) {
-                case PENDING_APPROVAL:
-                    statusColor = Color.parseColor(String.valueOf(RentingStatus.PENDING_APPROVAL_COLOR));
-                    break;
-                case APPROVED:
-                    statusColor = Color.parseColor(String.valueOf(RentingStatus.APPROVED_COLOR));
-                    break;
-                case DENIED:
-                    statusColor = Color.parseColor(String.valueOf(RentingStatus.DENIED_COLOR));
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + status);
-            }
-            tvStatus.setBackgroundColor(statusColor);
         }
 
         private void setCardOnClickListener(RentVehicle vehicle) {

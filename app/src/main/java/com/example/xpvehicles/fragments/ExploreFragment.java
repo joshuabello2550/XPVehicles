@@ -50,8 +50,8 @@ import java.util.List;
 public class ExploreFragment extends Fragment {
 
     private static final String TAG = "ExploreFragment";
-    private final String QUERY_PARAMETER_OWNER = "owner";
-    private final String QUERY_PARAMETER_NAME = "name";
+    private static final String QUERY_PARAMETER_OWNER = "owner";
+    private static final String QUERY_PARAMETER_NAME = "name";
     private ExploreAdapter exploreAdapter;
     private RecommendedVehiclesAdapter recommendedVehiclesAdapter;
     private MainActivity activity;
@@ -59,7 +59,7 @@ public class ExploreFragment extends Fragment {
     private FloatingActionButton fabAddVehicle;
     private SearchView searchView;
     private ImageView ivFilter;
-    private View main_layout;
+    private View mainLayout;
 
     public ExploreFragment() {}
 
@@ -72,7 +72,7 @@ public class ExploreFragment extends Fragment {
         super.onResume();
         searchView.setQuery("", false);
         searchView.clearFocus();
-        main_layout.requestFocus();
+        mainLayout.requestFocus();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void bind(View view) {
-        main_layout =  view.findViewById(R.id.main_layout);
+        mainLayout =  view.findViewById(R.id.mainLayout);
         tvNoAvailableRentVehicle = view.findViewById(R.id.tvNoAvailableRentVehicle);
         fabAddVehicle = view.findViewById(R.id.fabAddVehicle);
         searchView = view.findViewById(R.id.searchView);
@@ -153,7 +153,7 @@ public class ExploreFragment extends Fragment {
             }
         });
 
-        main_layout.setOnClickListener(new View.OnClickListener() {
+        mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchView.onActionViewCollapsed();

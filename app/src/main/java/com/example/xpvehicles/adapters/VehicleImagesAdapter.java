@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.activities.RentingRequestsActivity;
 import com.example.xpvehicles.activities.VehicleDetailsActivity;
 import com.example.xpvehicles.activities.VehicleImageZoomInActivity;
 import com.parse.Parse;
@@ -43,7 +44,7 @@ public class VehicleImagesAdapter extends RecyclerView.Adapter<VehicleImagesAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ParseFile image = images.get(position);
         holder.setValues(image);
-        if (activity instanceof VehicleDetailsActivity) {
+        if (activity instanceof VehicleDetailsActivity || activity instanceof RentingRequestsActivity) {
             holder.setImageOnClickListener(image);
         }
 

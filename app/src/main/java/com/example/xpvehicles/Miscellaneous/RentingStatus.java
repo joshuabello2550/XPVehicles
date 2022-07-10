@@ -1,4 +1,4 @@
-package com.example.xpvehicles.Miscellaneous;
+package com.example.xpvehicles.miscellaneous;
 
 import androidx.annotation.NonNull;
 

@@ -10,29 +10,24 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.interfaces.ParentActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.ortiz.touchview.TouchImageView;
 import com.parse.ParseFile;
 
-public class VehicleImageZoomInActivity extends AppCompatActivity {
+public class VehicleImageZoomInActivity extends AppCompatActivity implements ParentActivity {
 
     private static final String TAG = "VehicleImageZoomInActivity";
     private MaterialToolbar topAppBarVehicleImageZoomIn;
     private ParseFile image;
     private TouchImageView touchImageViewVehicleImageZoom;
 
-    private void setTopAppBarOnClickListener() {
-        topAppBarVehicleImageZoomIn.setNavigationOnClickListener(v -> {
-            this.finish();
-        });
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_image_zoom_in);
         bind();
-        setTopAppBarOnClickListener();
+        setTopAppBarOnClickListener(topAppBarVehicleImageZoomIn, this);
     }
 
     private void bind() {

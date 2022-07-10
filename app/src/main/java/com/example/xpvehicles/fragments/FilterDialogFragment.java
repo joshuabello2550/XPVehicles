@@ -38,7 +38,7 @@ import java.util.List;
 public class FilterDialogFragment extends DialogFragment {
 
     private static final String TAG = "FilterDialogFragment";
-    private final String QUERY_PARAMETER_OWNER = "owner";
+    private static final String QUERY_PARAMETER_OWNER = "owner";
     private ExploreAdapter exploreAdapter;
     private MainActivity activity;
     private MaterialToolbar filterTopAppBar;

@@ -3,12 +3,13 @@ package com.example.xpvehicles.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.xpvehicles.Miscellaneous.RentingStatus;
+import com.example.xpvehicles.interfaces.ParentActivity;
+import com.example.xpvehicles.interfaces.OrderInformation;
+import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
@@ -20,8 +21,9 @@ import com.parse.ParseFile;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class RentingRequestsActivity extends AppCompatActivity {
+public class RentingRequestsActivity extends AppCompatActivity implements ParentActivity, OrderInformation {
 
     private static final String TAG = "RentingRequestsActivity";
     private RentVehicle rentVehicle;
@@ -36,12 +38,8 @@ public class RentingRequestsActivity extends AppCompatActivity {
     private TextView tvRentingRequestsPickUpDate;
     private TextView tvRentingRequestReturnDate;
     private TextView tvRentingRequestStatus;
-
-    private void setTopAppBarOnClickListener() {
-        topAppBarRentingRequest.setNavigationOnClickListener(v -> {
-            this.finish();
-        });
-    }
+    private TextView tvVehicleImagePosition;
+    private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,7 @@ public class RentingRequestsActivity extends AppCompatActivity {
         rentVehicle = getIntent().getParcelableExtra("rentVehicle");
         originalVehicle = (Vehicle) rentVehicle.getVehicle();
         bind();
-        setTopAppBarOnClickListener();
+        setTopAppBarOnClickListener(topAppBarRentingRequest, this);
         try {
             bindVehicleImagesAdapter();
             setValues();
@@ -61,7 +59,6 @@ public class RentingRequestsActivity extends AppCompatActivity {
 
     private void bindVehicleImagesAdapter() throws ParseException {
         List<ParseFile> images = originalVehicle.getVehicleImages();
-        ViewPager2 viewPager = findViewById(R.id.viewPagerRentingRequestVehicleImages);
         VehicleImagesAdapter vehicleImagesAdapter = new VehicleImagesAdapter(this, images);
         viewPager.setAdapter(vehicleImagesAdapter);
         setVehicleSwipeListener(viewPager, images.size());
@@ -72,7 +69,6 @@ public class RentingRequestsActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                TextView tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
                 int currentPosition = position + 1;
                 tvVehicleImagePosition.setText(currentPosition + " / " + totalNumberOfImages);
             }
@@ -84,12 +80,14 @@ public class RentingRequestsActivity extends AppCompatActivity {
         tvRentingRequestVehicleName = findViewById(R.id.tvRentingRequestVehicleName);
         tvRentingRequestVehicleDescription = findViewById(R.id.tvRentingRequestVehicleDescription);
         tvRentingRequestDailyPrice = findViewById(R.id.tvRentingRequestDailyPrice);
-        tvOrderSummaryDailyPrice =  findViewById(R.id.tvOrderSummaryDailyPrice);
-        tvOrderSummaryNumberOfDays =  findViewById(R.id.tvOrderSummaryNumberOfDays);
-        tvOrderSummaryOrderTotal =  findViewById(R.id.tvOrderSummaryOrderTotal);
-        tvRentingRequestsPickUpDate =  findViewById(R.id.tvRentingRequestsPickUpDate);
-        tvRentingRequestReturnDate =  findViewById(R.id.tvRentingRequestReturnDate);
-        tvRentingRequestStatus =  findViewById(R.id.tvRentingRequestStatus);
+        tvOrderSummaryDailyPrice = findViewById(R.id.tvOrderSummaryDailyPrice);
+        tvOrderSummaryNumberOfDays = findViewById(R.id.tvOrderSummaryNumberOfDays);
+        tvOrderSummaryOrderTotal = findViewById(R.id.tvOrderSummaryOrderTotal);
+        tvRentingRequestsPickUpDate = findViewById(R.id.tvRentingRequestsPickUpDate);
+        tvRentingRequestReturnDate = findViewById(R.id.tvRentingRequestReturnDate);
+        tvRentingRequestStatus = findViewById(R.id.tvRentingRequestStatus);
+        tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
+        viewPager = findViewById(R.id.viewPagerRentingRequestVehicleImages);
     }
 
     private void setValues() throws ParseException {
@@ -99,7 +97,7 @@ public class RentingRequestsActivity extends AppCompatActivity {
         tvRentingRequestVehicleName.setText(vehicleName);
 
         // daily price
-        Number dailyPrice = originalVehicle.fetchIfNeeded().getNumber("dailyPrice");
+        Number dailyPrice =  originalVehicle.fetchIfNeeded().getNumber("dailyPrice");
         tvRentingRequestDailyPrice.setText("$" + dailyPrice);
         tvOrderSummaryDailyPrice.setText("$" + dailyPrice);
 
@@ -117,47 +115,19 @@ public class RentingRequestsActivity extends AppCompatActivity {
         String formattedReturnDate = sdf.format(returnDate);
         tvRentingRequestReturnDate.setText(formattedReturnDate);
 
-        //set order summary values
-        calculateNumberOfDays(pickUpDate, returnDate);
+        //set number of rent days
+        int numberOfRentDays = getNumberOfDays(pickUpDate, returnDate);
+        tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
+
+        //set order total
+        double orderTotal =  getOrderTotal(numberOfRentDays, (int) dailyPrice);
+        tvOrderSummaryOrderTotal.setText("$" + orderTotal);
 
         // status
         String status = rentVehicle.getStatus();
         RentingStatus rentingStatus = RentingStatus.valueOf(status);
         tvRentingRequestStatus.setText(rentingStatus.toString());
-        setStatusColor(rentingStatus);
-    }
-
-    private void calculateNumberOfDays(Date pickUpDate, Date returnDate) {
-        if (pickUpDate != null && returnDate != null) {
-            int conversionDifference = 1;
-            int conversionFactor = (1000 * 60 * 60 * 24);
-            int numberOfRentDays = (int) ((returnDate.getTime() - pickUpDate.getTime()) / (conversionFactor)) + conversionDifference;
-            tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
-            calculateOrderTotal(numberOfRentDays);
-        }
-    }
-
-    private void calculateOrderTotal(int numberOfRentDays) {
-        int orderTotal = numberOfRentDays * (int) originalVehicle.getDailyPrice();
-        Log.i(TAG, String.valueOf(orderTotal));
-        tvOrderSummaryOrderTotal.setText("$" + orderTotal);
-    }
-
-    private void setStatusColor(RentingStatus status) {
-        int statusColor;
-        switch (status) {
-            case PENDING_APPROVAL:
-                statusColor = Color.parseColor(String.valueOf(RentingStatus.PENDING_APPROVAL_COLOR));
-                break;
-            case APPROVED:
-                statusColor = Color.parseColor(String.valueOf(RentingStatus.APPROVED_COLOR));
-                break;
-            case DENIED:
-                statusColor = Color.parseColor(String.valueOf(RentingStatus.DENIED_COLOR));
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + status);
-        }
+        int statusColor = getStatusColor(rentingStatus);
         tvRentingRequestStatus.setBackgroundColor(statusColor);
     }
 }

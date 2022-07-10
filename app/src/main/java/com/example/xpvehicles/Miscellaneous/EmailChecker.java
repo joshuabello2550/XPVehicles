@@ -1,4 +1,4 @@
-package com.example.xpvehicles.Miscellaneous;
+package com.example.xpvehicles.miscellaneous;
 
 import android.text.TextUtils;
 import android.util.Patterns;

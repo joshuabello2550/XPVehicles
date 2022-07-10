@@ -1,13 +1,9 @@
 package com.example.xpvehicles.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.xpvehicles.Miscellaneous.RentingStatus;
+import com.example.xpvehicles.interfaces.OrderInformation;
+import com.example.xpvehicles.interfaces.ParentActivity;
+import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
@@ -26,7 +23,6 @@ import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -43,14 +39,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
-public class VehicleDetailsActivity extends AppCompatActivity {
+public class VehicleDetailsActivity extends AppCompatActivity implements ParentActivity, OrderInformation {
 
     public static final String TAG = "VehicleDetailsActivity";
+    public static final String STRIPE_API_PARAMETER_AMOUNT = "amount";
+    public static final String STRIPE_API_PARAMETER_CURRENCY = "currency";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
     private EditText edtPickUpDate;
@@ -62,6 +60,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private TextView tvOrderSummaryDailyPrice;
     private TextView tvOrderSummaryNumberOfDays;
     private TextView tvOrderSummaryOrderTotal;
+    private TextView tvVehicleImagePosition;
     private Button btnReserveNow;
     private TextInputLayout detailsPickupDateOTF;
     private TextInputLayout detailsReturnDateOTF;
@@ -71,13 +70,9 @@ public class VehicleDetailsActivity extends AppCompatActivity {
     private PaymentSheet paymentSheet;
     private String paymentIntentClientSecret;
     private PaymentSheet.CustomerConfiguration customerConfig;
-    private Number orderTotal;
-
-    private void setTopAppBarOnClickListener() {
-        topAppBar.setNavigationOnClickListener(v -> {
-            this.finish();
-        });
-    }
+    private Number dailyPrice;
+    private Double orderTotal;
+    private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +84,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         bind();
         bindVehicleImagesAdapter();
         setValues();
-        setTopAppBarOnClickListener();
+        setTopAppBarOnClickListener(topAppBar, this);
         setPickupDateOnClickListener();
         setReturnDateOnClickListener();
         setReserveNowOnClickListener();
@@ -97,7 +92,6 @@ public class VehicleDetailsActivity extends AppCompatActivity {
 
     private void bindVehicleImagesAdapter() {
         List<ParseFile> images = vehicle.getVehicleImages();
-        ViewPager2 viewPager = findViewById(R.id.viewPagerDetailsVehicleImages);
         VehicleImagesAdapter vehicleImagesAdapter = new VehicleImagesAdapter(this, images);
         viewPager.setAdapter(vehicleImagesAdapter);
         setVehicleSwipeListener(viewPager, images.size());
@@ -108,7 +102,6 @@ public class VehicleDetailsActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                TextView tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
                 int currentPosition = position + 1;
                 tvVehicleImagePosition.setText(currentPosition + " / " + totalNumberOfImages);
             }
@@ -129,14 +122,17 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         tvOrderSummaryOrderTotal = findViewById(R.id.tvOrderSummaryOrderTotal);
         detailsPickupDateOTF = findViewById(R.id.detailsPickupDateOTF);
         detailsReturnDateOTF = findViewById(R.id.detailsReturnDateOTF);
+        viewPager = findViewById(R.id.viewPagerDetailsVehicleImages);
+        tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
     }
 
     private void setValues() {
+        dailyPrice = vehicle.getDailyPrice();
         tvDetailsDistanceFromUser.setText(distanceFromUser + " mi.");
         tvDetailsVehicleName.setText(vehicle.getVehicleName());
         tvDetailsVehicleDescription.setText(vehicle.getDescription());
-        tvDetailsDailyPrice.setText("$" + vehicle.getDailyPrice() + "/day");
-        tvOrderSummaryDailyPrice.setText("$" + vehicle.getDailyPrice());
+        tvDetailsDailyPrice.setText("$" + dailyPrice + "/day");
+        tvOrderSummaryDailyPrice.setText("$" + dailyPrice);
         tvOrderSummaryNumberOfDays.setText("0");
         tvOrderSummaryOrderTotal.setText("$0");
     }
@@ -149,36 +145,43 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         detailsReturnDateOTF.setError(null);
     }
 
+    private MaterialDatePicker<Long> getAndDisplayCalender(String title) {
+        CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
+        // prevent users form selecting any previous dates from current day
+        calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
+
+        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("RETURN DATE");
+        materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
+        MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
+        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+
+        return materialDatePicker;
+    }
+
     private void setPickupDateOnClickListener() {
+        String title =  "PICKUP DATE";
         //prevents keyboard from popping up
         edtPickUpDate.setInputType(InputType.TYPE_NULL);
         edtPickUpDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayPickUpDateCalender();
+                MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
+                setPickupCalenderListener(materialDatePicker);
             }
         });
         edtPickUpDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    displayPickUpDateCalender();
+                    MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
+                    setPickupCalenderListener(materialDatePicker);
                 }
             }
         });
     }
 
-    private void displayPickUpDateCalender() {
-        CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
-        // prevent users form selecting any previous dates from current day
-        calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
-
-        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setTitleText("PICKUP DATE");
-        materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
-        MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
-        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
+    private void setPickupCalenderListener(MaterialDatePicker<Long> materialDatePicker) {
         // positive button == ok button
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
@@ -197,43 +200,35 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                 }
                 if (checkValidPickUpDate()) {
                     resetPickUpDateError();
-                    calculateNumberOfDays();
+                    calculateOrderInformation();
                 }
             }
         });
     }
 
-
     private void setReturnDateOnClickListener() {
+        String title =  "RETURN DATE";
         //prevents keyboard from popping up
         edtReturnDate.setInputType(InputType.TYPE_NULL);
         edtReturnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                displayReturnDateCalender();
+                MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
+                setReturnCalenderListener(materialDatePicker);
             }
         });
         edtReturnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    displayReturnDateCalender();
+                    MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
+                    setReturnCalenderListener(materialDatePicker);
                 }
             }
         });
     }
 
-    private void displayReturnDateCalender() {
-        CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
-        // prevent users form selecting any previous dates from current day
-        calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
-
-        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setTitleText("RETURN DATE");
-        materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
-        MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
-        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
+    private void setReturnCalenderListener(MaterialDatePicker<Long> materialDatePicker) {
         // positive button == ok button
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
@@ -252,7 +247,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                 }
                 if (checkValidReturnDate()) {
                     resetReturnDateError();
-                    calculateNumberOfDays();
+                    calculateOrderInformation();
                 }
             }
         });
@@ -276,22 +271,16 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         return validReturnDate;
     }
 
-    private void calculateNumberOfDays() {
+    private void calculateOrderInformation() {
         if (pickupDate != null && returnDate != null) {
             resetReturnDateError();
             resetPickUpDateError();
-            int conversionDifference = 1;
-            int conversionFactor = (1000 * 60 * 60 * 24);
-            int numberOfRentDays = (int) ((returnDate.getTime() - pickupDate.getTime()) / (conversionFactor)) + conversionDifference;
+            int numberOfRentDays = getNumberOfDays(pickupDate, returnDate);
             tvOrderSummaryNumberOfDays.setText(String.valueOf(numberOfRentDays));
-            calculateOrderTotal(numberOfRentDays);
+            Number dailyPrice =  vehicle.getDailyPrice();
+            orderTotal =  getOrderTotal(numberOfRentDays, (int) dailyPrice);
+            tvOrderSummaryOrderTotal.setText("$" + orderTotal);
         }
-    }
-
-    private void calculateOrderTotal(int numberOfRentDays) {
-        orderTotal = numberOfRentDays * (int) vehicle.getDailyPrice();
-        Log.i(TAG, String.valueOf(orderTotal));
-        tvOrderSummaryOrderTotal.setText("$" + orderTotal);
     }
 
     private Boolean checkValidDates() {
@@ -306,7 +295,7 @@ public class VehicleDetailsActivity extends AppCompatActivity {
         }
         if (pickupDate != null && returnDate != null && returnDate.getTime() - pickupDate.getTime() < 0) {
             Toast.makeText(VehicleDetailsActivity.this, "Invalid Pickup or Return date", Toast.LENGTH_SHORT);
-            validDates =  false;
+            validDates = false;
         }
         return validDates;
     }
@@ -318,8 +307,8 @@ public class VehicleDetailsActivity extends AppCompatActivity {
                 Boolean validDates = checkValidDates();
                 if (validDates) {
                     HashMap<String, Object> params = new HashMap<>();
-                    params.put("amount", (Integer) orderTotal * 100);
-                    params.put("currency", "usd");
+                    params.put(STRIPE_API_PARAMETER_AMOUNT, orderTotal * 100);
+                    params.put(STRIPE_API_PARAMETER_CURRENCY, "usd");
                     ParseCloud.callFunctionInBackground("paymentSheet", params, new FunctionCallback<HashMap<String, String>>() {
                         @Override
                         public void done(HashMap<String, String> result, com.parse.ParseException e) {
