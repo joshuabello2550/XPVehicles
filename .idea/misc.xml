@@ -22,6 +22,7 @@
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.24765625" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.302734375" />
         <entry key="app/src/main/res/layout/activity_add_vehicle.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_edit.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.375" />
@@ -31,6 +32,7 @@
         <entry key="app/src/main/res/layout/activity_user_vehicle_requests.xml" value="0.45" />
         <entry key="app/src/main/res/layout/activity_vehicle_details.xml" value="0.3085988825017756" />
         <entry key="app/src/main/res/layout/activity_vehicle_image_zoom_in.xml" value="0.19511159261067706" />
+        <entry key="app/src/main/res/layout/activity_vehicle_storage.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/layout/content_vehile_image_zoom.xml" value="0.34375" />
         <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.45" />
@@ -48,6 +50,7 @@
         <entry key="app/src/main/res/layout/request_card.xml" value="0.5" />
         <entry key="app/src/main/res/layout/reting_vehicle_card.xml" value="0.1" />
         <entry key="app/src/main/res/layout/user_owned_vehicle_card.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/user_owned_vehicle_request_card.xml" value="0.45" />
         <entry key="app/src/main/res/layout/user_vehicle_card.xml" value="0.5136720211919911" />
         <entry key="app/src/main/res/layout/user_vehicle_request_card.xml" value="0.1" />
         <entry key="app/src/main/res/layout/vehicle_card.xml" value="0.48596491228070177" />

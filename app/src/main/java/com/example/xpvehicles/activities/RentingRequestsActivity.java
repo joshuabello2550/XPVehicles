@@ -1,10 +1,12 @@
 package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.xpvehicles.interfaces.ParentActivity;
@@ -40,6 +42,7 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
     private TextView tvRentingRequestStatus;
     private TextView tvVehicleImagePosition;
     private ViewPager2 viewPager;
+    private ConstraintLayout constraintLayoutPickupContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,7 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
         tvRentingRequestStatus = findViewById(R.id.tvRentingRequestStatus);
         tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
         viewPager = findViewById(R.id.viewPagerRentingRequestVehicleImages);
+        constraintLayoutPickupContainer =  findViewById(R.id.constraintLayoutPickupContainer);
     }
 
     private void setValues() throws ParseException {
@@ -129,5 +133,20 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
         tvRentingRequestStatus.setText(rentingStatus.toString());
         int statusColor = getStatusColor(rentingStatus);
         tvRentingRequestStatus.setBackgroundColor(statusColor);
+        displayPickUpInfo(rentingStatus);
+    }
+
+    private void displayPickUpInfo(RentingStatus status) {
+        switch (status) {
+            case PENDING_APPROVAL:
+                break;
+            case APPROVED:
+                constraintLayoutPickupContainer.setVisibility(View.VISIBLE);
+                break;
+            case DENIED:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + status);
+        }
     }
 }

@@ -295,9 +295,20 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/viewPagerAddVehicleImages"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="16dp"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btnTakePicture" />
+
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabLayout"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="24dp"
                         android:background="#00FFFFFF"
                         app:layout_constraintBottom_toBottomOf="@+id/viewPagerAddVehicleImages"
@@ -310,17 +321,6 @@
                         app:tabPaddingEnd="6dp"
                         app:tabPaddingStart="6dp"
                         app:tabRippleColor="@null" />
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/viewPagerAddVehicleImages"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_marginTop="16dp"
-                        android:adjustViewBounds="true"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btnTakePicture" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -25,6 +25,10 @@ public class Vehicle extends ParseObject {
     public static final String KEY_GEO_LOCATION = "geoLocation";
     public static final String KEY_PLACE_ID = "placeId";
     public static final String KEY_VEHICLE_IMAGES = "images";
+    public static final String KEY_STREET_ADDRESS = "streetAddress";
+    public static final String KEY_CITY = "city";
+    public static final String KEY_STATE = "state";
+    public static final String KEY_ZIP_CODE = "zipCode";
 
     public ParseUser getOwner() {
         return getParseUser(KEY_OWNER);
@@ -80,5 +84,37 @@ public class Vehicle extends ParseObject {
 
     public void setVehicleImages(List<ParseFile> vehicleImages) {
         put(KEY_VEHICLE_IMAGES, vehicleImages);
+    }
+
+    public String getStreetAddress() {
+        return getString(KEY_STREET_ADDRESS);
+    }
+
+    public void setStreetAddress(String streetAddress) {
+        put(KEY_STREET_ADDRESS, streetAddress);
+    }
+
+    public String getCity() {
+        return getString(KEY_CITY);
+    }
+
+    public void setCity(String city) {
+        put(KEY_CITY, city);
+    }
+
+    public String getState() {
+        return getString(KEY_STATE);
+    }
+
+    public void setState(String state) {
+        put(KEY_STATE, state);
+    }
+
+    public String getZipCode() {
+        return getString(KEY_ZIP_CODE);
+    }
+
+    public void setZipCode(String zipCode) {
+        put(KEY_ZIP_CODE, zipCode);
     }
 }
