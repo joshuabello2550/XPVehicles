@@ -6,8 +6,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,15 +20,17 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
-import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
+import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.interfaces.ParentActivity;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -43,9 +43,9 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class AddVehicleActivity extends AppCompatActivity implements IndicatorDots, ParentActivity {
+public class EditVehicleActivity extends AppCompatActivity implements ParentActivity, IndicatorDots {
 
-    private static final String TAG = "AddVehicleActivity";
+    private static final String TAG = "EditVehicleActivity";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 10;
     private static final String GOOGLE_GEOCODING_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
     private static final String GOOGLE_GEOCODING_API_PARAMETER_KEY = "key";
@@ -58,10 +58,11 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     private EditText edtState;
     private EditText edtZipCode;
     private EditText edtDailyPrice;
-    private Button btnAddVehicle;
+    private Button btnSaveVehicle;
     private Button btnTakePicture;
     private File photoFile;
     private List<ParseFile> vehicleImages;
+    private Vehicle vehicle;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private VehicleImagesAdapter vehicleImagesAdapter;
@@ -69,13 +70,14 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_vehicle);
+        setContentView(R.layout.activity_edit_vehicle);
+        vehicle = getIntent().getParcelableExtra("vehicle");
         bind();
+        setValues();
         setTopAppBarOnClickListener(topAppBar, this);
         setAddVehicleOnClickListener();
-        setTakePictureOnClickListener();
         bindVehicleImagesAdapter();
-        getIntent().getStringExtra("type");
+        setTakePictureOnClickListener();
     }
 
     private void bind() {
@@ -87,21 +89,31 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
         edtState = findViewById(R.id.edtState);
         edtZipCode = findViewById(R.id.edtZipCode);
         edtDailyPrice = findViewById(R.id.edtDailyPrice);
-        btnAddVehicle = findViewById(R.id.btnAddVehicle);
+        btnSaveVehicle = findViewById(R.id.btnSaveVehicle);
         btnTakePicture = findViewById(R.id.btnTakePicture);
         viewPager =  findViewById(R.id.viewPagerAddVehicleImages);
         tabLayout = findViewById(R.id.tabLayout);
     }
 
+    private void setValues() {
+        edtVehicleName.setText(vehicle.getVehicleName());
+        edtDescription.setText(vehicle.getDescription());
+        edtStreetAddress.setText(vehicle.getStreetAddress());
+        edtCity.setText(vehicle.getCity());
+        edtState.setText(vehicle.getState());
+        edtZipCode.setText(vehicle.getZipCode());
+        edtDailyPrice.setText(String.valueOf(vehicle.getDailyPrice()));
+    }
+
     private void bindVehicleImagesAdapter() {
-        vehicleImagesAdapter =  new VehicleImagesAdapter(AddVehicleActivity.this, vehicleImages);
+        vehicleImages = vehicle.getVehicleImages();
+        vehicleImagesAdapter =  new VehicleImagesAdapter(EditVehicleActivity.this, vehicleImages);
         viewPager.setAdapter(vehicleImagesAdapter);
         setViewPagerIndicatorDots(tabLayout, viewPager);
     }
 
     private void setTakePictureOnClickListener() {
         String photoFileName = "photo.jpg";
-        vehicleImages =  new ArrayList<>();
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +121,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
                 photoFile = getPhotoFileUri(photoFileName);
 
                 // wrap File object into a content provider
-                Uri fileProvider = FileProvider.getUriForFile(AddVehicleActivity.this, "com.codepath.fileprovider", photoFile);
+                Uri fileProvider = FileProvider.getUriForFile(EditVehicleActivity.this, "com.codepath.fileprovider", photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
                 // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -132,7 +144,6 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(TAG, "failed to create directory");
         }
-
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
@@ -152,7 +163,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     }
 
     private void setAddVehicleOnClickListener() {
-        btnAddVehicle.setOnClickListener(v -> {
+        btnSaveVehicle.setOnClickListener(v -> {
             String streetAddress = edtStreetAddress.getText().toString();
             String city = edtCity.getText().toString();
             String state = edtState.getText().toString();
@@ -192,39 +203,38 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     }
 
     private void saveVehicle(String placeId, ParseGeoPoint vehicleLocationGeoPoint, String streetAddress, String city, String state, String zipCode) {
-        String vehicleName = edtVehicleName.getText().toString();
-        String description = edtDescription.getText().toString();
-        Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
-        ParseUser owner = ParseUser.getCurrentUser();
-
-        Vehicle vehicle = new Vehicle();
-        vehicle.setOwner(owner);
-        vehicle.setVehicleName(vehicleName);
-        vehicle.setDescription(description);
-        vehicle.setDailyPrice(dailyPrice);
-        vehicle.setPlaceId(placeId);
-        vehicle.setStreetAddress(streetAddress);
-        vehicle.setCity(city);
-        vehicle.setState(state);
-        vehicle.setZipCode(zipCode);
-        vehicle.setVehicleImages(vehicleImages);
-        vehicle.setGeoLocation(vehicleLocationGeoPoint);
-        vehicle.saveInBackground(new SaveCallback() {
+        ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
+        String vehicleObjectId = vehicle.getObjectId();
+        query.getInBackground(vehicleObjectId, new GetCallback<Vehicle>() {
             @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error while saving the vehicle to parse", e);
-                    Toast.makeText(AddVehicleActivity.this, "Unable to save vehicle to parse", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.i(TAG, "Post was successful");
-                goMainActivity();
+            public void done(Vehicle vehicle, ParseException e) {
+                String vehicleName = edtVehicleName.getText().toString();
+                String description = edtDescription.getText().toString();
+                Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
+
+                vehicle.setVehicleName(vehicleName);
+                vehicle.setDescription(description);
+                vehicle.setDailyPrice(dailyPrice);
+                vehicle.setPlaceId(placeId);
+                vehicle.setVehicleImages(vehicleImages);
+                vehicle.setGeoLocation(vehicleLocationGeoPoint);
+                vehicle.setStreetAddress(streetAddress);
+                vehicle.setCity(city);
+                vehicle.setState(state);
+                vehicle.setZipCode(zipCode);
+                vehicle.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Error while saving the vehicle to parse", e);
+                            Toast.makeText(EditVehicleActivity.this, "Unable to save vehicle to parse", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        Log.i(TAG, "Post was successful");
+                        finish();
+                    }
+                });
             }
         });
-    }
-
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
     }
 }

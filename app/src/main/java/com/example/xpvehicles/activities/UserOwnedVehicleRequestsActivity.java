@@ -5,8 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.xpvehicles.R;
@@ -39,6 +42,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
     private TextView tvNoRequests;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
+    private ImageButton ibEditVehicle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
         queryUserOwnedVehicleRequests();
         bindUserOwnedVehicleRequestsAdapter();
         setValues();
+        setEditVehicleOnClickListener();
         setTopAppBarOnClickListener(topAppBar, this);
     }
 
@@ -58,7 +63,8 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
         tvUserVehicleDetailsDailyPrice = findViewById(R.id.tvUserVehicleDetailsDailyPrice);
         tvNoRequests = findViewById(R.id.tvNoRequests);
         viewPager = findViewById(R.id.viewPagerUserVehicleDetails);
-        tabLayout =  findViewById(R.id.tabLayout);
+        tabLayout = findViewById(R.id.tabLayout);
+        ibEditVehicle =  findViewById(R.id.ibEditVehicle);
     }
 
     private void bindUserOwnedVehicleRequestsAdapter() {
@@ -96,5 +102,16 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
         VehicleImagesAdapter vehicleImagesAdapter = new VehicleImagesAdapter(this, images);
         viewPager.setAdapter(vehicleImagesAdapter);
         setViewPagerIndicatorDots(tabLayout, viewPager);
+    }
+
+    private void setEditVehicleOnClickListener() {
+        ibEditVehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserOwnedVehicleRequestsActivity.this, EditVehicleActivity.class);
+                intent.putExtra("vehicle", vehicle);
+                startActivity(intent);
+            }
+        });
     }
 }

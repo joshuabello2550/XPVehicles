@@ -9,8 +9,9 @@
         android:id="@+id/materialCardView2"
         style="?attr/materialCardViewElevatedStyle"
         android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_margin="8dp"
+        android:layout_height="180dp"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +26,6 @@
                 android:id="@+id/viewPagerUserVehicleImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:alpha=".8"
                 android:scaleType="centerCrop" />
 
             <com.google.android.material.tabs.TabLayout
@@ -33,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:background="#00FFFFFF"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/viewPagerUserVehicleImage"
                 app:layout_constraintEnd_toEndOf="@+id/viewPagerUserVehicleImage"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +43,8 @@
                 app:tabIndicatorHeight="0dp"
                 app:tabPaddingEnd="6dp"
                 app:tabPaddingStart="6dp"
-                app:tabRippleColor="@null" />
+                app:tabRippleColor="@null"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tvUserVehicleName"
@@ -52,8 +54,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
