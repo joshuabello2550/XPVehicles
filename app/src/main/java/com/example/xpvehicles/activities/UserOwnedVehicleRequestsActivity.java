@@ -48,7 +48,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vehicle = getIntent().getParcelableExtra("userVehicle");
-        setContentView(R.layout.activity_user_vehicle_requests);
+        setContentView(R.layout.activity_user_owned_vehicle_requests);
         bind();
         queryUserOwnedVehicleRequests();
         bindUserOwnedVehicleRequestsAdapter();
