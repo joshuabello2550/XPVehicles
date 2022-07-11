@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -72,9 +74,12 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         private Button btnRequestAccepted;
         private Button btnRequestDenied;
         private Button btnRequestDeny;
+        private ImageButton ibExpandMore;
+        private ImageButton ibExpandLess;
         private TextView tvRequestDates;
         private TextView tvRequestName;
         private ImageView ivRequestProfileImage;
+        private ConstraintLayout constraintLayoutMoreInformationContainer;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -91,6 +96,9 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             ivRequestProfileImage = itemView.findViewById(R.id.ivRequestProfileImage);
             btnRequestAccepted = itemView.findViewById(R.id.btnRequestAccepted);
             btnRequestDenied = itemView.findViewById(R.id.btnRequestDenied);
+            ibExpandMore =  itemView.findViewById(R.id.ibExpandMore);
+            ibExpandLess =  itemView.findViewById(R.id.ibExpandLess);
+            constraintLayoutMoreInformationContainer =  itemView.findViewById(R.id.constraintLayoutMoreInformationContainer);
         }
 
         private void setValues(RentVehicle vehicle) throws ParseException {
@@ -121,11 +129,11 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         private void setInitialAcceptOrDenyStatus(RentVehicle request) {
             if (Objects.equals(request.getStatus(), RentingStatus.APPROVED.name())) {
                 hideAcceptDenyButtons();
-                btnRequestAccepted.setVisibility(View.VISIBLE);
+                displayAcceptedStatus();
             }
             else if (Objects.equals(request.getStatus(), RentingStatus.DENIED.name())) {
                 hideAcceptDenyButtons();
-                btnRequestDenied.setVisibility(View.VISIBLE);
+                displayDeniedStatus();
             }
         }
 
@@ -134,7 +142,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 @Override
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
-                    btnRequestAccepted.setVisibility(View.VISIBLE);
+                    displayAcceptedStatus();
                     request.setStatus(RentingStatus.APPROVED.name());
                     request.saveInBackground();
                 }
@@ -146,7 +154,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 @Override
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
-                    btnRequestDenied.setVisibility(View.VISIBLE);
+                    displayDeniedStatus();
                     request.setStatus(RentingStatus.DENIED.name());
                     request.saveInBackground();
                 }
@@ -156,6 +164,39 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         private void hideAcceptDenyButtons() {
             btnRequestDeny.setVisibility(View.GONE);
             btnRequestAccept.setVisibility(View.GONE);
+        }
+
+        private void displayAcceptedStatus() {
+            btnRequestAccepted.setVisibility(View.VISIBLE);
+            ibExpandMore.setVisibility(View.VISIBLE);
+            setExpandMoreOnClickListener();
+            setExpandLessOnClickListener();
+        }
+
+        private void displayDeniedStatus() {
+            btnRequestDenied.setVisibility(View.VISIBLE);
+        }
+
+        private void setExpandMoreOnClickListener() {
+            ibExpandMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    constraintLayoutMoreInformationContainer.setVisibility(View.VISIBLE);
+                    ibExpandMore.setVisibility(View.GONE);
+                    ibExpandLess.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+
+        private void setExpandLessOnClickListener() {
+            ibExpandLess.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    constraintLayoutMoreInformationContainer.setVisibility(View.GONE);
+                    ibExpandLess.setVisibility(View.GONE);
+                    ibExpandMore.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 }
