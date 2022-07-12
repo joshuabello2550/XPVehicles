@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,18 +55,13 @@ public class ExploreFragment extends Fragment {
     private static final String QUERY_PARAMETER_NAME = "name";
     private ExploreAdapter exploreAdapter;
     private RecommendedVehiclesAdapter recommendedVehiclesAdapter;
-    private MainActivity activity;
     private TextView tvNoAvailableRentVehicle;
     private FloatingActionButton fabAddVehicle;
     private SearchView searchView;
     private ImageView ivFilter;
     private View mainLayout;
 
-    public ExploreFragment() {}
-
-    public ExploreFragment(MainActivity mainActivity){
-        activity = mainActivity;
-    }
+    public ExploreFragment(){}
 
     @Override
     public void onResume() {
@@ -124,7 +120,7 @@ public class ExploreFragment extends Fragment {
     }
 
     private void setAddVehicleOnClickListener(FloatingActionButton fabAddVehicle) {
-        Animation expandIn = AnimationUtils.loadAnimation(activity, R.anim.expand_in);
+        Animation expandIn = AnimationUtils.loadAnimation(getActivity(), R.anim.expand_in);
         fabAddVehicle.startAnimation(expandIn);
         fabAddVehicle.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), AddVehicleActivity.class);
@@ -198,8 +194,8 @@ public class ExploreFragment extends Fragment {
         ivFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FilterDialogFragment filterDialogFragment = new FilterDialogFragment(exploreAdapter, activity);
-                filterDialogFragment.show(activity.getSupportFragmentManager(), TAG);
+                FilterDialogFragment filterDialogFragment = new FilterDialogFragment(exploreAdapter);
+                filterDialogFragment.show(getActivity().getSupportFragmentManager(), TAG);
             }
         });
     }

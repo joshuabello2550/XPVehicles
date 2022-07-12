@@ -35,8 +35,7 @@ public class SavedFragment extends Fragment {
     private ExploreAdapter adapter;
     private TextView tvNoSavedVehicles;
 
-    public SavedFragment(MainActivity mainActivity) {
-    }
+    public SavedFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {

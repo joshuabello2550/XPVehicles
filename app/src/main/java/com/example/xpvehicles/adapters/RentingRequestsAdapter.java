@@ -56,8 +56,8 @@ public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequests
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RentVehicle vehicle = vehicles.get(position);
+        frameLayout.setVisibility(View.GONE);
         try {
-            frameLayout.setVisibility(View.GONE);
             holder.setValues(vehicle);
         } catch (ParseException e) {
             Log.e(TAG, "Error setting the values for the vehicles the user is renting", e);

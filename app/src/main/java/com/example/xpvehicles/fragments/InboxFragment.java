@@ -13,8 +13,7 @@ import com.example.xpvehicles.activities.MainActivity;
 
 public class InboxFragment extends Fragment {
 
-    public InboxFragment(MainActivity mainActivity) {
-    }
+    public InboxFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {

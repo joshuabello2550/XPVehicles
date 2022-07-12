@@ -3,6 +3,7 @@ package com.example.xpvehicles.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,12 +32,9 @@ public class RentingRequestsFragment extends Fragment {
     private static final String TAG = "RentingVehiclesFragment";
     private static final String QUERY_PARAMETER_RENTEE = "rentee";
     private RentingRequestsAdapter adapter;
-    private MainActivity activity;
     private TextView tvUserNoRentingVehicles;
 
-    public RentingRequestsFragment(MainActivity mainActivity) {
-        activity = mainActivity;
-    }
+    public RentingRequestsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class RentingRequestsFragment extends Fragment {
     }
 
     private void bind() {
-        tvUserNoRentingVehicles = activity.findViewById(R.id.tvUserNoRentingVehicles);
+        tvUserNoRentingVehicles = getActivity().findViewById(R.id.tvUserNoRentingVehicles);
     }
 
     private void bindAdapter(View view) {

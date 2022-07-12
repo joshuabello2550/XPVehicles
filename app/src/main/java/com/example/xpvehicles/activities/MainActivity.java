@@ -40,11 +40,11 @@ import com.parse.ParseGeoPoint;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private final ExploreFragment exploreFragment = new ExploreFragment(this);
-    private final InboxFragment inboxFragment = new InboxFragment(this);
-    private final SavedFragment savedFragment = new SavedFragment(this);
-    private final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment(this);
-    private final ProfileFragment profileFragment = new ProfileFragment(this);
+    private final ExploreFragment exploreFragment = new ExploreFragment();
+    private final InboxFragment inboxFragment = new InboxFragment();
+    private final SavedFragment savedFragment = new SavedFragment();
+    private final RentingRequestsFragment vehiclesFragment = new RentingRequestsFragment();
+    private final ProfileFragment profileFragment = new ProfileFragment();
     private static final long UPDATE_INTERVAL = 1;  /* 10 secs */
     private static final long MIN_DISTANCE = 1 * 1609; /* 1 mile */
     private static final int REQUEST_CODE = 1;
