@@ -15,25 +15,23 @@ public interface ParentAdapter {
 
     default void setVehicles(List<Vehicle> vehicles, List<Vehicle> addVehicles, TextView textViewNoVehicles, RecyclerView.Adapter adapter) {
         vehicles.clear();
-        adapter.notifyDataSetChanged();
         if (addVehicles.size() > 0) {
             textViewNoVehicles.setVisibility(View.GONE);
             vehicles.addAll(addVehicles);
-            adapter.notifyDataSetChanged();
         } else {
             textViewNoVehicles.setVisibility(View.VISIBLE);
         }
+        adapter.notifyDataSetChanged();
     }
 
     default void setRentVehicles(List<RentVehicle> vehicles, List<RentVehicle> addVehicles, TextView textViewNoVehicles, RecyclerView.Adapter adapter) {
         vehicles.clear();
-        adapter.notifyDataSetChanged();
         if (addVehicles.size() > 0) {
             textViewNoVehicles.setVisibility(View.GONE);
             vehicles.addAll(addVehicles);
-            adapter.notifyDataSetChanged();
         } else {
             textViewNoVehicles.setVisibility(View.VISIBLE);
         }
+        adapter.notifyDataSetChanged();
     }
 }

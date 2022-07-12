@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.text.Editable;
@@ -40,7 +41,6 @@ public class FilterDialogFragment extends DialogFragment {
     private static final String TAG = "FilterDialogFragment";
     private static final String QUERY_PARAMETER_OWNER = "owner";
     private ExploreAdapter exploreAdapter;
-    private MainActivity activity;
     private MaterialToolbar filterTopAppBar;
     private TextView tvNoAvailableRentVehicle;
     private TextView tvClearAll;
@@ -49,9 +49,8 @@ public class FilterDialogFragment extends DialogFragment {
     private EditText etMaxPrice;
     private Button btnFilterShowVehicles;
 
-    public FilterDialogFragment(ExploreAdapter exploreAdapter, MainActivity activity) {
+    public FilterDialogFragment(ExploreAdapter exploreAdapter) {
         this.exploreAdapter = exploreAdapter;
-        this.activity = activity;
     }
 
     @Override
@@ -84,7 +83,7 @@ public class FilterDialogFragment extends DialogFragment {
 
     private void bind(View view) {
         filterTopAppBar = view.findViewById(R.id.filterTopAppBar);
-        tvNoAvailableRentVehicle = activity.findViewById(R.id.tvNoAvailableRentVehicle);
+        tvNoAvailableRentVehicle = getActivity().findViewById(R.id.tvNoAvailableRentVehicle);
         etMaxDistance = view.findViewById(R.id.etMaxDistance);
         etMinPrice = view.findViewById(R.id.etMinPrice);
         etMaxPrice = view.findViewById(R.id.etMaxPrice);
@@ -127,7 +126,7 @@ public class FilterDialogFragment extends DialogFragment {
         }
         // add query for max distance
         if (!maxDistance.isEmpty()){
-            query.whereWithinMiles("geoLocation", activity.getUserLocationGeoPoint(), parseDouble(maxDistance));
+            query.whereWithinMiles("geoLocation", ((MainActivity) getActivity()).getUserLocationGeoPoint(), parseDouble(maxDistance));
         }
 
         query.findInBackground(new FindCallback<Vehicle>() {

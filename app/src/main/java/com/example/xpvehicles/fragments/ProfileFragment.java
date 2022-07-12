@@ -11,6 +11,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,14 +53,12 @@ public class ProfileFragment extends Fragment {
     private File photoFile;
     private UserOwnedVehiclesAdapter adapter;
     private MaterialToolbar profileTopAppBar;
-    private MainActivity activity;
     private TextView tvProfileUserName;
     private TextView tvUserNoVehiclesListed;
     private ImageView ivSetProfileImage;
     private ImageView ivProfileImage;
 
-    public ProfileFragment(MainActivity mainActivity) {
-        activity = mainActivity;
+    public ProfileFragment() {
     }
 
     @Override
@@ -121,7 +120,7 @@ public class ProfileFragment extends Fragment {
 
         ParseFile profileImage = currentUser.getProfileImage();
         if (profileImage != null) {
-            Glide.with(activity).load(profileImage.getUrl()).into(ivProfileImage);
+            Glide.with(getActivity()).load(profileImage.getUrl()).into(ivProfileImage);
         }
     }
 
@@ -151,12 +150,12 @@ public class ProfileFragment extends Fragment {
                 photoFile = getPhotoFileUri(photoFileName);
 
                 // wrap File object into a content provider
-                Uri fileProvider = FileProvider.getUriForFile(activity, "com.codepath.fileprovider", photoFile);
+                Uri fileProvider = FileProvider.getUriForFile(getActivity(), "com.codepath.fileprovider", photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
                 // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
                 // So as long as the result is not null, it's safe to use the intent.
-                if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                     // Start the image capture intent to take photo
                     startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
                 }
@@ -166,7 +165,7 @@ public class ProfileFragment extends Fragment {
 
     // Returns the File for a photo stored on disk given the fileName
     private File getPhotoFileUri(String fileName) {
-        File mediaStorageDir = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
@@ -189,7 +188,7 @@ public class ProfileFragment extends Fragment {
                 currentUser.saveInBackground();
 
             } else {
-                Toast.makeText(activity, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
