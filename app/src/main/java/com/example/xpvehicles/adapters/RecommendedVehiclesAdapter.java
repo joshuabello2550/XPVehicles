@@ -17,7 +17,7 @@ import java.util.List;
 
 public class RecommendedVehiclesAdapter extends RecyclerView.Adapter<RecommendedVehiclesAdapter.ViewHolder> {
 
-    public static final String TAG = "RecommendedVehiclesAdapter";
+    private static final String TAG = "RecommendedVehiclesAdapter";
     private List<Vehicle> vehicles;
     private ExploreFragment fragment;
     private MainActivity activity;

@@ -14,24 +14,30 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.xpvehicles.interfaces.OrderInformation;
 import com.example.xpvehicles.interfaces.ParentAdapter;
 import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.RentVehicle;
-import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models._User;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
-public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder> implements ParentAdapter {
+public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder> implements ParentAdapter, OrderInformation {
 
-    public static final String TAG = "RequestsAdapter";
+    private static final String TAG = "RequestsAdapter";
+    private static final String QUERY_PARAMETER_STORAGE_CENTER_AVAILABILITY = "availability";
     private List<RentVehicle> vehicles;
     private UserOwnedVehicleRequestsActivity activity;
 
@@ -78,6 +84,8 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         private ImageButton ibExpandLess;
         private TextView tvRequestDates;
         private TextView tvRequestName;
+        private TextView tvDropOffAddress;
+        private TextView tvLockerCode;
         private ImageView ivRequestProfileImage;
         private ConstraintLayout constraintLayoutMoreInformationContainer;
 
@@ -98,6 +106,8 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             btnRequestDenied = itemView.findViewById(R.id.btnRequestDenied);
             ibExpandMore =  itemView.findViewById(R.id.ibExpandMore);
             ibExpandLess =  itemView.findViewById(R.id.ibExpandLess);
+            tvDropOffAddress = itemView.findViewById(R.id.tvDropOffAddress);
+            tvLockerCode = itemView.findViewById(R.id.tvLockerCode);
             constraintLayoutMoreInformationContainer =  itemView.findViewById(R.id.constraintLayoutMoreInformationContainer);
         }
 
@@ -145,6 +155,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                     displayAcceptedStatus();
                     request.setStatus(RentingStatus.APPROVED.name());
                     request.saveInBackground();
+                    setStorageCenter(request);
                 }
             });
         }
@@ -159,6 +170,33 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                     request.saveInBackground();
                 }
             });
+        }
+
+        private void setStorageCenter(RentVehicle rentVehicle) {
+            ParseQuery<StorageCenter> query = ParseQuery.getQuery(StorageCenter.class);
+            query.whereEqualTo(QUERY_PARAMETER_STORAGE_CENTER_AVAILABILITY, true);
+            // find the first available storage center
+            query.getFirstInBackground(new GetCallback<StorageCenter>() {
+                @Override
+                public void done(StorageCenter storageCenter, com.parse.ParseException e) {
+                    rentVehicle.setStorageCenter(storageCenter);
+                    rentVehicle.saveInBackground();
+                    storageCenter.setAvailability(false);
+                    storageCenter.saveInBackground();
+                    setDropOffAddress(storageCenter);
+                }
+            });
+        }
+
+        private void setDropOffAddress(StorageCenter storageCenter) {
+            String dropOffAddress = getStorageCenterAddress(storageCenter);
+            tvDropOffAddress.setText(dropOffAddress);
+            setLockerCode(storageCenter);
+        }
+
+        private void setLockerCode(StorageCenter storageCenter) {
+            int lockerCode = getLockerCode(storageCenter);
+            tvLockerCode.setText(String.valueOf(lockerCode));
         }
 
         private void hideAcceptDenyButtons() {
@@ -184,6 +222,13 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                     constraintLayoutMoreInformationContainer.setVisibility(View.VISIBLE);
                     ibExpandMore.setVisibility(View.GONE);
                     ibExpandLess.setVisibility(View.VISIBLE);
+                    StorageCenter storageCenter = null;
+                    try {
+                        storageCenter = request.getStorageCenter().fetchIfNeeded();
+                    } catch (ParseException e) {
+                        Log.e(TAG, "error getting the storage center", e);
+                    }
+                    setDropOffAddress(storageCenter);
                 }
             });
         }

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class UserOwnedVehiclesAdapter extends RecyclerView.Adapter<UserOwnedVehiclesAdapter.ViewHolder> implements IndicatorDots, ParentAdapter {
 
-    public static final String TAG = "UserVehiclesAdapter";
+    private static final String TAG = "UserVehiclesAdapter";
     private List<Vehicle> vehicles;
     private Fragment fragment;
     private MainActivity activity;

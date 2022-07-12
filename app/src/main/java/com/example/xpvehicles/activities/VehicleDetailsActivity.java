@@ -19,6 +19,7 @@ import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
+import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -27,9 +28,12 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.parse.FindCallback;
 import com.parse.FunctionCallback;
+import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
@@ -46,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 
 public class VehicleDetailsActivity extends AppCompatActivity implements ParentActivity, OrderInformation {
 
-    public static final String TAG = "VehicleDetailsActivity";
+    private static final String TAG = "VehicleDetailsActivity";
     public static final String STRIPE_API_PARAMETER_AMOUNT = "amount";
     public static final String STRIPE_API_PARAMETER_CURRENCY = "currency";
     private Vehicle vehicle;
@@ -334,7 +338,7 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
             // Display for example, an order confirmation screen
             Log.d(TAG, "Completed");
             _User currentUser = (_User) ParseUser.getCurrentUser();
-            RentVehicle rentVehicle = createRentVehicle(currentUser);
+            RentVehicle rentVehicle = getRentVehicle(currentUser);
             requestVehicle(currentUser, rentVehicle);
             finish();
         }
@@ -347,7 +351,7 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         paymentSheet.presentWithPaymentIntent(paymentIntentClientSecret, configuration);
     }
 
-    private RentVehicle createRentVehicle(_User currentUser) {
+    private RentVehicle getRentVehicle(_User currentUser) {
         RentVehicle rentVehicle = new RentVehicle();
         rentVehicle.setVehicle(vehicle);
         rentVehicle.setRentee(currentUser);

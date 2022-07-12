@@ -15,9 +15,10 @@ public class RentVehicle extends ParseObject {
     public static final String KEY_PICK_UP_DATE =  "pickUpDate";
     public static final String KEY_RETURN_DATE =  "returnDate";
     public static final String KEY_STATUS =  "status";
+    public static final String KEY_STORAGE_CENTER = "storageCenter";
 
-    public ParseObject getVehicle() {
-        return getParseObject(KEY_VEHICLE);
+    public Vehicle getVehicle() {
+        return (Vehicle) getParseObject(KEY_VEHICLE);
     }
 
     public void setVehicle(Vehicle vehicle) {
@@ -54,5 +55,13 @@ public class RentVehicle extends ParseObject {
 
     public void setStatus(String status) {
         put(KEY_STATUS, status);
+    }
+
+    public StorageCenter getStorageCenter() {
+        return (StorageCenter) getParseObject(KEY_STORAGE_CENTER);
+    }
+
+    public void setStorageCenter(StorageCenter storageCenter) {
+        put(KEY_STORAGE_CENTER, storageCenter);
     }
 }
