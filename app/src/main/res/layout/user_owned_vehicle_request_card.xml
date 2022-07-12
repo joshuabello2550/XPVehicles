@@ -177,6 +177,7 @@
                     style="@style/TextAppearance.Material3.LabelLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="Drop-off Address"
                     app:layout_constraintStart_toStartOf="parent"
@@ -187,23 +188,25 @@
                     style="@style/TextAppearance.Material3.LabelLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:text="Locker Code"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPickupAddress" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvDropOffAddress" />
 
                 <TextView
-                    android:id="@+id/tvPickupAddress"
+                    android:id="@+id/tvDropOffAddress"
                     style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="TextView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
                 <TextView
-                    android:id="@+id/textView22"
+                    android:id="@+id/tvLockerCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"

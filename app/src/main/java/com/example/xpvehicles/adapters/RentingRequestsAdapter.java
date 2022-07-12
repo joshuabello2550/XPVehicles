@@ -33,7 +33,7 @@ import java.util.List;
 
 public class RentingRequestsAdapter extends RecyclerView.Adapter<RentingRequestsAdapter.ViewHolder> implements IndicatorDots, ParentAdapter, OrderInformation {
 
-    public static final String TAG = "RentingVehiclesAdapter";
+    private static final String TAG = "RentingVehiclesAdapter";
     private List<RentVehicle> vehicles;
     private RentingRequestsFragment fragment;
     private MainActivity activity;

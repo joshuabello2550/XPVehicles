@@ -4,11 +4,13 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.example.xpvehicles.miscellaneous.RentingStatus;
+import com.example.xpvehicles.models.StorageCenter;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public interface OrderInformation {
@@ -45,5 +47,23 @@ public interface OrderInformation {
         double orderTotal = numberOfRentDays * dailyPrice;
         Log.i(TAG, String.valueOf(orderTotal));
         return orderTotal;
+    }
+
+    default String getStorageCenterAddress(StorageCenter storageCenter) {
+        String streetAddress = storageCenter.getStreetAddress();
+        String city = storageCenter.getCity();
+        String state = storageCenter.getState();
+        String zipCode = storageCenter.getZipCode();
+        String storageCenterAddress = streetAddress + " " + city + " , " + state + " " + zipCode;
+        return storageCenterAddress;
+    }
+
+    default int getLockerCode(StorageCenter storageCenter) {
+        int lowerBound = 10000;
+        int upperBound = 90000;
+        int lockerCode = lowerBound + new Random().nextInt(upperBound);
+        storageCenter.setLockerCode(lockerCode);
+        storageCenter.saveInBackground();
+        return lockerCode;
     }
 }

@@ -3,6 +3,7 @@ package com.example.xpvehicles.applications;
 import android.app.Application;
 
 import com.example.xpvehicles.models.RentVehicle;
+import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.Parse;
@@ -22,6 +23,7 @@ public class ParseApplication extends Application {
         ParseUser.registerSubclass(_User.class);
         ParseObject.registerSubclass(Vehicle.class);
         ParseObject.registerSubclass(RentVehicle.class);
+        ParseObject.registerSubclass(StorageCenter.class);
 
         // Initializes Parse SDK as soon as the application is created
         Parse.initialize(new Parse.Configuration.Builder(this)

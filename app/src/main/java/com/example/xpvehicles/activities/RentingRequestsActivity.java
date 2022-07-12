@@ -2,11 +2,13 @@ package com.example.xpvehicles.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.xpvehicles.interfaces.ParentActivity;
@@ -15,6 +17,7 @@ import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.models.RentVehicle;
+import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.parse.ParseException;
@@ -41,8 +44,11 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
     private TextView tvRentingRequestReturnDate;
     private TextView tvRentingRequestStatus;
     private TextView tvVehicleImagePosition;
+    private TextView tvPickupAddress;
+    private TextView tvLockerCode;
     private ViewPager2 viewPager;
     private ConstraintLayout constraintLayoutPickupContainer;
+    private LinearLayout linearLayoutPickUpInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,23 +97,35 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
         tvRentingRequestStatus = findViewById(R.id.tvRentingRequestStatus);
         tvVehicleImagePosition = findViewById(R.id.tvVehicleImagePosition);
         viewPager = findViewById(R.id.viewPagerRentingRequestVehicleImages);
-        constraintLayoutPickupContainer =  findViewById(R.id.constraintLayoutPickupContainer);
+        constraintLayoutPickupContainer = findViewById(R.id.constraintLayoutPickupContainer);
+        linearLayoutPickUpInfo = findViewById(R.id.linearLayoutPickUpInfo);
+        tvPickupAddress = findViewById(R.id.tvPickupAddress);
+        tvLockerCode = findViewById(R.id.tvLockerCode);
     }
 
     private void setValues() throws ParseException {
         // vehicle name
-        Vehicle originalVehicle = (Vehicle) rentVehicle.getVehicle();
-        String vehicleName = originalVehicle.fetchIfNeeded().getString("name");
+        Vehicle originalVehicle = (Vehicle) rentVehicle.getVehicle().fetchIfNeeded();
+        String vehicleName = originalVehicle.getString("name");
         tvRentingRequestVehicleName.setText(vehicleName);
 
         // daily price
-        Number dailyPrice =  originalVehicle.fetchIfNeeded().getNumber("dailyPrice");
+        Number dailyPrice =  originalVehicle.getNumber("dailyPrice");
         tvRentingRequestDailyPrice.setText("$" + dailyPrice);
         tvOrderSummaryDailyPrice.setText("$" + dailyPrice);
 
         // vehicle description
-        String vehicleDescription = originalVehicle.fetchIfNeeded().getString("description");
+        String vehicleDescription = originalVehicle.getString("description");
         tvRentingRequestVehicleDescription.setText(vehicleDescription);
+
+        // vehicle pickup Address
+        StorageCenter storageCenter = rentVehicle.getStorageCenter().fetchIfNeeded();
+        String dropOffAddress = getStorageCenterAddress(storageCenter);
+        tvPickupAddress.setText(dropOffAddress);
+
+        // storage center locker code
+        int lockerCode = getLockerCode(storageCenter);
+        tvLockerCode.setText(String.valueOf(lockerCode));
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy");
         // vehicle pickup date
@@ -144,6 +162,7 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
                 constraintLayoutPickupContainer.setVisibility(View.VISIBLE);
                 break;
             case DENIED:
+                linearLayoutPickUpInfo.setVisibility(View.GONE);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + status);
