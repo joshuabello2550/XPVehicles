@@ -1,5 +1,6 @@
 package com.example.xpvehicles.fragments;
 
+import static com.example.xpvehicles.models.Vehicle.KEY_OWNER;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
@@ -39,7 +40,6 @@ import java.util.List;
 public class FilterDialogFragment extends DialogFragment {
 
     private static final String TAG = "FilterDialogFragment";
-    private static final String QUERY_PARAMETER_OWNER = "owner";
     private ExploreAdapter exploreAdapter;
     private MaterialToolbar filterTopAppBar;
     private TextView tvNoAvailableRentVehicle;
@@ -114,7 +114,7 @@ public class FilterDialogFragment extends DialogFragment {
 
     private void queryFilterVehicles(String maxDistance, String minPrice, String maxPrice) {
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
+        query.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
 
         // add query for max price
         if (!maxPrice.isEmpty()) {

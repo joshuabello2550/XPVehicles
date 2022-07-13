@@ -17,7 +17,7 @@ import okhttp3.Headers;
 
 @ParseClassName("Vehicle")
 public class Vehicle extends ParseObject {
-
+    public static final String KEY_OBJECT_ID = "objectId";
     public static final String KEY_VEHICLE_NAME =  "name";
     public static final String KEY_DESCRIPTION =  "description";
     public static final String KEY_OWNER = "owner";

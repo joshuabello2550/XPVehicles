@@ -1,5 +1,7 @@
 package com.example.xpvehicles.fragments;
 
+import static com.example.xpvehicles.models.Vehicle.KEY_OBJECT_ID;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -31,7 +33,6 @@ import java.util.List;
 public class SavedFragment extends Fragment {
 
     private static final String TAG = "SavedFragment";
-    private static final String QUERY_PARAMETER_OBJECT_ID = "objectId";
     private ExploreAdapter adapter;
     private TextView tvNoSavedVehicles;
 
@@ -65,7 +66,7 @@ public class SavedFragment extends Fragment {
     private void queryVehicles() {
         List<String> savedVehicles = ((_User) ParseUser.getCurrentUser()).getSavedVehicles();
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereContainedIn(QUERY_PARAMETER_OBJECT_ID, savedVehicles);
+        query.whereContainedIn(KEY_OBJECT_ID, savedVehicles);
         query.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {

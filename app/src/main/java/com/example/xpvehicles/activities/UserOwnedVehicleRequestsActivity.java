@@ -1,5 +1,7 @@
 package com.example.xpvehicles.activities;
 
+import static com.example.xpvehicles.models.RentVehicle.KEY_VEHICLE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +36,6 @@ import java.util.List;
 public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implements IndicatorDots, ParentActivity {
 
     private static final String TAG = "UserVehicleRequestsActivity";
-    private static final String QUERY_PARAMETER_VEHICLE = "vehicle";
     private static final String DAILY_PRICE_PREFIX = "Daily Price: $";
     private Vehicle vehicle;
     private MaterialToolbar topAppBar;
@@ -88,7 +89,7 @@ public class UserOwnedVehicleRequestsActivity extends AppCompatActivity implemen
 
     private void queryUserOwnedVehicleRequests() {
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
-        query.whereEqualTo(QUERY_PARAMETER_VEHICLE, vehicle);
+        query.whereEqualTo(KEY_VEHICLE, vehicle);
         query.findInBackground(new FindCallback<RentVehicle>() {
             @Override
             public void done(List<RentVehicle> requests, ParseException e) {

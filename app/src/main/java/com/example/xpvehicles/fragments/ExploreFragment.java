@@ -1,5 +1,8 @@
 package com.example.xpvehicles.fragments;
 
+import static com.example.xpvehicles.models.Vehicle.KEY_OWNER;
+import static com.example.xpvehicles.models.Vehicle.KEY_VEHICLE_NAME;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -51,8 +54,6 @@ import java.util.List;
 public class ExploreFragment extends Fragment {
 
     private static final String TAG = "ExploreFragment";
-    private static final String QUERY_PARAMETER_OWNER = "owner";
-    private static final String QUERY_PARAMETER_NAME = "name";
     private ExploreAdapter exploreAdapter;
     private RecommendedVehiclesAdapter recommendedVehiclesAdapter;
     private TextView tvNoAvailableRentVehicle;
@@ -159,8 +160,8 @@ public class ExploreFragment extends Fragment {
 
     private void querySearchVehicles(String searchQuery) {
         ParseQuery<Vehicle> parseQuery = ParseQuery.getQuery(Vehicle.class);
-        parseQuery.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
-        parseQuery.whereMatches(QUERY_PARAMETER_NAME, searchQuery, "i");
+        parseQuery.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
+        parseQuery.whereMatches(KEY_VEHICLE_NAME, searchQuery, "i");
 
         // Fetches the vehicles that start with the searchQuery or include the searchQuery within the name
         parseQuery.findInBackground(new FindCallback<Vehicle>() {
@@ -177,7 +178,7 @@ public class ExploreFragment extends Fragment {
 
     private void queryAllVehicles() {
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereNotEqualTo(QUERY_PARAMETER_OWNER, ParseUser.getCurrentUser().getObjectId());
+        query.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
         query.findInBackground(new FindCallback<Vehicle>() {
             @Override
             public void done(List<Vehicle> vehicles, ParseException e) {

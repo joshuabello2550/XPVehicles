@@ -1,5 +1,9 @@
 package com.example.xpvehicles.adapters;
 
+import static com.example.xpvehicles.models.Locker.KEY_AVAILABILITY;
+import static com.example.xpvehicles.models.Locker.KEY_STORAGE_CENTER;
+import static com.example.xpvehicles.models.StorageCenter.KEY_IS_STORAGE_FULL;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ import com.example.xpvehicles.interfaces.ParentAdapter;
 import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
+import com.example.xpvehicles.models.Locker;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models._User;
@@ -37,7 +42,6 @@ import java.util.Random;
 public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder> implements ParentAdapter, OrderInformation {
 
     private static final String TAG = "RequestsAdapter";
-    private static final String QUERY_PARAMETER_STORAGE_CENTER_AVAILABILITY = "availability";
     private List<RentVehicle> vehicles;
     private UserOwnedVehicleRequestsActivity activity;
 
@@ -174,7 +178,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
 
         private void setStorageCenter(RentVehicle rentVehicle) {
             ParseQuery<StorageCenter> query = ParseQuery.getQuery(StorageCenter.class);
-            query.whereEqualTo(QUERY_PARAMETER_STORAGE_CENTER_AVAILABILITY, true);
+            query.whereEqualTo(KEY_IS_STORAGE_FULL, false);
             // find the first available storage center
             query.getFirstInBackground(new GetCallback<StorageCenter>() {
                 @Override
@@ -195,8 +199,16 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         }
 
         private void setLockerCode(StorageCenter storageCenter) {
-            int lockerCode = getLockerCode(storageCenter);
-            tvLockerCode.setText(String.valueOf(lockerCode));
+            ParseQuery<Locker> query =  ParseQuery.getQuery(Locker.class);
+            query.whereEqualTo(KEY_STORAGE_CENTER, storageCenter);
+            query.whereEqualTo(KEY_AVAILABILITY, true);
+            query.getFirstInBackground(new GetCallback<Locker>() {
+                @Override
+                public void done(Locker locker, ParseException e) {
+                    int lockerCode = getLockerCode(locker);
+                    tvLockerCode.setText(String.valueOf(lockerCode));
+                }
+            });
         }
 
         private void hideAcceptDenyButtons() {

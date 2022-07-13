@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.example.xpvehicles.miscellaneous.RentingStatus;
+import com.example.xpvehicles.models.Locker;
 import com.example.xpvehicles.models.StorageCenter;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -58,12 +59,12 @@ public interface OrderInformation {
         return storageCenterAddress;
     }
 
-    default int getLockerCode(StorageCenter storageCenter) {
+    default int getLockerCode(Locker locker) {
         int lowerBound = 10000;
         int upperBound = 90000;
         int lockerCode = lowerBound + new Random().nextInt(upperBound);
-        storageCenter.setLockerCode(lockerCode);
-        storageCenter.saveInBackground();
+        locker.setLockerCode(lockerCode);
+        locker.saveInBackground();
         return lockerCode;
     }
 }
