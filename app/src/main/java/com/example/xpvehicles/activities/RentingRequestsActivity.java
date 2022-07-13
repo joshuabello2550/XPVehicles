@@ -1,5 +1,8 @@
 package com.example.xpvehicles.activities;
 
+import static com.example.xpvehicles.models.Locker.KEY_AVAILABILITY;
+import static com.example.xpvehicles.models.Locker.KEY_STORAGE_CENTER;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,12 +19,15 @@ import com.example.xpvehicles.interfaces.OrderInformation;
 import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
+import com.example.xpvehicles.models.Locker;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -118,15 +124,6 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
         String vehicleDescription = originalVehicle.getString("description");
         tvRentingRequestVehicleDescription.setText(vehicleDescription);
 
-        // vehicle pickup Address
-        StorageCenter storageCenter = rentVehicle.getStorageCenter().fetchIfNeeded();
-        String dropOffAddress = getStorageCenterAddress(storageCenter);
-        tvPickupAddress.setText(dropOffAddress);
-
-        // storage center locker code
-        int lockerCode = getLockerCode(storageCenter);
-        tvLockerCode.setText(String.valueOf(lockerCode));
-
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy");
         // vehicle pickup date
         Date pickUpDate = rentVehicle.getPickUpDate();
@@ -154,12 +151,15 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
         displayPickUpInfo(rentingStatus);
     }
 
-    private void displayPickUpInfo(RentingStatus status) {
+    private void displayPickUpInfo(RentingStatus status) throws ParseException {
         switch (status) {
             case PENDING_APPROVAL:
                 break;
             case APPROVED:
                 constraintLayoutPickupContainer.setVisibility(View.VISIBLE);
+                StorageCenter storageCenter = rentVehicle.getStorageCenter().fetchIfNeeded();
+                setPickupAddress(storageCenter);
+                setLockerCode(storageCenter);
                 break;
             case DENIED:
                 linearLayoutPickUpInfo.setVisibility(View.GONE);
@@ -167,5 +167,25 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
             default:
                 throw new IllegalStateException("Unexpected value: " + status);
         }
+    }
+
+    private void setPickupAddress(StorageCenter storageCenter) {
+        // vehicle pickup Address
+        String dropOffAddress = getStorageCenterAddress(storageCenter);
+        tvPickupAddress.setText(dropOffAddress);
+    }
+
+    private void setLockerCode(StorageCenter storageCenter) {
+        // storage center locker code
+        ParseQuery<Locker> query =  ParseQuery.getQuery(Locker.class);
+        query.whereEqualTo(KEY_STORAGE_CENTER, storageCenter);
+        query.whereEqualTo(KEY_AVAILABILITY, true);
+        query.getFirstInBackground(new GetCallback<Locker>() {
+            @Override
+            public void done(Locker locker, ParseException e) {
+                int lockerCode = getLockerCode(locker);
+                tvLockerCode.setText(String.valueOf(lockerCode));
+            }
+        });
     }
 }

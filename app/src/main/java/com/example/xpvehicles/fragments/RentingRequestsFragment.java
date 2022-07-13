@@ -1,5 +1,7 @@
 package com.example.xpvehicles.fragments;
 
+import static com.example.xpvehicles.models.RentVehicle.KEY_RENTEE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,7 +32,6 @@ import java.util.List;
 public class RentingRequestsFragment extends Fragment {
 
     private static final String TAG = "RentingVehiclesFragment";
-    private static final String QUERY_PARAMETER_RENTEE = "rentee";
     private RentingRequestsAdapter adapter;
     private TextView tvUserNoRentingVehicles;
 
@@ -64,7 +65,7 @@ public class RentingRequestsFragment extends Fragment {
     private void queryVehicles() {
         _User currentUser = (_User) ParseUser.getCurrentUser();
         ParseQuery<RentVehicle> query = ParseQuery.getQuery(RentVehicle.class);
-        query.whereEqualTo(QUERY_PARAMETER_RENTEE, currentUser);
+        query.whereEqualTo(KEY_RENTEE, currentUser);
 
         query.findInBackground(new FindCallback<RentVehicle>() {
             @Override

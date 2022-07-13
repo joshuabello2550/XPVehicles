@@ -14,7 +14,7 @@ public class StorageCenter extends ParseObject {
     public static final String KEY_CITY =  "city";
     public static final String KEY_STATE =  "state";
     public static final String KEY_ZIPCODE =  "zipCode";
-    public static final String KEY_LOCKER_CODE =  "lockerCode";
+    public static final String KEY_IS_STORAGE_FULL = "isStorageFull";
 
     public Boolean getAvailability() {
         return getBoolean(KEY_AVAILABILITY);
@@ -56,11 +56,11 @@ public class StorageCenter extends ParseObject {
         put(KEY_ZIPCODE, zipCode);
     }
 
-    public Number getLockerCode(int lockerCode) {
-        return getInt(KEY_LOCKER_CODE);
+    public Boolean getIsStorageFull() {
+        return getBoolean(KEY_IS_STORAGE_FULL);
     }
 
-    public void setLockerCode(int lockerCode) {
-        put(KEY_LOCKER_CODE, lockerCode);
+    public void setIsStorageFull(Boolean isStorageFull) {
+        put(KEY_IS_STORAGE_FULL, isStorageFull);
     }
 }
