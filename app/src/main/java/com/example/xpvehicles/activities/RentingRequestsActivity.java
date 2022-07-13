@@ -155,7 +155,9 @@ public class RentingRequestsActivity extends AppCompatActivity implements Parent
         switch (status) {
             case PENDING_APPROVAL:
                 break;
-            case APPROVED:
+            case WAITING_DROP_OFF:
+                break;
+            case READY_FOR_PICKUP:
                 constraintLayoutPickupContainer.setVisibility(View.VISIBLE);
                 StorageCenter storageCenter = rentVehicle.getStorageCenter().fetchIfNeeded();
                 setPickupAddress(storageCenter);

@@ -42,6 +42,7 @@ import java.util.Random;
 public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder> implements ParentAdapter, OrderInformation {
 
     private static final String TAG = "RequestsAdapter";
+    private static final String DROPPED_OFF_MESSAGE = "Accepted: Dropped Off";
     private List<RentVehicle> vehicles;
     private UserOwnedVehicleRequestsActivity activity;
 
@@ -84,6 +85,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         private Button btnRequestAccepted;
         private Button btnRequestDenied;
         private Button btnRequestDeny;
+        private Button btnFinishDropOff;
         private ImageButton ibExpandMore;
         private ImageButton ibExpandLess;
         private TextView tvRequestDates;
@@ -98,6 +100,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             bind(itemView);
             setAcceptOnClickListener(itemView);
             setDenyOnClickListener(itemView);
+            setFinishDropOffOnClickListener();
         }
 
         private void bind(View itemView) {
@@ -113,6 +116,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             tvDropOffAddress = itemView.findViewById(R.id.tvDropOffAddress);
             tvLockerCode = itemView.findViewById(R.id.tvLockerCode);
             constraintLayoutMoreInformationContainer =  itemView.findViewById(R.id.constraintLayoutMoreInformationContainer);
+            btnFinishDropOff =  itemView.findViewById(R.id.btnFinishDropOff);
         }
 
         private void setValues(RentVehicle vehicle) throws ParseException {
@@ -141,7 +145,13 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
         }
 
         private void setInitialAcceptOrDenyStatus(RentVehicle request) {
-            if (Objects.equals(request.getStatus(), RentingStatus.APPROVED.name())) {
+            if (Objects.equals(request.getStatus(), RentingStatus.WAITING_DROP_OFF.name())) {
+                hideAcceptDenyButtons();
+                displayAcceptedStatus();
+            }
+            else if (Objects.equals(request.getStatus(), RentingStatus.READY_FOR_PICKUP.name())) {
+                btnRequestAccepted.setText(DROPPED_OFF_MESSAGE);
+                hideDropOffButton();
                 hideAcceptDenyButtons();
                 displayAcceptedStatus();
             }
@@ -157,9 +167,9 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 public void onClick(View v) {
                     hideAcceptDenyButtons();
                     displayAcceptedStatus();
-                    request.setStatus(RentingStatus.APPROVED.name());
+                    request.setStatus(RentingStatus.WAITING_DROP_OFF.name());
                     request.saveInBackground();
-                    setStorageCenter(request);
+                    setStorageCenter();
                 }
             });
         }
@@ -176,15 +186,15 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             });
         }
 
-        private void setStorageCenter(RentVehicle rentVehicle) {
+        private void setStorageCenter() {
             ParseQuery<StorageCenter> query = ParseQuery.getQuery(StorageCenter.class);
             query.whereEqualTo(KEY_IS_STORAGE_FULL, false);
             // find the first available storage center
             query.getFirstInBackground(new GetCallback<StorageCenter>() {
                 @Override
                 public void done(StorageCenter storageCenter, com.parse.ParseException e) {
-                    rentVehicle.setStorageCenter(storageCenter);
-                    rentVehicle.saveInBackground();
+                    request.setStorageCenter(storageCenter);
+                    request.saveInBackground();
                     storageCenter.setAvailability(false);
                     storageCenter.saveInBackground();
                     setDropOffAddress(storageCenter);
@@ -254,6 +264,22 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                     ibExpandMore.setVisibility(View.VISIBLE);
                 }
             });
+        }
+
+        private void setFinishDropOffOnClickListener() {
+            btnFinishDropOff.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    request.setStatus(RentingStatus.READY_FOR_PICKUP.name());
+                    request.saveInBackground();
+                    btnRequestAccepted.setText(DROPPED_OFF_MESSAGE);
+                    hideDropOffButton();
+                }
+            });
+        }
+
+        private void hideDropOffButton() {
+            btnFinishDropOff.setVisibility(View.GONE);
         }
     }
 }

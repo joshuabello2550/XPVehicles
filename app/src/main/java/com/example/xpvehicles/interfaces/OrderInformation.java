@@ -24,7 +24,8 @@ public interface OrderInformation {
             case PENDING_APPROVAL:
                 statusColor = Color.parseColor(String.valueOf(RentingStatus.PENDING_APPROVAL_COLOR));
                 break;
-            case APPROVED:
+            case WAITING_DROP_OFF:
+            case READY_FOR_PICKUP:
                 statusColor = Color.parseColor(String.valueOf(RentingStatus.APPROVED_COLOR));
                 break;
             case DENIED:
