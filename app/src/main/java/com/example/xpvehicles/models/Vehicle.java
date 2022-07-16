@@ -30,11 +30,11 @@ public class Vehicle extends ParseObject {
     public static final String KEY_STATE = "state";
     public static final String KEY_ZIP_CODE = "zipCode";
 
-    public ParseUser getOwner() {
-        return getParseUser(KEY_OWNER);
+    public _User getOwner() {
+        return (_User) getParseUser(KEY_OWNER);
     }
 
-    public void setOwner (ParseUser owner) {
+    public void setOwner (_User owner) {
         put(KEY_OWNER, owner);
     }
 

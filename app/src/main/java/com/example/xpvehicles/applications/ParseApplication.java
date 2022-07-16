@@ -40,12 +40,11 @@ public class ParseApplication extends Application {
         );
 
         ArrayList<String> channels = new ArrayList<>();
-        channels.add("newRentRequest");
-        channels.add("requestStatus");
 
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("GCMSenderId", FIREBASE_SENDER_ID);
         installation.put("channels", channels);
+        installation.put("user", ParseUser.getCurrentUser().getObjectId());
         installation.setDeviceToken(installation.getDeviceToken());
         installation.saveInBackground();
     }

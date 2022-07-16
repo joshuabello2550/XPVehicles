@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         bind();
         setBottomNavigationOnClick();
         setDefaultBottomNavigationSelection();
-        pushNotification();
     }
 
     private void bind() {
@@ -142,37 +141,6 @@ public class MainActivity extends AppCompatActivity {
         ParseGeoPoint userGeoLocation = getUserLocationGeoPoint();
         int distanceFromUser = (int) vehicleGeoLocation.distanceInMilesTo(userGeoLocation);
         return distanceFromUser;
-    }
-
-    private void alertDisplayer(String title,String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog ok = builder.create();
-        ok.show();
-    }
-
-    private void pushNotification() {
-        HashMap<String, String> params = new HashMap<>();
-        // Calling the cloud code function
-        ParseCloud.callFunctionInBackground("pushNotificationNewRentRequest", params, new FunctionCallback<Object>() {
-            @Override
-            public void done(Object object, com.parse.ParseException e) {
-                if (e == null) {
-                    // The function was executed, but it's interesting to check its response
-                    alertDisplayer("Successful Push", "Check on your phone the notifications to confirm!");
-                } else {
-                    // Something went wrong
-                    Log.e(TAG, "Error sending push notifications", e);
-                }
-            }
-        });
     }
 
     @Override

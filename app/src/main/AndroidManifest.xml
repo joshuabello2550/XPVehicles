@@ -82,6 +82,8 @@
         </provider>
 
         <!-- push notifications -->
+        <meta-data android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/ic_stat_name"/>
         <meta-data android:name="com.parse.push.gcm_sender_id"
             android:value="612946493259" />
         <service android:name="com.parse.fcm.ParseFirebaseMessagingService" android:exported="false">

@@ -154,37 +154,52 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         detailsReturnDateOTF.setError(null);
     }
 
-    private MaterialDatePicker<Long> getAndDisplayCalender(String title) {
+    private void setMaterialDatePickerClearFocus (MaterialDatePicker<Long> materialDatePicker, EditText editTextDate) {
+        materialDatePicker.addOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (editTextDate.getText().toString().isEmpty()) {
+                    editTextDate.clearFocus();
+                }
+            }
+        });
+    }
+
+    private MaterialDatePicker<Long> getCalender(String title) {
         CalendarConstraints.Builder calendarConstraintBuilder = new CalendarConstraints.Builder();
         // prevent users form selecting any previous dates from current day
         calendarConstraintBuilder.setValidator(DateValidatorPointForward.now());
 
         MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setTitleText("RETURN DATE");
+        materialDateBuilder.setTitleText(title);
         materialDateBuilder.setCalendarConstraints(calendarConstraintBuilder.build());
         MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
-        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
         return materialDatePicker;
+    }
+
+    private void displayCalender(MaterialDatePicker<Long> materialDatePicker) {
+        materialDatePicker.show(getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
     }
 
     private void setPickupDateOnClickListener() {
         String title =  "PICKUP DATE";
+        MaterialDatePicker<Long> materialDatePicker =  getCalender(title);
+        setPickupCalenderListener(materialDatePicker);
+        setMaterialDatePickerClearFocus(materialDatePicker, edtPickUpDate);
+
         //prevents keyboard from popping up
         edtPickUpDate.setInputType(InputType.TYPE_NULL);
         edtPickUpDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
-                setPickupCalenderListener(materialDatePicker);
+                displayCalender(materialDatePicker);
             }
         });
         edtPickUpDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
-                    setPickupCalenderListener(materialDatePicker);
+                    displayCalender(materialDatePicker);
                 }
             }
         });
@@ -217,21 +232,23 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
 
     private void setReturnDateOnClickListener() {
         String title =  "RETURN DATE";
+        MaterialDatePicker<Long> materialDatePicker =  getCalender(title);
+        setReturnCalenderListener(materialDatePicker);
+        setMaterialDatePickerClearFocus(materialDatePicker, edtReturnDate);
+
         //prevents keyboard from popping up
         edtReturnDate.setInputType(InputType.TYPE_NULL);
         edtReturnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
-                setReturnCalenderListener(materialDatePicker);
+                displayCalender(materialDatePicker);
             }
         });
         edtReturnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    MaterialDatePicker<Long> materialDatePicker =  getAndDisplayCalender(title);
-                    setReturnCalenderListener(materialDatePicker);
+                    displayCalender(materialDatePicker);
                 }
             }
         });
@@ -341,6 +358,23 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         paymentSheet.presentWithPaymentIntent(paymentIntentClientSecret, configuration);
     }
 
+    private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            Log.d(TAG, "Canceled");
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            Log.e(TAG, "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            // Display for example, an order confirmation screen
+            Log.d(TAG, "Completed");
+            _User currentUser = (_User) ParseUser.getCurrentUser();
+            RentVehicle rentVehicle = getRentVehicle(currentUser);
+            saveRequestVehicle(currentUser, rentVehicle);
+            pushNotification();
+            resetPickupAndReturnDateSelector();
+            resetOrderSummary();
+        }
+    }
+
     private RentVehicle getRentVehicle(_User currentUser) {
         RentVehicle rentVehicle = new RentVehicle();
         rentVehicle.setVehicle(vehicle);
@@ -352,25 +386,55 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         return rentVehicle;
     }
 
-    private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
-        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
-            Log.d(TAG, "Canceled");
-        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
-            Log.e(TAG, "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
-        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
-            // Display for example, an order confirmation screen
-            Log.d(TAG, "Completed");
-            _User currentUser = (_User) ParseUser.getCurrentUser();
-            RentVehicle rentVehicle = getRentVehicle(currentUser);
-            requestVehicle(currentUser, rentVehicle);
-            finish();
-        }
-    }
-
-    private void requestVehicle(_User currentUser, RentVehicle rentVehicle) {
+    private void saveRequestVehicle(_User currentUser, RentVehicle rentVehicle) {
         List<RentVehicle> rentedVehicles = currentUser.getRentedVehicles();
         rentedVehicles.add(rentVehicle);
         currentUser.setRentedVehicles(rentedVehicles);
         currentUser.saveInBackground();
+    }
+
+    private void pushNotification() {
+        _User vehicleOwner = vehicle.getOwner();
+        String vehicleOwnerObjectId =  vehicleOwner.getObjectId();
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("vehicleOwnerObjectId", vehicleOwnerObjectId);
+        params.put("vehicleName", vehicle.getVehicleName());
+        ParseCloud.callFunctionInBackground("pushNotificationNewRentRequest", params, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object object, com.parse.ParseException e) {
+                if (e == null) {
+                    alertDisplayer("Request submitted!", "Thank you for your order.");
+                } else {
+                    Log.e(TAG, "Error sending push notifications", e);
+                }
+            }
+        });
+    }
+
+    private void alertDisplayer(String title,String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog ok = builder.create();
+        ok.show();
+    }
+
+    private void resetPickupAndReturnDateSelector() {
+        edtPickUpDate.getText().clear();
+        edtPickUpDate.clearFocus();
+        edtReturnDate.getText().clear();
+        edtReturnDate.clearFocus();
+    }
+
+    private void resetOrderSummary() {
+        tvOrderSummaryNumberOfDays.setText("0");
+        tvOrderSummaryOrderTotal.setText("$0");
     }
 }
