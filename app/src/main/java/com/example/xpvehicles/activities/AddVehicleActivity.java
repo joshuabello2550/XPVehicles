@@ -26,6 +26,7 @@ import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.interfaces.ParentActivity;
 import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.models._User;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
@@ -195,7 +196,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
         String vehicleName = edtVehicleName.getText().toString();
         String description = edtDescription.getText().toString();
         Double dailyPrice = Double.valueOf(edtDailyPrice.getText().toString());
-        ParseUser owner = ParseUser.getCurrentUser();
+        _User owner = (_User) ParseUser.getCurrentUser();
 
         Vehicle vehicle = new Vehicle();
         vehicle.setOwner(owner);
