@@ -8,14 +8,18 @@ import com.example.xpvehicles.models.StorageCenter;
 import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
 
 public class ParseApplication extends Application {
 
     private static final String PARSE_APPLICATION_ID = "VSy9BgESdDvYNBhizAnwe8u4FQcvQpBTUSziFQ53";
     private static final String PARSE_CLIENT_KEY = "ZU2vfje4LiBUgZFaGQPNOhj4Xesv7c9PMdpbR8Et";
     private static final String PARSE_SERVER_HTTP_ADDRESS = "https://parseapi.back4app.com";
+    private static final String FIREBASE_SENDER_ID = "612946493259";
 
     @Override
     public void onCreate() {
@@ -34,5 +38,15 @@ public class ParseApplication extends Application {
                 .server(PARSE_SERVER_HTTP_ADDRESS)
                 .build()
         );
+
+        ArrayList<String> channels = new ArrayList<>();
+        channels.add("newRentRequest");
+        channels.add("requestStatus");
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("GCMSenderId", FIREBASE_SENDER_ID);
+        installation.put("channels", channels);
+        installation.setDeviceToken(installation.getDeviceToken());
+        installation.saveInBackground();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.xpvehicles.activities;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -31,8 +33,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.stripe.android.PaymentConfiguration;
@@ -41,6 +45,7 @@ import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -328,21 +333,6 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
             }
         });
     }
-    
-    private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
-        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
-            Log.d(TAG, "Canceled");
-        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
-            Log.e(TAG, "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
-        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
-            // Display for example, an order confirmation screen
-            Log.d(TAG, "Completed");
-            _User currentUser = (_User) ParseUser.getCurrentUser();
-            RentVehicle rentVehicle = getRentVehicle(currentUser);
-            requestVehicle(currentUser, rentVehicle);
-            finish();
-        }
-    }
 
     private void presentPaymentSheet() {
         final PaymentSheet.Configuration configuration = new PaymentSheet.Configuration.Builder("XP Vehicles")
@@ -360,6 +350,21 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         rentVehicle.setStatus(RentingStatus.PENDING_APPROVAL.name());
         rentVehicle.saveInBackground();
         return rentVehicle;
+    }
+
+    private void onPaymentSheetResult(final PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            Log.d(TAG, "Canceled");
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            Log.e(TAG, "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
+        } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            // Display for example, an order confirmation screen
+            Log.d(TAG, "Completed");
+            _User currentUser = (_User) ParseUser.getCurrentUser();
+            RentVehicle rentVehicle = getRentVehicle(currentUser);
+            requestVehicle(currentUser, rentVehicle);
+            finish();
+        }
     }
 
     private void requestVehicle(_User currentUser, RentVehicle rentVehicle) {
