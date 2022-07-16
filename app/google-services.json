@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "612946493259",
+    "project_id": "xpvehicles",
+    "storage_bucket": "xpvehicles.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612946493259:android:9149697da2079da93ef2ce",
+        "android_client_info": {
+          "package_name": "com.example.xpvehicles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "612946493259-oduaapehfbkapr6sgqevcit7ohgbca6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL_0RC801AFut354uPaWDQz_tCTWnEm5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "612946493259-oduaapehfbkapr6sgqevcit7ohgbca6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

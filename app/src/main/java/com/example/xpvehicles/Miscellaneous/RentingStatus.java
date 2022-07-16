@@ -3,9 +3,10 @@ package com.example.xpvehicles.miscellaneous;
 import androidx.annotation.NonNull;
 
 public enum RentingStatus {
-    PENDING_APPROVAL ("pending approval"),
-    APPROVED ("approved"),
-    DENIED ("denied"),
+    PENDING_APPROVAL ("Pending Approval"),
+    WAITING_DROP_OFF ("Approved: Waiting for renter to drop off"),
+    READY_FOR_PICKUP ("Approved: Ready for pickup"),
+    DENIED ("Denied"),
     PENDING_APPROVAL_COLOR ("#FFC107"),
     APPROVED_COLOR ("#4CAF50"),
     DENIED_COLOR ("#F44336");

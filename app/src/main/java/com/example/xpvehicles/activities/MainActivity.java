@@ -1,6 +1,9 @@
 package com.example.xpvehicles.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,8 +12,11 @@ import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
@@ -26,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.fragments.ExploreFragment;
@@ -35,7 +42,11 @@ import com.example.xpvehicles.fragments.SavedFragment;
 import com.example.xpvehicles.fragments.RentingRequestsFragment;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseGeoPoint;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         bind();
         setBottomNavigationOnClick();
         setDefaultBottomNavigationSelection();
+        pushNotification();
     }
 
     private void bind() {
@@ -130,5 +142,42 @@ public class MainActivity extends AppCompatActivity {
         ParseGeoPoint userGeoLocation = getUserLocationGeoPoint();
         int distanceFromUser = (int) vehicleGeoLocation.distanceInMilesTo(userGeoLocation);
         return distanceFromUser;
+    }
+
+    private void alertDisplayer(String title,String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog ok = builder.create();
+        ok.show();
+    }
+
+    private void pushNotification() {
+        HashMap<String, String> params = new HashMap<>();
+        // Calling the cloud code function
+        ParseCloud.callFunctionInBackground("pushNotificationNewRentRequest", params, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object object, com.parse.ParseException e) {
+                if (e == null) {
+                    // The function was executed, but it's interesting to check its response
+                    alertDisplayer("Successful Push", "Check on your phone the notifications to confirm!");
+                } else {
+                    // Something went wrong
+                    Log.e(TAG, "Error sending push notifications", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.i(TAG, "hello world");
     }
 }
