@@ -26,18 +26,20 @@ import com.example.xpvehicles.activities.UserOwnedVehicleRequestsActivity;
 import com.example.xpvehicles.models.Locker;
 import com.example.xpvehicles.models.RentVehicle;
 import com.example.xpvehicles.models.StorageCenter;
+import com.example.xpvehicles.models.Vehicle;
 import com.example.xpvehicles.models._User;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOwnedVehicleRequestsAdapter.ViewHolder> implements ParentAdapter, OrderInformation {
 
@@ -165,8 +167,11 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             btnRequestAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String result = "accepted";
+
                     hideAcceptDenyButtons();
                     displayAcceptedStatus();
+                    setPushNotification(result);
                     request.setStatus(RentingStatus.WAITING_DROP_OFF.name());
                     request.saveInBackground();
                     setStorageCenter();
@@ -178,8 +183,11 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             btnRequestDeny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String result = "denied";
+
                     hideAcceptDenyButtons();
                     displayDeniedStatus();
+                    setPushNotification(result);
                     request.setStatus(RentingStatus.DENIED.name());
                     request.saveInBackground();
                 }
@@ -280,6 +288,22 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
 
         private void hideDropOffButton() {
             btnFinishDropOff.setVisibility(View.GONE);
+        }
+
+        private void setPushNotification(String result) {
+            _User rentee = null;
+            Vehicle originalVehicle = null;
+            try {
+                rentee = (_User) request.getRentee().fetchIfNeeded();
+                originalVehicle = request.getVehicle().fetchIfNeeded();
+            } catch (ParseException e) {
+                Log.e(TAG, "Error getting the rentee", e);
+            }
+            String renteeObjectId =  rentee.getObjectId();
+            String title = "Vehicle request status changed";
+            String alert = "Request for " + originalVehicle.getVehicleName() + " was " + result;
+
+            sendPushNotification(renteeObjectId, title, alert);
         }
     }
 }
