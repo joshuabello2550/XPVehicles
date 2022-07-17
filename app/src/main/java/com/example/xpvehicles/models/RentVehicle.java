@@ -25,8 +25,8 @@ public class RentVehicle extends ParseObject {
         put(KEY_VEHICLE, vehicle);
     }
 
-    public ParseUser getRentee() {
-        return getParseUser(KEY_RENTEE);
+    public _User getRentee() {
+        return (_User) getParseUser(KEY_RENTEE);
     }
 
     public void setRentee(_User rentee) {

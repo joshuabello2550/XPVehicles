@@ -364,14 +364,17 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         } else if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
             Log.e(TAG, "Got error: ", ((PaymentSheetResult.Failed) paymentSheetResult).getError());
         } else if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
-            // Display for example, an order confirmation screen
             Log.d(TAG, "Completed");
             _User currentUser = (_User) ParseUser.getCurrentUser();
             RentVehicle rentVehicle = getRentVehicle(currentUser);
+            String title = "Request submitted!";
+            String message = "Thank you for your order.";
+
             saveRequestVehicle(currentUser, rentVehicle);
-            pushNotification();
+            alertDisplayer(title ,message);
             resetPickupAndReturnDateSelector();
             resetOrderSummary();
+            setPushNotification();
         }
     }
 
@@ -393,23 +396,13 @@ public class VehicleDetailsActivity extends AppCompatActivity implements ParentA
         currentUser.saveInBackground();
     }
 
-    private void pushNotification() {
+    private void setPushNotification() {
         _User vehicleOwner = vehicle.getOwner();
         String vehicleOwnerObjectId =  vehicleOwner.getObjectId();
+        String title = "New Vehicle Rent Request!";
+        String alert = "Request for " + vehicle.getVehicleName();
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put("vehicleOwnerObjectId", vehicleOwnerObjectId);
-        params.put("vehicleName", vehicle.getVehicleName());
-        ParseCloud.callFunctionInBackground("pushNotificationNewRentRequest", params, new FunctionCallback<Object>() {
-            @Override
-            public void done(Object object, com.parse.ParseException e) {
-                if (e == null) {
-                    alertDisplayer("Request submitted!", "Thank you for your order.");
-                } else {
-                    Log.e(TAG, "Error sending push notifications", e);
-                }
-            }
-        });
+        sendPushNotification(vehicleOwnerObjectId, title, alert);
     }
 
     private void alertDisplayer(String title,String message){

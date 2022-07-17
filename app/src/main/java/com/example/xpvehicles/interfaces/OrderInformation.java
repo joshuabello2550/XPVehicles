@@ -1,16 +1,24 @@
 package com.example.xpvehicles.interfaces;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.xpvehicles.miscellaneous.RentingStatus;
 import com.example.xpvehicles.models.Locker;
 import com.example.xpvehicles.models.StorageCenter;
+import com.example.xpvehicles.models._User;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -67,5 +75,20 @@ public interface OrderInformation {
         locker.setLockerCode(lockerCode);
         locker.saveInBackground();
         return lockerCode;
+    }
+
+    default void sendPushNotification(String receiverObjectId, String title, String alert) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("receiverObjectId", receiverObjectId);
+        params.put("title", title);
+        params.put("alert", alert);
+        ParseCloud.callFunctionInBackground("sendPushNotification", params, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object object, com.parse.ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error sending push notifications", e);
+                }
+            }
+        });
     }
 }
