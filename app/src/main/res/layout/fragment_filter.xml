@@ -109,8 +109,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Type"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/filterMinPriceTextInputLayout"
-        app:layout_constraintTop_toBottomOf="@+id/filterMinPriceTextInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/filterMinPriceTextInputLayout"
+        tools:visibility="gone" />
 
 
     <Button

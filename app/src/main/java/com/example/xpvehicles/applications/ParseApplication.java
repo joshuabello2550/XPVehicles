@@ -44,7 +44,9 @@ public class ParseApplication extends Application {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("GCMSenderId", FIREBASE_SENDER_ID);
         installation.put("channels", channels);
-        installation.put("user", ParseUser.getCurrentUser().getObjectId());
+        if (ParseUser.getCurrentUser() != null) {
+            installation.put("user", ParseUser.getCurrentUser().getObjectId());
+        }
         installation.setDeviceToken(installation.getDeviceToken());
         installation.saveInBackground();
     }
