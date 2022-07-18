@@ -282,7 +282,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             btnFinishDropOff.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String alert = originalVehicle.getVehicleName() + "is ready for pickup";
+                    String alert = originalVehicle.getVehicleName() + " is ready for pickup";
                     request.setStatus(RentingStatus.READY_FOR_PICKUP.name());
                     request.saveInBackground();
                     btnRequestAccepted.setText(DROPPED_OFF_MESSAGE);
