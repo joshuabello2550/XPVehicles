@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void setMakeNewAccountOnClickListener() {
+    private void setMakeNewAccountOnClickListener() {
         tvMakeNewAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

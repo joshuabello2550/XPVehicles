@@ -83,6 +83,7 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private RentVehicle request;
+        private Vehicle originalVehicle;
         private Button btnRequestAccept;
         private Button btnRequestAccepted;
         private Button btnRequestDenied;
@@ -123,9 +124,10 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
 
         private void setValues(RentVehicle vehicle) throws ParseException {
             request = vehicle;
+            originalVehicle = vehicle.getVehicle().fetchIfNeeded();
             // user requesting name
-            _User userRequesting = (_User) vehicle.getRentee();
-            String userRequestingName = userRequesting.fetchIfNeeded().getString("firstName") + " " + userRequesting.fetchIfNeeded().getString("lastName");
+            _User userRequesting = (_User) vehicle.getRentee().fetchIfNeeded();
+            String userRequestingName = userRequesting.getFirstName() + " " + userRequesting.getLastName();
             tvRequestName.setText(userRequestingName);
 
             // user requesting profile image
@@ -168,13 +170,14 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 @Override
                 public void onClick(View v) {
                     String result = "accepted";
+                    String alert = "Request for " + originalVehicle.getVehicleName() + " was " + result;
 
                     hideAcceptDenyButtons();
                     displayAcceptedStatus();
-                    setPushNotification(result);
                     request.setStatus(RentingStatus.WAITING_DROP_OFF.name());
                     request.saveInBackground();
                     setStorageCenter();
+                    setPushNotification(alert);
                 }
             });
         }
@@ -184,12 +187,13 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
                 @Override
                 public void onClick(View v) {
                     String result = "denied";
+                    String alert = "Request for " + originalVehicle.getVehicleName() + " was " + result;
 
                     hideAcceptDenyButtons();
                     displayDeniedStatus();
-                    setPushNotification(result);
                     request.setStatus(RentingStatus.DENIED.name());
                     request.saveInBackground();
+                    setPushNotification(alert);
                 }
             });
         }
@@ -278,10 +282,12 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             btnFinishDropOff.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String alert = originalVehicle.getVehicleName() + "is ready for pickup";
                     request.setStatus(RentingStatus.READY_FOR_PICKUP.name());
                     request.saveInBackground();
                     btnRequestAccepted.setText(DROPPED_OFF_MESSAGE);
                     hideDropOffButton();
+                    setPushNotification(alert);
                 }
             });
         }
@@ -290,18 +296,15 @@ public class UserOwnedVehicleRequestsAdapter extends RecyclerView.Adapter<UserOw
             btnFinishDropOff.setVisibility(View.GONE);
         }
 
-        private void setPushNotification(String result) {
+        private void setPushNotification(String alert) {
             _User rentee = null;
-            Vehicle originalVehicle = null;
             try {
                 rentee = (_User) request.getRentee().fetchIfNeeded();
-                originalVehicle = request.getVehicle().fetchIfNeeded();
             } catch (ParseException e) {
                 Log.e(TAG, "Error getting the rentee", e);
             }
             String renteeObjectId =  rentee.getObjectId();
             String title = "Vehicle request status changed";
-            String alert = "Request for " + originalVehicle.getVehicleName() + " was " + result;
 
             sendPushNotification(renteeObjectId, title, alert);
         }
