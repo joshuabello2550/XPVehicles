@@ -1,22 +1,10 @@
 package com.example.xpvehicles.fragments;
 
-import static com.example.xpvehicles.models.Vehicle.KEY_OWNER;
-import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
-import android.text.Editable;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,20 +15,15 @@ import android.widget.TextView;
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.adapters.ExploreAdapter;
-import com.example.xpvehicles.models.Vehicle;
+import com.example.xpvehicles.miscellaneous.SearchAndFilter;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
-import java.util.List;
-
-public class FilterDialogFragment extends DialogFragment {
+public class FilterDialogFragment extends SearchAndFilter implements com.example.xpvehicles.interfaces.SearchAndFilter {
 
     private static final String TAG = "FilterDialogFragment";
     private ExploreAdapter exploreAdapter;
+    private ExploreFragment exploreFragment;
     private MaterialToolbar filterTopAppBar;
     private TextView tvNoAvailableRentVehicle;
     private TextView tvClearAll;
@@ -49,8 +32,9 @@ public class FilterDialogFragment extends DialogFragment {
     private EditText etMaxPrice;
     private Button btnFilterShowVehicles;
 
-    public FilterDialogFragment(ExploreAdapter exploreAdapter) {
+    public FilterDialogFragment(ExploreFragment exploreFragment, ExploreAdapter exploreAdapter) {
         this.exploreAdapter = exploreAdapter;
+        this.exploreFragment = exploreFragment;
     }
 
     @Override
@@ -105,41 +89,20 @@ public class FilterDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String maxPrice = String.valueOf(etMaxPrice.getText());
+                setMaxPrice(maxPrice);
                 String minPrice = String.valueOf(etMinPrice.getText());
+                setMinPrice(minPrice);
                 String maxDistance = String.valueOf(etMaxDistance.getText());
-                queryFilterVehicles(maxDistance, minPrice, maxPrice);
+                setMaxDistance(maxDistance);
+                queryFilterVehicles();
             }
         });
     }
 
-    private void queryFilterVehicles(String maxDistance, String minPrice, String maxPrice) {
-        ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
-
-        // add query for max price
-        if (!maxPrice.isEmpty()) {
-            query.whereLessThanOrEqualTo("dailyPrice", parseDouble(maxPrice));
-        }
-        // add query for min price
-        if (!minPrice.isEmpty()) {
-            query.whereGreaterThanOrEqualTo("dailyPrice", parseDouble(minPrice));
-        }
-        // add query for max distance
-        if (!maxDistance.isEmpty()){
-            query.whereWithinMiles("geoLocation", ((MainActivity) getActivity()).getUserLocationGeoPoint(), parseDouble(maxDistance));
-        }
-
-        query.findInBackground(new FindCallback<Vehicle>() {
-            @Override
-            public void done(List<Vehicle> vehicles, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with filtering vehicles",e);
-                    return;
-                }
-                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
-                dismiss();
-            }
-        });
+    private void queryFilterVehicles() {
+        ParseGeoPoint userLocationGeoPoint = ((MainActivity) getActivity()).getUserLocationGeoPoint();
+        setUserLocationGeoPoint(userLocationGeoPoint);
+        querySearchAndFilterVehicles(this, exploreAdapter, tvNoAvailableRentVehicle);
     }
 
     private void setClearAllOnCLickListener() {

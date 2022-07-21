@@ -1,35 +1,21 @@
 package com.example.xpvehicles.fragments;
 
 import static com.example.xpvehicles.models.Vehicle.KEY_OWNER;
-import static com.example.xpvehicles.models.Vehicle.KEY_VEHICLE_NAME;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Filter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -38,20 +24,19 @@ import com.example.xpvehicles.activities.AddVehicleActivity;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.adapters.ExploreAdapter;
 import com.example.xpvehicles.adapters.RecommendedVehiclesAdapter;
+import com.example.xpvehicles.miscellaneous.SearchAndFilter;
 import com.example.xpvehicles.models.Vehicle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
-public class ExploreFragment extends Fragment {
+public class ExploreFragment extends SearchAndFilter implements com.example.xpvehicles.interfaces.SearchAndFilter {
 
     private static final String TAG = "ExploreFragment";
     private ExploreAdapter exploreAdapter;
@@ -80,8 +65,8 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bind(view);
-        queryAllVehicles();
         bindExploreAdapter(view);
+        querySearchVehicles();
         bindRecommendedAdapter(view);
         setAddVehicleOnClickListener(fabAddVehicle);
         setSearchViewOnClickListener();
@@ -133,19 +118,16 @@ public class ExploreFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String searchQuery) {
-                querySearchVehicles(searchQuery);
+                setSearchQuery(searchQuery);
+                querySearchVehicles();
                 searchView.clearFocus();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String searchQuery) {
-                if (searchQuery.isEmpty()){
-                    queryAllVehicles();
-                }
-                else{
-                    querySearchVehicles(searchQuery);
-                }
+                    setSearchQuery(searchQuery);
+                    querySearchVehicles();
                 return false;
             }
         });
@@ -158,44 +140,17 @@ public class ExploreFragment extends Fragment {
         });
     }
 
-    private void querySearchVehicles(String searchQuery) {
-        ParseQuery<Vehicle> parseQuery = ParseQuery.getQuery(Vehicle.class);
-        parseQuery.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
-        parseQuery.whereMatches(KEY_VEHICLE_NAME, searchQuery, "i");
-
-        // Fetches the vehicles that start with the searchQuery or include the searchQuery within the name
-        parseQuery.findInBackground(new FindCallback<Vehicle>() {
-            @Override
-            public void done(List<Vehicle> vehicles, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting the vehicles",e);
-                    return;
-                }
-                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
-            }
-        });
-    }
-
-    private void queryAllVehicles() {
-        ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
-        query.findInBackground(new FindCallback<Vehicle>() {
-            @Override
-            public void done(List<Vehicle> vehicles, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting the vehicles",e);
-                    return;
-                }
-                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
-            }
-        });
+    private void querySearchVehicles() {
+        ParseGeoPoint userLocationGeoPoint = ((MainActivity) getActivity()).getUserLocationGeoPoint();
+        setUserLocationGeoPoint(userLocationGeoPoint);
+        querySearchAndFilterVehicles(null, exploreAdapter, tvNoAvailableRentVehicle);
     }
 
     private void setFilterOnClickListener() {
         ivFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FilterDialogFragment filterDialogFragment = new FilterDialogFragment(exploreAdapter);
+                FilterDialogFragment filterDialogFragment = new FilterDialogFragment(ExploreFragment.this, exploreAdapter);
                 filterDialogFragment.show(getActivity().getSupportFragmentManager(), TAG);
             }
         });

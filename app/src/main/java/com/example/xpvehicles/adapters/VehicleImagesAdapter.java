@@ -47,7 +47,6 @@ public class VehicleImagesAdapter extends RecyclerView.Adapter<VehicleImagesAdap
         if (activity instanceof VehicleDetailsActivity || activity instanceof RentingRequestsActivity) {
             holder.setImageOnClickListener(image);
         }
-
     }
 
     @Override
