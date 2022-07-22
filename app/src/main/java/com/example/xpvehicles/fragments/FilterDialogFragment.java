@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.xpvehicles.R;
 import com.example.xpvehicles.activities.MainActivity;
 import com.example.xpvehicles.adapters.ExploreAdapter;
@@ -19,7 +22,7 @@ import com.example.xpvehicles.miscellaneous.SearchAndFilter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.parse.ParseGeoPoint;
 
-public class FilterDialogFragment extends SearchAndFilter implements com.example.xpvehicles.interfaces.SearchAndFilter {
+public class FilterDialogFragment extends SearchAndFilter {
 
     private static final String TAG = "FilterDialogFragment";
     private ExploreAdapter exploreAdapter;
@@ -31,6 +34,9 @@ public class FilterDialogFragment extends SearchAndFilter implements com.example
     private EditText etMinPrice;
     private EditText etMaxPrice;
     private Button btnFilterShowVehicles;
+    private String maxPrice;
+    private String minPrice;
+    private String maxDistance;
 
     public FilterDialogFragment(ExploreFragment exploreFragment, ExploreAdapter exploreAdapter) {
         this.exploreAdapter = exploreAdapter;
@@ -60,6 +66,7 @@ public class FilterDialogFragment extends SearchAndFilter implements com.example
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bind(view);
+        setValues();
         setTopAppBarOnClickListener();
         setShowVehiclesOnClickListener();
         setClearAllOnCLickListener();
@@ -75,6 +82,17 @@ public class FilterDialogFragment extends SearchAndFilter implements com.example
         tvClearAll = view.findViewById(R.id.tvClearAll);
     }
 
+    private void setValues() {
+        maxDistance = getMaxDistance();
+        etMaxDistance.setText(maxDistance);
+
+        minPrice = getMinPrice();
+        etMinPrice.setText(minPrice);
+
+        maxPrice = getMaxPrice();
+        etMaxPrice.setText(maxPrice);
+    }
+
     private void setTopAppBarOnClickListener() {
         filterTopAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,12 +106,15 @@ public class FilterDialogFragment extends SearchAndFilter implements com.example
         btnFilterShowVehicles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String maxPrice = String.valueOf(etMaxPrice.getText());
+                maxPrice = String.valueOf(etMaxPrice.getText());
                 setMaxPrice(maxPrice);
-                String minPrice = String.valueOf(etMinPrice.getText());
+
+                minPrice = String.valueOf(etMinPrice.getText());
                 setMinPrice(minPrice);
-                String maxDistance = String.valueOf(etMaxDistance.getText());
+
+                maxDistance = String.valueOf(etMaxDistance.getText());
                 setMaxDistance(maxDistance);
+
                 queryFilterVehicles();
             }
         });
