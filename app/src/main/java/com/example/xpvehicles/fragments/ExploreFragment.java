@@ -36,7 +36,7 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExploreFragment extends SearchAndFilter implements com.example.xpvehicles.interfaces.SearchAndFilter {
+public class ExploreFragment extends SearchAndFilter {
 
     private static final String TAG = "ExploreFragment";
     private ExploreAdapter exploreAdapter;

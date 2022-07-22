@@ -39,20 +39,40 @@ public class SearchAndFilter extends DialogFragment {
         this.searchQuery = searchQuery;
     }
 
+    public static String getSearchQuery() {
+        return searchQuery;
+    }
+
     public void setMaxDistance(String maxDistance) {
         this.maxDistance = maxDistance;
+    }
+
+    public static String getMaxDistance() {
+        return maxDistance;
     }
 
     public void setMinPrice(String minPrice) {
         this.minPrice = minPrice;
     }
 
+    public static String getMinPrice() {
+        return minPrice;
+    }
+
     public void setMaxPrice(String maxPrice) {
         this.maxPrice = maxPrice;
     }
 
+    public static String getMaxPrice() {
+        return maxPrice;
+    }
+
     public void setUserLocationGeoPoint(ParseGeoPoint userLocationGeoPoint) {
         this.userLocationGeoPoint = userLocationGeoPoint;
+    }
+
+    public static ParseGeoPoint getUserLocationGeoPoint() {
+        return userLocationGeoPoint;
     }
 
     public void querySearchAndFilterVehicles(FilterDialogFragment fragment, ExploreAdapter exploreAdapter, TextView tvNoAvailableRentVehicle) {
@@ -87,21 +107,6 @@ public class SearchAndFilter extends DialogFragment {
                 if (fragment != null) {
                     fragment.dismiss();
                 }
-            }
-        });
-    }
-
-    public void queryAllVehicles(ExploreAdapter exploreAdapter, TextView tvNoAvailableRentVehicle) {
-        ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
-        query.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
-        query.findInBackground(new FindCallback<Vehicle>() {
-            @Override
-            public void done(List<Vehicle> vehicles, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting the vehicles",e);
-                    return;
-                }
-                exploreAdapter.setVehicles(vehicles, tvNoAvailableRentVehicle);
             }
         });
     }
