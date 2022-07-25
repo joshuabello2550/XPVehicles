@@ -20,6 +20,7 @@ import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.xpvehicles.R;
+import com.example.xpvehicles.adapters.AddVehicleImagesAdapter;
 import com.example.xpvehicles.interfaces.IndicatorDots;
 import com.example.xpvehicles.adapters.VehicleImagesAdapter;
 import com.example.xpvehicles.interfaces.ParentActivity;
@@ -62,9 +63,10 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     private Button btnTakePicture;
     private File photoFile;
     private List<ParseFile> vehicleImages;
+    private List<File> addVehicleImages;
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    private VehicleImagesAdapter vehicleImagesAdapter;
+    private AddVehicleImagesAdapter vehicleImagesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +96,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     }
 
     private void bindVehicleImagesAdapter() {
-        vehicleImagesAdapter =  new VehicleImagesAdapter(AddVehicleActivity.this, vehicleImages);
+        vehicleImagesAdapter =  new AddVehicleImagesAdapter(AddVehicleActivity.this, addVehicleImages);
         viewPager.setAdapter(vehicleImagesAdapter);
         setViewPagerIndicatorDots(tabLayout, viewPager);
     }
@@ -102,6 +104,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
     private void setTakePictureOnClickListener() {
         String photoFileName = "photo.jpg";
         vehicleImages =  new ArrayList<>();
+        addVehicleImages = new ArrayList<>();
         btnTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +147,7 @@ public class AddVehicleActivity extends AppCompatActivity implements IndicatorDo
                 // by this point we have the camera photo on disk
 //                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 vehicleImages.add(new ParseFile(photoFile));
+                addVehicleImages.add(photoFile);
                 vehicleImagesAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
