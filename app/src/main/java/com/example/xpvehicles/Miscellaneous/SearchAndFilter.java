@@ -1,5 +1,7 @@
 package com.example.xpvehicles.miscellaneous;
 
+import static com.example.xpvehicles.models.Vehicle.KEY_DAILY_PRICE;
+import static com.example.xpvehicles.models.Vehicle.KEY_GEO_LOCATION;
 import static com.example.xpvehicles.models.Vehicle.KEY_OWNER;
 import static com.example.xpvehicles.models.Vehicle.KEY_VEHICLE_NAME;
 import static java.lang.Double.parseDouble;
@@ -29,10 +31,12 @@ import java.util.List;
 public class SearchAndFilter extends DialogFragment {
 
     private static final String TAG = "SearchAndFilter";
+    private static final String sortByDistance = "Distance";
     private static String searchQuery;
     private static String minPrice;
     private static String maxPrice;
     private static String maxDistance;
+    private static String sortBy;
     private static ParseGeoPoint userLocationGeoPoint;
 
     public void setSearchQuery(String searchQuery) {
@@ -71,6 +75,14 @@ public class SearchAndFilter extends DialogFragment {
         this.userLocationGeoPoint = userLocationGeoPoint;
     }
 
+    public void setSortBy(String sortBy) {
+        this.sortBy =  sortBy;
+    }
+
+    public static String getSortBy() {
+        return sortBy;
+    }
+
     public static ParseGeoPoint getUserLocationGeoPoint() {
         return userLocationGeoPoint;
     }
@@ -79,21 +91,10 @@ public class SearchAndFilter extends DialogFragment {
         ParseQuery<Vehicle> query = ParseQuery.getQuery(Vehicle.class);
         query.whereNotEqualTo(KEY_OWNER, ParseUser.getCurrentUser().getObjectId());
 
-        // add query for max price
-        if (maxPrice != null && !maxPrice.isEmpty()) {
-            query.whereLessThanOrEqualTo("dailyPrice", parseDouble(maxPrice));
-        }
-        // add query for min price
-        if (minPrice != null && !minPrice.isEmpty()) {
-            query.whereGreaterThanOrEqualTo("dailyPrice", parseDouble(minPrice));
-        }
-        // add query for max distance
-        if (maxDistance != null && !maxDistance.isEmpty()){
-            query.whereWithinMiles("geoLocation", userLocationGeoPoint, parseDouble(maxDistance));
-        }
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            query.whereMatches(KEY_VEHICLE_NAME, searchQuery, "i");
-        }
+        addQuerySearchQuery(query);
+        addQueryDistance(query);
+        addQueryPrice(query);
+        addQuerySortBy(query);
 
         query.findInBackground(new FindCallback<Vehicle>() {
             @Override
@@ -109,5 +110,32 @@ public class SearchAndFilter extends DialogFragment {
                 }
             }
         });
+    }
+
+    private void addQuerySearchQuery(ParseQuery<Vehicle> query) {
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            query.whereMatches(KEY_VEHICLE_NAME, searchQuery, "i");
+        }
+    }
+
+    private void addQueryDistance(ParseQuery<Vehicle> query) {
+        if (maxDistance != null && !maxDistance.isEmpty()){
+            query.whereWithinMiles(KEY_GEO_LOCATION, userLocationGeoPoint, parseDouble(maxDistance));
+        }
+    }
+
+    private void addQueryPrice(ParseQuery<Vehicle> query) {
+        if (minPrice != null && !minPrice.isEmpty()) {
+            query.whereGreaterThanOrEqualTo(KEY_DAILY_PRICE, parseDouble(minPrice));
+        }
+        if (maxPrice != null && !maxPrice.isEmpty()) {
+            query.whereLessThanOrEqualTo(KEY_DAILY_PRICE, parseDouble(maxPrice));
+        }
+    }
+
+    private void addQuerySortBy(ParseQuery<Vehicle> query) {
+        if (sortBy == sortByDistance) {
+            query.addAscendingOrder(KEY_DAILY_PRICE);
+        }
     }
 }
